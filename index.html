@@ -1,0 +1,12 @@
+<canvas id="HexCanvas" width="1450" height="855"></canvas>
+
+<script src="../HexGridV2/Hexagon.js/hexagon.js"></script>
+
+<script>
+    InitializeBoardData();
+    var hexagonGrid = new HexagonGrid("HexCanvas", 25);
+    hexagonGrid.drawHexGrid(18, 37, 50, 50, true);
+</script>
+
+<input type="button" id="Load" onclick="LoadBoard(hexagonGrid)" value="Load" />
+<input type="button" id="Reset" onclick="ClearBoard(hexagonGrid)" value="Reset" />
