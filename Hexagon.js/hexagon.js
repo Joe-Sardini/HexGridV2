@@ -1,21 +1,19 @@
 // Hex math defined here: http://blog.ruslans.com/2011/02/hexagonal-grid-math.html
 
 class HexObject {
-    constructor(row, col, image){
-        this._Row = row;
-        this._Col = col;
+    constructor(image, PointF){
         this._Image = image;
         this._IsSelected = false;
+        this._PointF = PointF;
     }
     //#region Properties
-    //#region Row
-    get Row(){
-        return this._Row;
+
+    get PointF(){
+        return this._PointF;
     }
-    set Row(value){
-        this._Row = value;
+    set PointF(value){
+        this._PointF = value;
     }
-    //#endregion
 
     get IsSelected(){
         return this._IsSelected;
@@ -23,15 +21,6 @@ class HexObject {
     set IsSelected(value){
         this._IsSelected = value
     }
-
-    //#region Col
-    get Col(){
-        return this._Col;
-    }
-    set Col(value) {
-        this._Col = value;
-    }
-    //#endregion
     
     get Image(){
         return this._Image;
@@ -43,9 +32,39 @@ class HexObject {
     //#endregion 
 }
 
+class PointF {
+    constructor(x,y){
+        this._Row = x;
+        this._Col = y;
+    }
+
+    get Row(){
+        return this._Row;
+    }
+    set Row(value){
+        this._Row = value;
+    }
+    get Col(){
+        return this._Col;
+    }
+    set Col(value) {
+        this._Col = value;
+    }
+}
+
+const ModeTypes = {
+    PLACEMENT: 'placement',
+    SELECTION: 'selection',
+    MOVEMENT: 'movement',
+    COMBAT: 'combat',
+    DEFAULT: 'default',
+    INSPECT: 'inspect'
+}
+
 var c = document.getElementById("HexCanvas");
 var ctx = c.getContext("2d");
 var HexObjects = [];
+let CurrentModeType = ModeTypes.DEFAULT;
 
 function HexagonGrid(canvasId, radius) {
     this.radius = radius;
@@ -258,25 +277,54 @@ HexagonGrid.prototype.clickEvent = function (e) {
 function InitializeBoardData(){
     var image = new Image(20,20);
     image.src = 'images/1.png';
-    HexObjects.push(new HexObject(0,0,image));
+    HexObjects.push(new HexObject(image,new PointF(0,0)));
     image = new Image(20,20);
     image.src = 'images/2.png';
-    HexObjects.push(new HexObject(0,1,image));
+    HexObjects.push(new HexObject(image,new PointF(0,1)));
     image = new Image(20,20);
     image.src = 'images/3.png';
-    HexObjects.push(new HexObject(0,2,image));
+    HexObjects.push(new HexObject(image,new PointF(0,2)));
     image = new Image(20,20);
     image.src = 'images/4.png';
-    HexObjects.push(new HexObject(0,3,image));
+    HexObjects.push(new HexObject(image,new PointF(0,3)));
 }
 
 function LoadBoard(HexagonGrid){
     for (index = 0; index < HexObjects.length;index++){
-        HexagonGrid.drawHexAtColRow(HexObjects[index].Col,HexObjects[index].Row,"",HexObjects[index].Image);
+        HexagonGrid.drawHexAtColRow(HexObjects[index].PointF.Col,HexObjects[index].PointF.Row,"",HexObjects[index].Image);
     }
 }
 
 function ClearBoard(HexagonGrid){
     HexObjects = [];
     HexagonGrid.drawHexGrid(18, 37, 50, 50, true);
+}
+
+function SetSelectionMode(Mode){
+    if (!Mode){
+        throw new Error('ModeType not defined');
+    }
+
+    switch(Mode){
+        case ModeTypes.DEFAULT:
+            CurrentModeType = ModeTypes.DEFAULT;
+            break;
+        case ModeTypes.INSPECT:
+            CurrentModeType = ModeTypes.INSPECT;
+            break;
+        case ModeTypes.MOVEMENT:
+            CurrentModeType = ModeTypes.MOVEMENT;
+            break;
+        case ModeTypes.PLACEMENT:
+            CurrentModeType = ModeTypes.PLACEMENT;
+            break;
+        case ModeTypes.SELECTION:
+            CurrentModeType = ModeTypes.SELECTION;
+            break;
+        default:
+            CurrentModeType = ModeTypes.DEFAULT;
+    }
+
+    console.log(CurrentModeType);
+
 }
