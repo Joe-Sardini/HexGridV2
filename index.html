@@ -1,11 +1,12 @@
 <canvas id="HexCanvas" width="1450" height="855"></canvas>
 
 <script src="../HexGridV2/Hexagon.js/hexagon.js"></script>
+<script src="../HexGridV2/node_modules/underscore/underscore.js"></script>
 
 <script>
-    InitializeBoardData();
     var hexagonGrid = new HexagonGrid("HexCanvas", 25);
     hexagonGrid.drawHexGrid(18, 37, 50, 50, true);
+    InitializeGameData();
 </script>
 
 <input type="button" id="Load" onclick="LoadBoard(hexagonGrid)" value="Load" />
