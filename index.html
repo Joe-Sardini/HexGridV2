@@ -1,13 +1,21 @@
-<canvas id="HexCanvas" width="1450" height="855"></canvas>
+
+<!DOCTYPE html>
+<html>
+    <body>
+        <table id="PlayerInfo" style='position: absolute; top:30px;'></table>
+    </body>
+
+<canvas id="HexCanvas" width="1220" height="855" style='border:2px solid black; position: absolute; left: 175px; top:54px'></canvas>
 
 <script src="../HexGridV2/Hexagon.js/hexagon.js"></script>
 <script src="../HexGridV2/node_modules/underscore/underscore.js"></script>
-
+    
 <script>
-    var hexagonGrid = new HexagonGrid("HexCanvas", 25);
-    hexagonGrid.drawHexGrid(18, 37, 50, 50, true);
+    var hexagonGrid = new HexagonGrid("HexCanvas",25);
+    hexagonGrid.drawHexGrid(19, 32, 5, 5, true);
     InitializeGameData();
 </script>
+</html>
 
 <input type="button" id="Load" onclick="LoadBoard(hexagonGrid)" value="Load" />
 <input type="button" id="Reset" onclick="ClearBoard(hexagonGrid)" value="Reset" />
