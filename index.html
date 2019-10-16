@@ -1,22 +1,23 @@
 
 <!DOCTYPE html>
 <html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
     <body>
         <table id="PlayerInfo" style='position: absolute; top:30px;'></table>
     </body>
 
-<canvas id="HexCanvas" width="1220" height="855" style='border:2px solid black; position: absolute; left: 175px; top:54px'></canvas>
+<canvas id="HexCanvas" width="1220px" height="855px" style='border:2px solid black; position: absolute; left: 175px; top:54px'></canvas>
+<div class="History" id="EventLog"><p>Event Log</p></div>
+<div class="EncounterHistory" id="EncounterLog"><p>Encounter Log</p></div>
 
 <script src="../HexGridV2/Hexagon.js/hexagon.js"></script>
 <script src="../HexGridV2/node_modules/underscore/underscore.js"></script>
     
 <script>
-    var hexagonGrid = new HexagonGrid("HexCanvas",25);
-    hexagonGrid.drawHexGrid(19, 32, 5, 5, true);
+    var hexagonGrid = new HexagonGrid("HexCanvas",20);
+    hexagonGrid.drawHexGrid(24, 40, 5, 5, true);
     InitializeGameData();
 </script>
 </html>
-
-<input type="button" id="Load" onclick="LoadBoard(hexagonGrid)" value="Load" />
-<input type="button" id="Reset" onclick="ClearBoard(hexagonGrid)" value="Reset" />
-<input type="button" id="SelectMode" onclick="SetSelectionMode('selection')" value="SelectionMode" />

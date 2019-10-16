@@ -1,0 +1,26 @@
+.History {
+    position: relative;  
+    background: #CCD1D1;
+    width: 300px;
+    height: 855px;
+    top: 38px;         
+    left: 1400px;       
+}
+
+div.History p {
+    text-align: center;
+    font-weight: bold;
+}
+
+div.History span.Damage {
+    color: red;
+}
+
+.EncounterHistory {
+    position: relative;  
+    background: #CCD1D1;
+    width: 1220px;
+    height: 100px;
+    top: 50px;         
+    left: 165px;       
+}

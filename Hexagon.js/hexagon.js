@@ -32,16 +32,25 @@ class HexObject {
         this._IsVisible = false;
         //this._EncounterType = encType;
         this._IsEncounterComplete = false;
-        this._DifficultyLevel = 1;
+        this._DifficultyLevel = Math.ceil(Math.random() * 6);
+        this._DifficultyLevelColour = this.SetDifficultyLevelColour();
         this._HexIndex = index;
     }
     //#region Properties
+    get DifficultyLevelColour(){
+        return this._DifficultyLevelColour;
+    }
+    set DifficultyLevelColour(value){
+        this._DifficultyLevelColour = value;
+    }
+
     get HexIndex(){
         return this._HexIndex;
     }
     set HexIndex(value){
         this._HexIndex = value;
     }
+
     get DifficultyLevel(){
         return this._DifficultyLevel;
     }
@@ -95,6 +104,25 @@ class HexObject {
         return this._Encounter;
     }
     //#endregion 
+    SetDifficultyLevelColour(){
+        switch(this._DifficultyLevel){
+            case 1:
+                return "#D5DBDB";
+            case 2:
+                return "#F6DDCC";
+            case 3:
+                return "#F9E79F";
+            case 4:
+                return "#7DCEA0";
+            case 5:
+                return "#85C1E9";
+            case 6:
+                return "#C39BD3";
+            default:
+                return "#F7F9F9";
+        }
+        return "#D6DBDF";
+    }
 
     SetEncounter(){
         switch(this._EncounterType){
@@ -123,9 +151,9 @@ class HexObject {
                 this._Encounter = new Encounter(PointF,"","Rest Not done");
                 break;    
             default:
-                console.log(this._EncounterType);
                 this._Encounter = new Encounter(PointF,"","Default Encounter.");
         }
+        this._Encounter.DifficultyLevel = this._DifficultyLevel;
     }
 }
 //#endregion
@@ -188,6 +216,8 @@ class Character {
         this._CurrentHealth = value;
         if (this._CurrentHealth < -1){
             this._IsAlive = false;
+            var ele = document.getElementById("EventLog");
+            ele.innerHTML += ("<br><span class='Damage'>" + this._Name + " has died.</span>");
         }
     }
     get Strength(){
@@ -285,8 +315,16 @@ class Encounter {
     set Description(value){
         this._Description = value;
     }
+    get DifficultyLevel(){
+        return this._DifficultyLevel;
+    }
+    set DifficultyLevel(value){
+        this._DifficultyLevel = value;
+    }
     RunEncounter(){
-        console.log(this._Description);
+        var ele = document.getElementById("EncounterLog");
+        ele.innerHTML += "<BR>" + this._Description;
+        //console.log(this._Description);
     }
 }
 
@@ -296,7 +334,9 @@ class GainPartyMember extends Encounter{
     }
     
     RunEncounter(){
-        console.log(this.Description);
+        var ele = document.getElementById("EncounterLog");
+        ele.innerHTML += "<BR>" + this._Description;
+        //console.log(this.Description);
         PlayerParty.push(new Character(8,24,6,9,1,"New PC ".concat(PlayerParty.length-2)));
         DisplayParty();
     }
@@ -309,6 +349,8 @@ class Friendly extends Encounter{
 
     RunEncounter(){
         console.log("Your party is fully healed.");
+        var ele = document.getElementById("EncounterLog");
+        ele.innerHTML += "<BR>Your party is fully healed.";
         PlayerParty.forEach(function(element){element.RestoreHealth();});
         DisplayParty();
     }
@@ -320,6 +362,8 @@ class Combat extends Encounter{
     }
     
     RunEncounter(){
+        var ele = document.getElementById("EncounterLog");
+        ele.innerHTML += "<BR>" + this.Description;
         console.log(this.Description);
         PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -3;}});
         DisplayParty();
@@ -332,8 +376,15 @@ class Trap extends Encounter{
     }
 
     RunEncounter(){
-        console.log("Trap Damage - 5 health to all party memebers.");
-        PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -5;}});
+        var ele = document.getElementById("EncounterLog");
+        ele.innerHTML += "<BR>Trap Damage - " + 5*this._DifficultyLevel + " damage to all party memebers.";
+        console.log("Trap Damage - " + 5*this._DifficultyLevel + " damage to all party memebers.");
+        //PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth - 5;}});
+        for (idx = 0; idx < PlayerParty.length; idx++){
+            if (PlayerParty[idx].IsAlive){
+                PlayerParty[idx].CurrentHealth = (PlayerParty[idx].CurrentHealth - (5 * this._DifficultyLevel));
+            }
+        }
         DisplayParty();
     }
 }
@@ -345,6 +396,8 @@ class SpotDamage extends Encounter{
 
     RunEncounter(){
         console.log("A few of your party members take damage...")
+        var ele = document.getElementById("EncounterLog");
+        ele.innerHTML += "<BR>A few of your party members take damage...";
         this.SprinkleDamage();
         DisplayParty();
     }
@@ -353,9 +406,10 @@ class SpotDamage extends Encounter{
         var numberOfVictims = Math.ceil(Math.random() * (PlayerParty.length+1)/2)+1;
         for (var i = 0; i < numberOfVictims; i++){
             var playerIndex = Math.ceil(Math.random() * PlayerParty.length-1);
-            var damageTaken = Math.ceil(Math.random() * 8+1);
+            var damageTaken = Math.ceil(Math.random() * 8+1)*this._DifficultyLevel;
             if (PlayerParty[playerIndex].IsAlive){
                 PlayerParty[playerIndex].CurrentHealth -= damageTaken;
+
             }
         }
     }
@@ -422,6 +476,8 @@ HexagonGrid.prototype.drawHexGrid = function (rows, cols, originX, originY, isDe
     this.canvasOriginX = originX;
     this.canvasOriginY = originY;
     this.hexCount = rows*cols;
+    this._rows = rows;
+    this._cols = cols;
 
     var currentHexX;
     var currentHexY;
@@ -491,7 +547,7 @@ HexagonGrid.prototype.drawHex = function(x0, y0, fillColor, debugText,image, hex
     if (hexText) {
         this.context.font = "10px";
         this.context.fillStyle = "#000";
-        this.context.fillText(hexText, x0 + (this.width / 2) - (this.width/4) + 10, y0 + (this.height - 12.5));
+        this.context.fillText(hexText, x0 + (this.width / 2) - (this.width/4) + 10, y0 + (this.height - 14));
     }
 }
 
@@ -616,6 +672,8 @@ HexagonGrid.prototype.clickEvent = function(e) {
             HexContents.Encounter.RunEncounter();
             Hexes[HexIndex].IsEncounterComplete = true;
             this.drawHexAtColRow(HexContents.PointF.Col,HexContents.PointF.Row,"#FF0000","","Done!");
+            var ele = document.getElementById("EventLog");
+            ele.innerHTML += ("<br><span class='Damage'>" + HexContents.Encounter.Description + "</span>");
             this.RevealSurroundingHexes(HexIndex);
         }
     }
@@ -625,20 +683,22 @@ HexagonGrid.prototype.RevealSurroundingHexes = function(HexIndex){
     var surroudingHexGridCords = [];
     surroudingHexGridCords = this.CalculateSurroundingHexes(Hexes[HexIndex].PointF.Row,Hexes[HexIndex].PointF.Col);
     for (idx = 0;idx < surroudingHexGridCords.length; idx++){
-        if (!this.getHexAtCords(surroudingHexGridCords[idx].Row,surroudingHexGridCords[idx].Col).IsEncounterComplete){
-            this.drawHexAtColRow(surroudingHexGridCords[idx].Col,surroudingHexGridCords[idx].Row,"#808080","","","1");
+        var Hex = this.getHexAtCords(surroudingHexGridCords[idx].Row,surroudingHexGridCords[idx].Col);
+        if (!Hex.IsEncounterComplete){
+            this.drawHexAtColRow(surroudingHexGridCords[idx].Col,surroudingHexGridCords[idx].Row,Hex.DifficultyLevelColour,"","",Hex.DifficultyLevel);
         }
     }
 }
 
 HexagonGrid.prototype.IsValidHex = function(cordX,cordY){
-    if (cordX > -1 && cordX < 19 && cordY > -1 && cordY < 32){
+    if (cordX > -1 && cordX < this._rows && cordY > -1 && cordY < this._cols){
         return true;
     }else{
         return false;
     }
 }
 
+//TODO make an algo to replace this.
 HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
     var sHexes = [];
     
@@ -807,47 +867,6 @@ function CreatePlayerCharacter(name){
 
     return new Player(strength,health,damage,tohit,1,0,name);
 }
-
-//#region Button functions
-function LoadBoard(HexagonGrid){
-    for (index = 0; index < HexObjects.length;index++){
-        if (HexObjects[index].IsVisible){
-            HexagonGrid.drawHexAtColRow(HexObjects[index].PointF.Col,HexObjects[index].PointF.Row,"",HexObjects[index].Image);
-        }
-    }
-}
-
-function ClearBoard(HexagonGrid){
-    HexObjects = [];
-    HexagonGrid.drawHexGrid(18, 37, 50, 50, true);
-}
-
-function SetSelectionMode(Mode){
-    if (!Mode){
-        throw new Error('ModeType not defined');
-    }
-
-    switch(Mode){
-        case ModeTypes.DEFAULT:
-            CurrentModeType = ModeTypes.DEFAULT;
-            break;
-        case ModeTypes.INSPECT:
-            CurrentModeType = ModeTypes.INSPECT;
-            break;
-        case ModeTypes.MOVEMENT:
-            CurrentModeType = ModeTypes.MOVEMENT;
-            break;
-        case ModeTypes.PLACEMENT:
-            CurrentModeType = ModeTypes.PLACEMENT;
-            break;
-        case ModeTypes.SELECTION:
-            CurrentModeType = ModeTypes.SELECTION;
-            break;
-        default:
-            CurrentModeType = ModeTypes.DEFAULT;
-    }
-}
-//#endregion
 
 function DisplayParty(){
     document.getElementById("PlayerInfo").innerHTML = "<tr><TD>Character Info";
