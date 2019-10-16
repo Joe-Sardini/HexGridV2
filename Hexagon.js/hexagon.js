@@ -25,16 +25,30 @@ const EncounterTypes = {
 //#region Hex object
 //represents a game board tile
 class HexObject {
-    constructor(image, PointF, encType){
+    constructor(image, PointF, index){
         //this._Image = image;
         this._IsSelected = false;
         this._PointF = PointF;
         this._IsVisible = false;
-        this._EncounterType = encType;
+        //this._EncounterType = encType;
         this._IsEncounterComplete = false;
+        this._DifficultyLevel = 1;
+        this._HexIndex = index;
     }
     //#region Properties
-    
+    get HexIndex(){
+        return this._HexIndex;
+    }
+    set HexIndex(value){
+        this._HexIndex = value;
+    }
+    get DifficultyLevel(){
+        return this._DifficultyLevel;
+    }
+    set DifficultyLevel(value){
+        this._DifficultyLevel = value;
+    }
+
     get PointF(){
         return this._PointF;
     }
@@ -85,7 +99,7 @@ class HexObject {
     SetEncounter(){
         switch(this._EncounterType){
             case EncounterTypes.COMBAT:
-                this._Encounter = new Combat(PointF,"","Combat Encounter, you take damage!");
+                this._Encounter = new Combat(PointF,"","Combat Encounter, you all take damage!");
                 break;
             case EncounterTypes.FRIENDLY:
                 this._Encounter = new Friendly(PointF,"","Hey, how ya doing?");
@@ -126,7 +140,6 @@ class PointF {
     get Points(){
         return { row: this._Row, column: this._Col}
     }
-
     get Row(){
         return this._Row;
     }
@@ -209,8 +222,14 @@ class Character {
     }
     //#endregion 
     
-    RestoreHealth(){
-        this._CurrentHealth = this._Health;
+    RestoreHealth(Amount){
+        if (this._IsAlive){
+            if (Amount != undefined){
+                this._CurrentHealth += Amount;
+            }else{
+                this._CurrentHealth = this._Health;
+            }
+        }
     }
 }
 
@@ -313,8 +332,8 @@ class Trap extends Encounter{
     }
 
     RunEncounter(){
-        console.log("Trap Damage - 1 health to all party memebers.");
-        PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -1;}});
+        console.log("Trap Damage - 5 health to all party memebers.");
+        PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -5;}});
         DisplayParty();
     }
 }
@@ -331,10 +350,10 @@ class SpotDamage extends Encounter{
     }
 
     SprinkleDamage(){
-        var numberOfVictims = Math.ceil(Math.random() * (PlayerParty.length+1)/2);
+        var numberOfVictims = Math.ceil(Math.random() * (PlayerParty.length+1)/2)+1;
         for (var i = 0; i < numberOfVictims; i++){
             var playerIndex = Math.ceil(Math.random() * PlayerParty.length-1);
-            var damageTaken = Math.ceil(Math.random() * 5+1);
+            var damageTaken = Math.ceil(Math.random() * 8+1);
             if (PlayerParty[playerIndex].IsAlive){
                 PlayerParty[playerIndex].CurrentHealth -= damageTaken;
             }
@@ -425,8 +444,8 @@ HexagonGrid.prototype.drawHexGrid = function (rows, cols, originX, originY, isDe
                 debugText = row + "," + col;
             }
             
-            if (Hexes.length < this.hexCount+1){ 
-            Hexes.push(new HexObject("",new PointF(row,col)));
+            if (Hexes.length < this.hexCount+1){ //Add all hexes to the hex list
+                Hexes.push(new HexObject("",new PointF(row,col),Hexes.length));
             }
 
             this.drawHex(currentHexX, currentHexY, "#ddd", debugText);
@@ -435,13 +454,13 @@ HexagonGrid.prototype.drawHexGrid = function (rows, cols, originX, originY, isDe
     }
 }
 
-HexagonGrid.prototype.drawHexAtColRow = function(column, row, color, image, debugText) {
+HexagonGrid.prototype.drawHexAtColRow = function(column, row, color, image, debugText, hexText) {
     var drawy = column % 2 == 0 ? (row * this.height) + this.canvasOriginY : (row * this.height) + this.canvasOriginY + (this.height / 2);
     var drawx = (column * this.side) + this.canvasOriginX;
-    this.drawHex(drawx, drawy, color, debugText, image);
+    this.drawHex(drawx, drawy, color, debugText, image, hexText);
 }
 
-HexagonGrid.prototype.drawHex = function(x0, y0, fillColor, debugText,image) {
+HexagonGrid.prototype.drawHex = function(x0, y0, fillColor, debugText,image, hexText) {
     this.context.strokeStyle = "#000";
     this.context.beginPath();
     this.context.moveTo(x0 + this.width - this.side, y0);
@@ -467,6 +486,12 @@ HexagonGrid.prototype.drawHex = function(x0, y0, fillColor, debugText,image) {
         this.context.font = "8px";
         this.context.fillStyle = "#000";
         this.context.fillText(debugText, x0 + (this.width / 2) - (this.width/4), y0 + (this.height - 5));
+    }
+
+    if (hexText) {
+        this.context.font = "10px";
+        this.context.fillStyle = "#000";
+        this.context.fillText(hexText, x0 + (this.width / 2) - (this.width/4) + 10, y0 + (this.height - 12.5));
     }
 }
 
@@ -591,8 +616,93 @@ HexagonGrid.prototype.clickEvent = function(e) {
             HexContents.Encounter.RunEncounter();
             Hexes[HexIndex].IsEncounterComplete = true;
             this.drawHexAtColRow(HexContents.PointF.Col,HexContents.PointF.Row,"#FF0000","","Done!");
+            this.RevealSurroundingHexes(HexIndex);
         }
     }
+}
+
+HexagonGrid.prototype.RevealSurroundingHexes = function(HexIndex){
+    var surroudingHexGridCords = [];
+    surroudingHexGridCords = this.CalculateSurroundingHexes(Hexes[HexIndex].PointF.Row,Hexes[HexIndex].PointF.Col);
+    for (idx = 0;idx < surroudingHexGridCords.length; idx++){
+        if (!this.getHexAtCords(surroudingHexGridCords[idx].Row,surroudingHexGridCords[idx].Col).IsEncounterComplete){
+            this.drawHexAtColRow(surroudingHexGridCords[idx].Col,surroudingHexGridCords[idx].Row,"#808080","","","1");
+        }
+    }
+}
+
+HexagonGrid.prototype.IsValidHex = function(cordX,cordY){
+    if (cordX > -1 && cordX < 19 && cordY > -1 && cordY < 32){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
+    var sHexes = [];
+    
+    for (idx = 1;idx < 7;idx++){
+        switch(idx){
+            case 1:
+                if (cordY % 2 != 0){
+                    if (this.IsValidHex(cordX,cordY-1)){
+                        sHexes.push(new PointF(cordX,cordY-1));
+                    }
+                }else{
+                    if (this.IsValidHex(cordX-1,cordY-1)){
+                        sHexes.push(new PointF(cordX-1,cordY-1));
+                    }
+                }
+                //break;
+            case 2:
+                if (this.IsValidHex(cordX-1,cordY)){
+                    sHexes.push(new PointF(cordX-1,cordY));
+                }
+                //break;
+            case 3:
+                if (cordY % 2 != 0){
+                    if (this.IsValidHex(cordX,cordY+1)){
+                        sHexes.push(new PointF(cordX,cordY+1));
+                    }
+                }else{
+                    if (this.IsValidHex(cordX-1,cordY+1)){
+                        sHexes.push(new PointF(cordX-1,cordY+1));
+                    }
+                }
+                //break;
+            case 4:
+                if (cordY % 2 != 0){
+                    if (this.IsValidHex(cordX+1,cordY+1)){
+                        sHexes.push(new PointF(cordX+1,cordY+1));
+                    }
+                }else{
+                    if (this.IsValidHex(cordX,cordY+1)){
+                        sHexes.push(new PointF(cordX,cordY+1));
+                    }
+                }
+                //break;
+            case 5:
+                if (this.IsValidHex(cordX+1,cordY)){
+                    sHexes.push(new PointF(cordX+1,cordY));
+                }
+                //break;
+            case 6:
+                if (cordY % 2 != 0){
+                    if (this.IsValidHex(cordX+1,cordY-1)){
+                        sHexes.push(new PointF(cordX+1,cordY-1));
+                    }
+                }else{
+                    if (this.IsValidHex(cordX,cordY-1)){
+                        sHexes.push(new PointF(cordX,cordY-1));
+                    }
+                }
+                //break;
+            default:
+                break;
+        }
+    }
+    return sHexes;
 }
 
 HexagonGrid.prototype.getHexAtCords = function(cordX,cordY) {
@@ -637,7 +747,7 @@ function InitializeGameData(){
     }
     PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth"));
     PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak"));
-    PlayerParty.push(new Player(8,20,5,10,1,0,"Ralaa"));
+    PlayerParty.push(CreatePlayerCharacter("Ralaa"));
     DisplayParty();
     ConfigurePartyDisplay();
 }
@@ -672,6 +782,30 @@ function RandomEncounter(){
         default:
             return EncounterTypes.REST;
     }
+}
+
+function CreatePlayerCharacter(name){
+    //strength
+    var max = 16;
+    var min = 4;
+    var strength = Math.floor(Math.random() * (max - min + 1)) + min;
+   
+    //health
+    max = 31;
+    min = 14;
+    var health = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    //dmg
+    max = 2;
+    min = 7;
+    var damage = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    //tohit
+    max = 16;
+    min = 9;
+    var tohit = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    return new Player(strength,health,damage,tohit,1,0,name);
 }
 
 //#region Button functions
