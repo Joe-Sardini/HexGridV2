@@ -1,13 +1,4 @@
 //#region Enums
-const ModeTypes = {
-    PLACEMENT: 'placement',
-    SELECTION: 'selection',
-    MOVEMENT: 'movement',
-    COMBAT: 'combat',
-    DEFAULT: 'default',
-    INSPECT: 'inspect'
-}
-
 const EncounterTypes = {
     COMBAT: 'combat',
     TREASURE: 'treasure',
@@ -19,8 +10,6 @@ const EncounterTypes = {
     SPOTDAMAGE: 'spotdamage'
 }
 //#endregion 
-
-//#region Object definitions
 
 //#region Hex object
 //represents a game board tile
@@ -130,7 +119,7 @@ class HexObject {
                 this._Encounter = new Combat(PointF,"","Combat Encounter, you all take damage!");
                 break;
             case EncounterTypes.FRIENDLY:
-                this._Encounter = new Friendly(PointF,"","Party heal?");
+                this._Encounter = new Friendly(PointF,"","Party heal");
                 break;
             case EncounterTypes.INFORMATION:
                 this._Encounter = new Encounter(PointF,"","Info not done");
@@ -157,7 +146,6 @@ class HexObject {
     }
 }
 //#endregion
-//#endregion 
 
 //#region Grid Cords
 class PointF {
@@ -387,9 +375,20 @@ class Combat extends Encounter{
         super(location,items,description);
     }
     
+    ConstructEnemyParty(){
+        var partySize = 1 * this._DifficultyLevel;
+        var name;
+        var party = [];
+        for (index = 0; index < partySize;index++){
+            name = "NPC" + index;
+            party.push(CreateNPC(name,this._DifficultyLevel));
+        }
+    }
+
     RunEncounter(){
         this._EncounterLogElement.innerHTML += "<BR>" + this.Description;
-        console.log(this.Description);
+        var combat = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
+
         PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -3;}});
         DisplayParty();
     }
@@ -398,15 +397,23 @@ class Combat extends Encounter{
 class Trap extends Encounter{
     constructor(location,items,description){
         super(location,items,description);
+        this._TrapDamage = 3;
+    }
+
+    get TrapDamage(){
+        return this._TrapDamage;
+    }
+    set TrapDamage(value){
+        this._TrapDamage = value;
     }
 
     RunEncounter(){
-        this._EncounterLogElement.innerHTML += "<BR>Trap Damage - " + 5*this._DifficultyLevel + " damage to all party memebers.";
-        console.log("Trap Damage - " + 5*this._DifficultyLevel + " damage to all party memebers.");
+        this._EncounterLogElement.innerHTML += "<BR>Trap Damage - " + this._TrapDamage*this._DifficultyLevel + " damage to all party memebers.";
+        console.log("Trap Damage - " + this._TrapDamage*this._DifficultyLevel + " damage to all party memebers.");
         //PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth - 5;}});
         for (idx = 0; idx < PlayerParty.length; idx++){
             if (PlayerParty[idx].IsAlive){
-                PlayerParty[idx].CurrentHealth = (PlayerParty[idx].CurrentHealth - (5 * this._DifficultyLevel));
+                PlayerParty[idx].CurrentHealth = (PlayerParty[idx].CurrentHealth - (this._TrapDamage * this._DifficultyLevel));
             }
         }
         DisplayParty();
@@ -416,6 +423,14 @@ class Trap extends Encounter{
 class SpotDamage extends Encounter{
     constructor(location,items,description){
         super(location,items,description);
+        this._SpotDamage = 5;
+    }
+
+    get SpotDamage(){
+        return this._SpotDamage;
+    }
+    set SpotDamage(value){
+        this._SpotDamage = value;
     }
 
     RunEncounter(){
@@ -429,12 +444,21 @@ class SpotDamage extends Encounter{
         var numberOfVictims = Math.ceil(Math.random() * (PlayerParty.length+1)/2)+1;
         for (var i = 0; i < numberOfVictims; i++){
             var playerIndex = Math.ceil(Math.random() * PlayerParty.length-1);
-            var damageTaken = Math.ceil(Math.random() * 8+1)*this._DifficultyLevel;
+            var damageTaken = Math.ceil(Math.random() * this._SpotDamage+1)*this._DifficultyLevel;
             if (PlayerParty[playerIndex].IsAlive){
                 PlayerParty[playerIndex].CurrentHealth -= damageTaken;
 
             }
         }
+    }
+}
+//#endregion
+
+//#region CombatEngine
+class CombatEngine{
+    constructor(PlayerParty,EnemyParty){
+        this._PlayerParty = PlayerParty;
+        this._EnemyParty = EnemyParty;
     }
 }
 //#endregion
@@ -471,9 +495,6 @@ var PlayerParty = [];
 var PlayerPartyItems = [];
 var c = document.getElementById("HexCanvas");
 var ctx = c.getContext("2d");
-var HexObjects = [];
-let CurrentModeType = ModeTypes.DEFAULT;
-SelectedHex = new PointF;
 var Hexes = [];
 //#endregion 
 
@@ -821,15 +842,6 @@ HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
 //#endregion
 
 //#region Unsorted functions 
-function ContainsUnit(pointF){
-    for (index = 0; index < HexObjects.length;index++){
-        if (_.isEqual(pointF,HexObjects[index].PointF.Points)){
-            return true;
-        }
-    }
-    return false;
-}
-
 function InitializeGameData(){
     for (index = 0; index < Hexes.length;index++){
         Hexes[index].EncounterType = RandomEncounter();
@@ -871,6 +883,31 @@ function RandomEncounter(){
         default:
             return EncounterTypes.REST;
     }
+}
+
+function CreateNPC(name,difficultyLevel){
+    var max = 10;
+    var min = 2;
+    var strength = Math.floor(Math.random() * (max - min + 1)) + min;
+    strength *= difficultyLevel;
+    //health
+    max = 31;
+    min = 14;
+    var health = Math.floor(Math.random() * (max - min + 1)) + min;
+    health *= difficultyLevel;
+    //dmg
+    max = 2;
+    min = 7;
+    var damage = Math.floor(Math.random() * (max - min + 1)) + min;
+    damage *= difficultyLevel;
+
+    //tohit
+    max = 16;
+    min = 9;
+    var tohit = Math.floor(Math.random() * (max - min + 1)) + min;
+    tohit *= difficultyLevel;
+
+    return new NPC(strength,health,damage,tohit,1,100,name);
 }
 
 function CreatePlayerCharacter(name){
