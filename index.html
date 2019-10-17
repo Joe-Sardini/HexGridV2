@@ -5,12 +5,14 @@
         <link rel="stylesheet" type="text/css" href="style.css">
     </head>
     <body>
-        <table id="PlayerInfo" style='position: absolute; top:30px;'></table>
+        <table id="PlayerInfo" class="PlayerInfo"></table>
     </body>
 
-<canvas id="HexCanvas" width="1220px" height="855px" style='border:2px solid black; position: absolute; left: 175px; top:54px'></canvas>
+<div class="EndGame" id="EndGameOverlay"></div>    
+<canvas id="HexCanvas" class="HexCanvas" width="1220px" height="855px"></canvas>
 <div class="History" id="EventLog"><p>Event Log</p></div>
-<div class="EncounterHistory" id="EncounterLog"><p>Encounter Log</p></div>
+<div class="EncounterHistory" id="EncounterLog"></div>
+
 
 <script src="../HexGridV2/Hexagon.js/hexagon.js"></script>
 <script src="../HexGridV2/node_modules/underscore/underscore.js"></script>

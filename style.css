@@ -3,8 +3,9 @@
     background: #CCD1D1;
     width: 300px;
     height: 855px;
-    top: 38px;         
+    top: 45px;         
     left: 1400px;       
+    overflow-y: scroll;
 }
 
 div.History p {
@@ -21,6 +22,35 @@ div.History span.Damage {
     background: #CCD1D1;
     width: 1220px;
     height: 100px;
-    top: 50px;         
-    left: 165px;       
+    top: 60px;         
+    left: 165px;    
+    overflow-y: scroll;   
+    overflow-x: scroll;
+}
+
+.EndGame {
+    display: none;
+    background: #6E2C00;
+    position: absolute;
+    width: 1500px;
+    height: 1000px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 300px;  
+    font-size: 300%;
+    z-index: 2;
+    border:2px solid black; 
+}
+
+.HexCanvas {
+    border:2px solid black; 
+    position: absolute; 
+    left: 175px; 
+    top:54px;
+    z-index: 1;
+}
+
+.PlayerInfo {
+    position: absolute; 
+    top:30px;
 }

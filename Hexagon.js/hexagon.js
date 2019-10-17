@@ -32,7 +32,7 @@ class HexObject {
         this._IsVisible = false;
         //this._EncounterType = encType;
         this._IsEncounterComplete = false;
-        this._DifficultyLevel = Math.ceil(Math.random() * 6);
+        this._DifficultyLevel = Math.ceil(Math.random() * 5);
         this._DifficultyLevelColour = this.SetDifficultyLevelColour();
         this._HexIndex = index;
     }
@@ -130,7 +130,7 @@ class HexObject {
                 this._Encounter = new Combat(PointF,"","Combat Encounter, you all take damage!");
                 break;
             case EncounterTypes.FRIENDLY:
-                this._Encounter = new Friendly(PointF,"","Hey, how ya doing?");
+                this._Encounter = new Friendly(PointF,"","Party heal?");
                 break;
             case EncounterTypes.INFORMATION:
                 this._Encounter = new Encounter(PointF,"","Info not done");
@@ -148,7 +148,7 @@ class HexObject {
                 this._Encounter = new SpotDamage(PointF,"","A bit oh damage.");
                 break;    
             case EncounterTypes.REST:
-                this._Encounter = new Encounter(PointF,"","Rest Not done");
+                this._Encounter = new Rest(PointF,"","Your party is healed.");
                 break;    
             default:
                 this._Encounter = new Encounter(PointF,"","Default Encounter.");
@@ -157,6 +157,7 @@ class HexObject {
     }
 }
 //#endregion
+//#endregion 
 
 //#region Grid Cords
 class PointF {
@@ -214,7 +215,7 @@ class Character {
     }
     set CurrentHealth(value){
         this._CurrentHealth = value;
-        if (this._CurrentHealth < -1){
+        if (this._CurrentHealth < -1 && this._IsAlive){
             this._IsAlive = false;
             var ele = document.getElementById("EventLog");
             ele.innerHTML += ("<br><span class='Damage'>" + this._Name + " has died.</span>");
@@ -296,7 +297,9 @@ class Encounter {
         this._Location = location;
         this._Items = items;
         this._Description = description;
+        this._EncounterLogElement = document.getElementById("EncounterLog");
     }
+    
     get Location(){
         return this._Location;
     }
@@ -322,9 +325,34 @@ class Encounter {
         this._DifficultyLevel = value;
     }
     RunEncounter(){
-        var ele = document.getElementById("EncounterLog");
-        ele.innerHTML += "<BR>" + this._Description;
+        //var ele = document.getElementById("EncounterLog");
+        this._EncounterLogElement.innerHTML += "<BR>" + this._Description;
         //console.log(this._Description);
+    }
+}
+
+class Rest extends Encounter{
+    constructor(location,items,description){
+        super(location,items,description);    
+    }
+
+    RunEncounter(){
+        console.log("Your party is partially healed.");
+        var ele = document.getElementById("EncounterLog");
+        ele.innerHTML += "<BR>Your party is fully healed.";
+        this.PartialPartyHealing();
+        DisplayParty();
+    }
+
+    PartialPartyHealing(){
+        var healingAmount = Math.ceil(Math.random() * 3)*this._DifficultyLevel;
+        for (idx = 0;idx < PlayerParty.length;idx++){
+            if ((PlayerParty[idx].CurrentHealth + healingAmount) > PlayerParty[idx].Health){
+                PlayerParty[idx].CurrentHealth = PlayerParty[idx].Health;
+            }else{
+                PlayerParty[idx].CurrentHealth += healingAmount;
+            }
+        }
     }
 }
 
@@ -334,8 +362,7 @@ class GainPartyMember extends Encounter{
     }
     
     RunEncounter(){
-        var ele = document.getElementById("EncounterLog");
-        ele.innerHTML += "<BR>" + this._Description;
+        this._EncounterLogElement.innerHTML += "<BR>" + this._Description;
         //console.log(this.Description);
         PlayerParty.push(new Character(8,24,6,9,1,"New PC ".concat(PlayerParty.length-2)));
         DisplayParty();
@@ -349,8 +376,7 @@ class Friendly extends Encounter{
 
     RunEncounter(){
         console.log("Your party is fully healed.");
-        var ele = document.getElementById("EncounterLog");
-        ele.innerHTML += "<BR>Your party is fully healed.";
+        this._EncounterLogElement.innerHTML += "<BR>Your party is fully healed.";
         PlayerParty.forEach(function(element){element.RestoreHealth();});
         DisplayParty();
     }
@@ -362,8 +388,7 @@ class Combat extends Encounter{
     }
     
     RunEncounter(){
-        var ele = document.getElementById("EncounterLog");
-        ele.innerHTML += "<BR>" + this.Description;
+        this._EncounterLogElement.innerHTML += "<BR>" + this.Description;
         console.log(this.Description);
         PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -3;}});
         DisplayParty();
@@ -376,8 +401,7 @@ class Trap extends Encounter{
     }
 
     RunEncounter(){
-        var ele = document.getElementById("EncounterLog");
-        ele.innerHTML += "<BR>Trap Damage - " + 5*this._DifficultyLevel + " damage to all party memebers.";
+        this._EncounterLogElement.innerHTML += "<BR>Trap Damage - " + 5*this._DifficultyLevel + " damage to all party memebers.";
         console.log("Trap Damage - " + 5*this._DifficultyLevel + " damage to all party memebers.");
         //PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth - 5;}});
         for (idx = 0; idx < PlayerParty.length; idx++){
@@ -396,8 +420,7 @@ class SpotDamage extends Encounter{
 
     RunEncounter(){
         console.log("A few of your party members take damage...")
-        var ele = document.getElementById("EncounterLog");
-        ele.innerHTML += "<BR>A few of your party members take damage...";
+        this._EncounterLogElement.innerHTML += "<BR>A few of your party members take damage...";
         this.SprinkleDamage();
         DisplayParty();
     }
@@ -442,7 +465,6 @@ class Item {
     }
 }
 //#endregion
-//#endregion 
 
 //#region Global Variables
 var PlayerParty = [];
@@ -453,6 +475,19 @@ var HexObjects = [];
 let CurrentModeType = ModeTypes.DEFAULT;
 SelectedHex = new PointF;
 var Hexes = [];
+//#endregion 
+
+//#region Global Functions
+window.CheckIfPartyIsAllDead = function(){
+    for(idx = 0; idx < PlayerParty.length;idx++){
+        if (PlayerParty[idx].IsAlive){
+            return false;
+        }
+    }
+    return true;
+}
+
+//window.
 //#endregion 
 
 //#region HexagonGrid
@@ -669,11 +704,11 @@ HexagonGrid.prototype.clickEvent = function(e) {
 
     if (HexContents != undefined){
         if (!HexContents.IsEncounterComplete) {
+            var ele = document.getElementById("EventLog");
+            ele.innerHTML += ("<br><span class='Damage'>" + HexContents.Encounter.Description + "</span>");
             HexContents.Encounter.RunEncounter();
             Hexes[HexIndex].IsEncounterComplete = true;
             this.drawHexAtColRow(HexContents.PointF.Col,HexContents.PointF.Row,"#FF0000","","Done!");
-            var ele = document.getElementById("EventLog");
-            ele.innerHTML += ("<br><span class='Damage'>" + HexContents.Encounter.Description + "</span>");
             this.RevealSurroundingHexes(HexIndex);
         }
     }
@@ -714,12 +749,10 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
                         sHexes.push(new PointF(cordX-1,cordY-1));
                     }
                 }
-                //break;
             case 2:
                 if (this.IsValidHex(cordX-1,cordY)){
                     sHexes.push(new PointF(cordX-1,cordY));
                 }
-                //break;
             case 3:
                 if (cordY % 2 != 0){
                     if (this.IsValidHex(cordX,cordY+1)){
@@ -730,7 +763,6 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
                         sHexes.push(new PointF(cordX-1,cordY+1));
                     }
                 }
-                //break;
             case 4:
                 if (cordY % 2 != 0){
                     if (this.IsValidHex(cordX+1,cordY+1)){
@@ -741,12 +773,10 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
                         sHexes.push(new PointF(cordX,cordY+1));
                     }
                 }
-                //break;
             case 5:
                 if (this.IsValidHex(cordX+1,cordY)){
                     sHexes.push(new PointF(cordX+1,cordY));
                 }
-                //break;
             case 6:
                 if (cordY % 2 != 0){
                     if (this.IsValidHex(cordX+1,cordY-1)){
@@ -757,7 +787,6 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
                         sHexes.push(new PointF(cordX,cordY-1));
                     }
                 }
-                //break;
             default:
                 break;
         }
@@ -791,7 +820,7 @@ HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
 }
 //#endregion
 
-
+//#region Unsorted functions 
 function ContainsUnit(pointF){
     for (index = 0; index < HexObjects.length;index++){
         if (_.isEqual(pointF,HexObjects[index].PointF.Points)){
@@ -897,6 +926,12 @@ function UpdateDisplay(){
             document.getElementById(divID).style.backgroundColor = "grey";
         }
     }
+    if (window.CheckIfPartyIsAllDead()){
+        var ele = document.getElementById("EndGameOverlay");
+        console.log("<BR>The party is all dead, game over!");
+        ele.innerText = "The party is all dead, game over!";
+        ele.style.display = "block";
+    }
 }
 
 function ConfigurePartyDisplay(){
@@ -912,10 +947,11 @@ function ConfigurePartyDisplay(){
 
 function HandlePartyDisplayClick(){
     //TODO: What do I want here...
+    console.log("You clicked on a character");
 }
 
 function HandleDeadPartyDisplayClick(){
     //TODO 
     console.log("This character is dead.");
 }
-
+//#endregion 
