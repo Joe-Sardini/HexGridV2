@@ -183,9 +183,16 @@ class Character {
         this._CurrentHealth = health;
         this._Name = name;
         this._IsAlive = true;
+        this._Initiative = Math.ceil(Math.random() * 10);
     }
 
     //#region Properties
+    get Initiative(){
+        return this._Initiative;
+    }
+    set Initiative(value){
+        this._Initiative = value;
+    }
     get IsAlive(){
         return this._IsAlive;
     }
@@ -351,7 +358,6 @@ class GainPartyMember extends Encounter{
     
     RunEncounter(){
         this._EncounterLogElement.innerHTML += "<BR>" + this._Description;
-        //console.log(this.Description);
         PlayerParty.push(new Character(8,24,6,9,1,"New PC ".concat(PlayerParty.length-2)));
         DisplayParty();
     }
@@ -387,9 +393,10 @@ class Combat extends Encounter{
 
     RunEncounter(){
         this._EncounterLogElement.innerHTML += "<BR>" + this.Description;
-        var combat = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
-
-        PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -3;}});
+        var combatEncounter = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
+        
+        
+        //PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -3;}});
         DisplayParty();
     }
 }
@@ -460,6 +467,16 @@ class CombatEngine{
         this._PlayerParty = PlayerParty;
         this._EnemyParty = EnemyParty;
     }
+
+    DetermineInitiative(){
+        //TODO
+    }
+
+    RandomTargetCombat(){
+        //TODO
+    }
+
+
 }
 //#endregion
 
