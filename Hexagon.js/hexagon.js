@@ -174,7 +174,7 @@ class PointF {
 
 //#region Characters
 class Character {
-    constructor(str,health,dmg,tohit,level,name){
+    constructor(str,health,dmg,tohit,level,name,index){
         this._Strength = str;
         this._Health = health;
         this._Damage = dmg;
@@ -184,6 +184,7 @@ class Character {
         this._Name = name;
         this._IsAlive = true;
         this._Initiative = Math.ceil(Math.random() * 20);
+        this._Index = index;
     }
 
     //#region Properties
@@ -260,8 +261,8 @@ class Character {
 }
 
 class Player extends Character{
-    constructor(str,health,dmg,tohit,level,exppoints,name){
-        super(str,health,dmg,tohit,level,name);
+    constructor(str,health,dmg,tohit,level,exppoints,name,index){
+        super(str,health,dmg,tohit,level,name,index);
         this._ExperiencePoints = exppoints;
     }
     get ExperiencePoints(){
@@ -273,8 +274,8 @@ class Player extends Character{
 }
 
 class NPC extends Character{
-    constructor(str,health,dmg,tohit,level,expvalue,name){
-        super(str,health,dmg,tohit,level,name);
+    constructor(str,health,dmg,tohit,level,expvalue,name,index){
+        super(str,health,dmg,tohit,level,name,index);
         this._ExperienceValue = expvalue;
     }
     get ExperienceValue(){
@@ -358,7 +359,7 @@ class GainPartyMember extends Encounter{
     
     RunEncounter(){
         this._EncounterLogElement.innerHTML += "<BR>" + this._Description;
-        PlayerParty.push(new Character(8,24,6,9,1,"New PC ".concat(PlayerParty.length-2)));
+        PlayerParty.push(new Character(8,24,6,9,1,"New PC ".concat(PlayerParty.length-2),PlayerParty.length));
         DisplayParty();
     }
 }
@@ -388,6 +389,7 @@ class Combat extends Encounter{
         for (index = 0; index < partySize;index++){
             name = "NPC" + index;
             party.push(CreateNPC(name,this._DifficultyLevel));
+            party[index].index = index;
         }
         return party;
     }
@@ -476,7 +478,11 @@ class Treasure extends Encounter{
 //#region CombatEngine
 class CombatEngine{
     constructor(PlayerParty,EnemyParty){
-        this._PlayerParty = PlayerParty;
+        for (idx = 0; idx > PlayerParty.length; idx++){
+            if (PlayerParty[idx].IsAlive){
+                this._PlayerParty.push(PlayerParty[idx]);    
+            }
+        }
         this._EnemyParty = EnemyParty;
         this._MergedParties = [];
 
@@ -487,6 +493,15 @@ class CombatEngine{
         this._MergedParties.sort(CompareInitiative);
     }
 
+    IsPartyAllDead(party){
+        for(idx = 0; idx < party.length;idx++){
+            if (party[idx].IsAlive){
+                return false;
+            }
+        }
+        return true;
+    }
+
     RandomTargetCombat(){
         this.DetermineOrderOfBattle();
 
@@ -494,7 +509,7 @@ class CombatEngine{
             function(e)
                 {
                     if (e instanceof Player){ 
-
+                        
                     }else{
 
                     }
@@ -887,8 +902,8 @@ function InitializeGameData(){
     for (index = 0; index < Hexes.length;index++){
         Hexes[index].EncounterType = RandomEncounter();
     }
-    PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth"));
-    PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak"));
+    PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth",PlayerParty.length));
+    PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak",PlayerParty.length));
     PlayerParty.push(CreatePlayerCharacter("Ralaa"));
     DisplayParty();
 }
@@ -971,7 +986,7 @@ function CreatePlayerCharacter(name){
     min = 9;
     let tohit = Math.floor(Math.random() * (max - min + 1)) + min;
 
-    return new Player(strength,health,damage,tohit,1,0,name);
+    return new Player(strength,health,damage,tohit,1,0,name,PlayerParty.length);
 }
 
 function DisplayParty(){
