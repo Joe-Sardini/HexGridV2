@@ -125,7 +125,7 @@ class HexObject {
                 this._Encounter = new Encounter(PointF,"","Info not done");
                 break;
             case EncounterTypes.TREASURE:
-                this._Encounter = new Encounter(PointF,"","Treasure Not complete");
+                this._Encounter = new Treasure(PointF,"","Treasure Not complete");
                 break;
             case EncounterTypes.TRAP:
                 this._Encounter = new Trap(PointF,"","It's a trap!!");
@@ -183,7 +183,7 @@ class Character {
         this._CurrentHealth = health;
         this._Name = name;
         this._IsAlive = true;
-        this._Initiative = Math.ceil(Math.random() * 10);
+        this._Initiative = Math.ceil(Math.random() * 20);
     }
 
     //#region Properties
@@ -382,20 +382,22 @@ class Combat extends Encounter{
     }
     
     ConstructEnemyParty(){
-        var partySize = 1 * this._DifficultyLevel;
+        var partySize = 2 * this._DifficultyLevel;
         var name;
         var party = [];
         for (index = 0; index < partySize;index++){
             name = "NPC" + index;
             party.push(CreateNPC(name,this._DifficultyLevel));
         }
+        return party;
     }
 
     RunEncounter(){
         this._EncounterLogElement.innerHTML += "<BR>" + this.Description;
+        // Should probably have a global combat engine so I'm not making a new one everytime
         var combatEncounter = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
-        
-        
+
+        //combatEncounter.DetermineOrderOfBattle();
         //PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -3;}});
         DisplayParty();
     }
@@ -459,6 +461,16 @@ class SpotDamage extends Encounter{
         }
     }
 }
+
+class Treasure extends Encounter{
+    constructor(location,items,description){
+        super(location,items,description);
+    }
+
+    RunEncounter(){
+        //TODO
+    }
+}
 //#endregion
 
 //#region CombatEngine
@@ -466,17 +478,32 @@ class CombatEngine{
     constructor(PlayerParty,EnemyParty){
         this._PlayerParty = PlayerParty;
         this._EnemyParty = EnemyParty;
+        this._MergedParties = [];
+
     }
 
-    DetermineInitiative(){
-        //TODO
+    DetermineOrderOfBattle(){
+        this._MergedParties = this._PlayerParty.concat(this._EnemyParty);
+        this._MergedParties.sort(CompareInitiative);
     }
 
     RandomTargetCombat(){
-        //TODO
+        this.DetermineOrderOfBattle();
+
+        this._MergedParties.forEach(
+            function(e)
+                {
+                    if (e instanceof Player){ 
+
+                    }else{
+
+                    }
+                });
+
+        for (i = 0; i > this._MergedParties.length; i++){
+            
+        }
     }
-
-
 }
 //#endregion
 
@@ -622,6 +649,8 @@ HexagonGrid.prototype.drawHex = function(x0, y0, fillColor, debugText,image, hex
         this.context.fillStyle = "#000";
         this.context.fillText(hexText, x0 + (this.width / 2) - (this.width/4) + 10, y0 + (this.height - 14));
     }
+
+    this.context.globalAlpha = 0.4;
 }
 
 //Recusivly step up to the body to calculate canvas offset.
@@ -708,11 +737,6 @@ HexagonGrid.prototype.getSelectedTile = function(mouseX, mouseY) {
     }
 
     return  { row: row, column: column };
-}
-
-HexagonGrid.prototype.IdentifyHexContents = function(mouseX, mouseY){
-    var tile = this.getSelectedTile(mouseX, mouseY);
-    return ContainsUnit(tile);
 }
 
 HexagonGrid.prototype.sign = function(p1, p2, p3) {
@@ -867,7 +891,6 @@ function InitializeGameData(){
     PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak"));
     PlayerParty.push(CreatePlayerCharacter("Ralaa"));
     DisplayParty();
-    ConfigurePartyDisplay();
 }
 
 function RandomEncounter(){
@@ -903,50 +926,50 @@ function RandomEncounter(){
 }
 
 function CreateNPC(name,difficultyLevel){
-    var max = 10;
-    var min = 2;
-    var strength = Math.floor(Math.random() * (max - min + 1)) + min;
+    let max = 10;
+    let min = 2;
+    let strength = Math.floor(Math.random() * (max - min + 1)) + min;
     strength *= difficultyLevel;
     //health
-    max = 31;
-    min = 14;
-    var health = Math.floor(Math.random() * (max - min + 1)) + min;
+    max = 22;
+    min = 10;
+    let health = Math.floor(Math.random() * (max - min + 1)) + min;
     health *= difficultyLevel;
     //dmg
-    max = 2;
-    min = 7;
-    var damage = Math.floor(Math.random() * (max - min + 1)) + min;
+    max = 7;
+    min = 2;
+    let damage = Math.floor(Math.random() * (max - min + 1)) + min;
     damage *= difficultyLevel;
 
     //tohit
-    max = 16;
-    min = 9;
-    var tohit = Math.floor(Math.random() * (max - min + 1)) + min;
+    max = 8;
+    min = 4;
+    let tohit = Math.floor(Math.random() * (max - min + 1)) + min;
     tohit *= difficultyLevel;
 
-    return new NPC(strength,health,damage,tohit,1,100,name);
+    return new NPC(strength,health,damage,tohit,difficultyLevel,100*difficultyLevel,name);
 }
 
 function CreatePlayerCharacter(name){
     //strength
-    var max = 16;
-    var min = 4;
-    var strength = Math.floor(Math.random() * (max - min + 1)) + min;
+    let max = 16;
+    let min = 4;
+    let strength = Math.floor(Math.random() * (max - min + 1)) + min;
    
     //health
     max = 31;
     min = 14;
-    var health = Math.floor(Math.random() * (max - min + 1)) + min;
+    let health = Math.floor(Math.random() * (max - min + 1)) + min;
 
     //dmg
     max = 2;
     min = 7;
-    var damage = Math.floor(Math.random() * (max - min + 1)) + min;
+    let damage = Math.floor(Math.random() * (max - min + 1)) + min;
 
     //tohit
     max = 16;
     min = 9;
-    var tohit = Math.floor(Math.random() * (max - min + 1)) + min;
+    let tohit = Math.floor(Math.random() * (max - min + 1)) + min;
 
     return new Player(strength,health,damage,tohit,1,0,name);
 }
@@ -958,12 +981,13 @@ function DisplayParty(){
         if (PlayerParty[i].IsAlive){
             if(PlayerParty[i].CurrentHealth < PlayerParty[i].Health){
                 HealthIndicatorFont = "<span style='color:red';>";
-                ;}else{
+                }else{
                     HealthIndicatorFont = "<span style='color:black';>";
             }
         }
         document.getElementById("PlayerInfo").innerHTML += "<TD><div class='PCDisplay' id='PCSlot".concat(i) + "' style='border:2px solid black; width:150px'>" 
             + "Name:" + PlayerParty[i].Name 
+            + "<BR/>Init:" + PlayerParty[i].Initiative 
             + "<BR/>Dmg:" + PlayerParty[i].Damage 
             + "<br/>ToHit:" + PlayerParty[i].ToHit 
             + "<br/>HP:" + HealthIndicatorFont + PlayerParty[i].CurrentHealth + "</span>"
@@ -986,6 +1010,7 @@ function UpdateDisplay(){
         ele.innerText = "The party is all dead, game over!";
         ele.style.display = "block";
     }
+    ConfigurePartyDisplay();
 }
 
 function ConfigurePartyDisplay(){
@@ -1007,5 +1032,15 @@ function HandlePartyDisplayClick(){
 function HandleDeadPartyDisplayClick(){
     //TODO 
     console.log("This character is dead.");
+}
+
+function CompareInitiative(a,b){
+    if (a.Initiative < b.Initiative){
+        return -1;
+    }
+    if (a.Initiative > b.Initiative){
+        return 1;
+    }
+    return 0;
 }
 //#endregion 
