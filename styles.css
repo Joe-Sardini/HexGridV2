@@ -1,0 +1,64 @@
+.EventHistory {
+  background: #CCD1D1;
+  position: absolute;
+  width: 300px;
+  height: 859px;
+  top: 50px;
+  left: 1400px;
+  overflow-y: scroll;
+  border: 2px solid black;
+}
+
+div.EventHistory p {
+  text-align: center;
+  font-weight: bold;
+}
+
+div.EventHistory span.Damage {
+  color: red;
+}
+
+.EncounterHistory {
+  background: #CCD1D1;
+  position: absolute;
+  width: 1224px;
+  height: 100px;
+  top: 910px;
+  left: 175px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  border: 2px solid black;
+}
+
+.EndGame {
+  display: none;
+  background: #6E2C00;
+  width: 1500px;
+  height: 1000px;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 300px;
+  font-size: 300%;
+  z-index: 2;
+  border: 2px solid black;
+}
+
+.HexCanvas {
+  border: 2px solid black;
+  position: absolute;
+  left: 175px;
+  top: 50px;
+  z-index: 1;
+  background: url("./images/back.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.PlayerInfo {
+  position: absolute;
+  top: 50px;
+  left: 10px;
+  width: 160px;
+}
+
+/*# sourceMappingURL=styles.css.map */
