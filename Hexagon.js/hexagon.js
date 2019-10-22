@@ -213,7 +213,7 @@ class Character {
         this._CurrentHealth = value;
         if (this._CurrentHealth < -1 && this._IsAlive){
             this._IsAlive = false;
-            var ele = document.getElementById("EventLog");
+            let ele = document.getElementById("EventLog");
             ele.innerHTML += ("<br><span class='Damage'>" + this._Name + " has died.</span>");
         }
     }
@@ -293,7 +293,7 @@ class Encounter {
         this._Location = location;
         this._Items = items;
         this._Description = description;
-        this._EncounterLogElement = document.getElementById("EncounterLog");
+        this._EncounterLogElement = document.getElementById("EncounterHistory");
     }
     
     get Location(){
@@ -321,7 +321,7 @@ class Encounter {
         this._DifficultyLevel = value;
     }
     RunEncounter(){
-        //var ele = document.getElementById("EncounterLog");
+        //let ele = document.getElementById("EncounterLog");
         this._EncounterLogElement.innerHTML += "<BR>" + this._Description;
         //console.log(this._Description);
     }
@@ -334,14 +334,14 @@ class Rest extends Encounter{
 
     RunEncounter(){
         console.log("Your party is partially healed.");
-        var ele = document.getElementById("EncounterLog");
+        let ele = document.getElementById("EncounterHistory");
         ele.innerHTML += "<BR>Your party is fully healed.";
         this.PartialPartyHealing();
         DisplayParty();
     }
 
     PartialPartyHealing(){
-        var healingAmount = Math.ceil(Math.random() * 3)*this._DifficultyLevel;
+        let healingAmount = Math.ceil(Math.random() * 3)*this._DifficultyLevel;
         for (idx = 0;idx < PlayerParty.length;idx++){
             if ((PlayerParty[idx].CurrentHealth + healingAmount) > PlayerParty[idx].Health){
                 PlayerParty[idx].CurrentHealth = PlayerParty[idx].Health;
@@ -383,9 +383,9 @@ class Combat extends Encounter{
     }
     
     ConstructEnemyParty(){
-        var partySize = 2 * this._DifficultyLevel;
-        var name;
-        var party = [];
+        let partySize = 2 * this._DifficultyLevel;
+        let name;
+        let party = [];
         for (index = 0; index < partySize;index++){
             name = "NPC" + index;
             party.push(CreateNPC(name,this._DifficultyLevel));
@@ -397,7 +397,7 @@ class Combat extends Encounter{
     RunEncounter(){
         this._EncounterLogElement.innerHTML += "<BR>" + this.Description;
         // Should probably have a global combat engine so I'm not making a new one everytime
-        var combatEncounter = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
+        let combatEncounter = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
 
         //combatEncounter.DetermineOrderOfBattle();
         //PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -3;}});
@@ -452,10 +452,10 @@ class SpotDamage extends Encounter{
     }
 
     SprinkleDamage(){
-        var numberOfVictims = Math.ceil(Math.random() * (PlayerParty.length+1)/2)+1;
-        for (var i = 0; i < numberOfVictims; i++){
-            var playerIndex = Math.ceil(Math.random() * PlayerParty.length-1);
-            var damageTaken = Math.ceil(Math.random() * this._SpotDamage+1)*this._DifficultyLevel;
+        let numberOfVictims = Math.ceil(Math.random() * (PlayerParty.length+1)/2)+1;
+        for (let i = 0; i < numberOfVictims; i++){
+            let playerIndex = Math.ceil(Math.random() * PlayerParty.length-1);
+            let damageTaken = Math.ceil(Math.random() * this._SpotDamage+1)*this._DifficultyLevel;
             if (PlayerParty[playerIndex].IsAlive){
                 PlayerParty[playerIndex].CurrentHealth -= damageTaken;
 
@@ -549,12 +549,12 @@ class Item {
 }
 //#endregion
 
-//#region Global Variables
-var PlayerParty = [];
-var PlayerPartyItems = [];
-var c = document.getElementById("HexCanvas");
-var ctx = c.getContext("2d");
-var Hexes = [];
+//#region Global letiables
+let PlayerParty = [];
+let PlayerPartyItems = [];
+let c = document.getElementById("HexCanvas");
+let ctx = c.getContext("2d");
+let Hexes = [];
 //#endregion 
 
 //#region Global Functions
@@ -594,14 +594,14 @@ HexagonGrid.prototype.drawHexGrid = function (rows, cols, originX, originY, isDe
     this._rows = rows;
     this._cols = cols;
 
-    var currentHexX;
-    var currentHexY;
-    var debugText = "";
+    let currentHexX;
+    let currentHexY;
+    let debugText = "";
 
-    var offsetColumn = false;
+    let offsetColumn = false;
 
-    for (var col = 0; col < cols; col++) {
-        for (var row = 0; row < rows; row++) {
+    for (let col = 0; col < cols; col++) {
+        for (let row = 0; row < rows; row++) {
 
             if (!offsetColumn) {
                 currentHexX = (col * this.side) + originX;
@@ -626,8 +626,8 @@ HexagonGrid.prototype.drawHexGrid = function (rows, cols, originX, originY, isDe
 }
 
 HexagonGrid.prototype.drawHexAtColRow = function(column, row, color, image, debugText, hexText) {
-    var drawy = column % 2 == 0 ? (row * this.height) + this.canvasOriginY : (row * this.height) + this.canvasOriginY + (this.height / 2);
-    var drawx = (column * this.side) + this.canvasOriginX;
+    let drawy = column % 2 == 0 ? (row * this.height) + this.canvasOriginY : (row * this.height) + this.canvasOriginY + (this.height / 2);
+    let drawx = (column * this.side) + this.canvasOriginX;
     this.drawHex(drawx, drawy, color, debugText, image, hexText);
 }
 
@@ -670,8 +670,8 @@ HexagonGrid.prototype.drawHex = function(x0, y0, fillColor, debugText,image, hex
 
 //Recusivly step up to the body to calculate canvas offset.
 HexagonGrid.prototype.getRelativeCanvasOffset = function() {
-	var x = 0, y = 0;
-	var layoutElement = this.canvas;
+	let x = 0, y = 0;
+	let layoutElement = this.canvas;
     if (layoutElement.offsetParent) {
         do {
             x += layoutElement.offsetLeft;
@@ -686,13 +686,13 @@ HexagonGrid.prototype.getRelativeCanvasOffset = function() {
 //Left edge of grid has a test to acuratly determin correct hex
 HexagonGrid.prototype.getSelectedTile = function(mouseX, mouseY) {
 
-	var offSet = this.getRelativeCanvasOffset();
+	let offSet = this.getRelativeCanvasOffset();
 
     mouseX -= offSet.x;
     mouseY -= offSet.y;
 
-    var column = Math.floor((mouseX) / this.side);
-    var row = Math.floor(
+    let column = Math.floor((mouseX) / this.side);
+    let row = Math.floor(
         column % 2 == 0
             ? Math.floor((mouseY) / this.height)
             : Math.floor(((mouseY + (this.height * 0.5)) / this.height)) - 1);
@@ -704,21 +704,21 @@ HexagonGrid.prototype.getSelectedTile = function(mouseX, mouseY) {
 
         //Now test which of the two triangles we are in 
         //Top left triangle points
-        var p1 = new Object();
+        let p1 = new Object();
         p1.x = column * this.side;
         p1.y = column % 2 == 0
             ? row * this.height
             : (row * this.height) + (this.height / 2);
 
-        var p2 = new Object();
+        let p2 = new Object();
         p2.x = p1.x;
         p2.y = p1.y + (this.height / 2);
 
-        var p3 = new Object();
+        let p3 = new Object();
         p3.x = p1.x + this.width - this.side;
         p3.y = p1.y;
 
-        var mousePoint = new Object();
+        let mousePoint = new Object();
         mousePoint.x = mouseX;
         mousePoint.y = mouseY;
 
@@ -731,14 +731,14 @@ HexagonGrid.prototype.getSelectedTile = function(mouseX, mouseY) {
         }
 
         //Bottom left triangle points
-        var p4 = new Object();
+        let p4 = new Object();
         p4 = p2;
 
-        var p5 = new Object();
+        let p5 = new Object();
         p5.x = p4.x;
         p5.y = p4.y + (this.height / 2);
 
-        var p6 = new Object();
+        let p6 = new Object();
         p6.x = p5.x + (this.width - this.side);
         p6.y = p5.y;
 
@@ -760,7 +760,7 @@ HexagonGrid.prototype.sign = function(p1, p2, p3) {
 
 //TODO: Replace with optimized barycentric coordinate method
 HexagonGrid.prototype.isPointInTriangle = function isPointInTriangle(pt, v1, v2, v3) {
-    var b1, b2, b3;
+    let b1, b2, b3;
 
     b1 = this.sign(pt, v1, v2) < 0.0;
     b2 = this.sign(pt, v2, v3) < 0.0;
@@ -770,18 +770,18 @@ HexagonGrid.prototype.isPointInTriangle = function isPointInTriangle(pt, v1, v2,
 }
 
 HexagonGrid.prototype.clickEvent = function(e) {
-    var mouseX = e.pageX;
-    var mouseY = e.pageY;
+    let mouseX = e.pageX;
+    let mouseY = e.pageY;
 
-    var localX = mouseX - this.canvasOriginX;
-    var localY = mouseY - this.canvasOriginY;
+    let localX = mouseX - this.canvasOriginX;
+    let localY = mouseY - this.canvasOriginY;
 
-    var HexIndex = this.GetUnitIndexAtSelection(localX,localY);
-    var HexContents = Hexes[HexIndex];
+    let HexIndex = this.GetUnitIndexAtSelection(localX,localY);
+    let HexContents = Hexes[HexIndex];
 
     if (HexContents != undefined){
         if (!HexContents.IsEncounterComplete) {
-            var ele = document.getElementById("EventLog");
+            let ele = document.getElementById("EventLog");
             ele.innerHTML += ("<br><span class='Damage'>" + HexContents.Encounter.Description + "</span>");
             HexContents.Encounter.RunEncounter();
             Hexes[HexIndex].IsEncounterComplete = true;
@@ -792,10 +792,10 @@ HexagonGrid.prototype.clickEvent = function(e) {
 }
 
 HexagonGrid.prototype.RevealSurroundingHexes = function(HexIndex){
-    var surroudingHexGridCords = [];
+    let surroudingHexGridCords = [];
     surroudingHexGridCords = this.CalculateSurroundingHexes(Hexes[HexIndex].PointF.Row,Hexes[HexIndex].PointF.Col);
     for (idx = 0;idx < surroudingHexGridCords.length; idx++){
-        var Hex = this.getHexAtCords(surroudingHexGridCords[idx].Row,surroudingHexGridCords[idx].Col);
+        let Hex = this.getHexAtCords(surroudingHexGridCords[idx].Row,surroudingHexGridCords[idx].Col);
         if (!Hex.IsEncounterComplete){
             this.drawHexAtColRow(surroudingHexGridCords[idx].Col,surroudingHexGridCords[idx].Row,Hex.DifficultyLevelColour,"","",Hex.DifficultyLevel);
         }
@@ -812,7 +812,7 @@ HexagonGrid.prototype.IsValidHex = function(cordX,cordY){
 
 //TODO make an algo to replace this.
 HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
-    var sHexes = [];
+    let sHexes = [];
     
     for (idx = 1;idx < 7;idx++){
         switch(idx){
@@ -872,7 +872,7 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
 }
 
 HexagonGrid.prototype.getHexAtCords = function(cordX,cordY) {
-    var tile = new PointF(cordX,cordY);
+    let tile = new PointF(cordX,cordY);
     for (index = 0; index < Hexes.length;index++){
         if (_.isEqual(tile.Points,Hexes[index].PointF.Points)){
             return Hexes[index];
@@ -882,7 +882,7 @@ HexagonGrid.prototype.getHexAtCords = function(cordX,cordY) {
 }
 
 HexagonGrid.prototype.GetUnitIndexAtSelection = function(mouseX, mouseY){
-    var tile = this.getSelectedTile(mouseX, mouseY);
+    let tile = this.getSelectedTile(mouseX, mouseY);
     for (index = 0; index < Hexes.length;index++){
         if (_.isEqual(tile,Hexes[index].PointF.Points)){
             return index;
@@ -892,7 +892,7 @@ HexagonGrid.prototype.GetUnitIndexAtSelection = function(mouseX, mouseY){
 }
 
 HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
-    var tile = this.getSelectedTile(mouseX, mouseY);
+    let tile = this.getSelectedTile(mouseX, mouseY);
     return tile;
 }
 //#endregion
@@ -990,9 +990,9 @@ function CreatePlayerCharacter(name){
 }
 
 function DisplayParty(){
-    document.getElementById("PlayerInfo").innerHTML = "<tr><TD>Character Info";
-    var HealthIndicatorFont = "<span style='color:black';>";
-    for (var i = 0; i < PlayerParty.length; i++){
+    document.getElementById("PlayerInfo").innerHTML = "<thead><tr><Th>Character Info</th></tr></thead>";
+    let HealthIndicatorFont = "<span style='color:black';>";
+    for (let i = 0; i < PlayerParty.length; i++){
         if (PlayerParty[i].IsAlive){
             if(PlayerParty[i].CurrentHealth < PlayerParty[i].Health){
                 HealthIndicatorFont = "<span style='color:red';>";
@@ -1000,27 +1000,27 @@ function DisplayParty(){
                     HealthIndicatorFont = "<span style='color:black';>";
             }
         }
-        document.getElementById("PlayerInfo").innerHTML += "<TD><div class='PCDisplay' id='PCSlot".concat(i) + "' style='border:2px solid black; width:150px'>" 
+        document.getElementById("PlayerInfo").innerHTML += "<tr><TD><div class='PCDisplay' id='PCSlot".concat(i) + "' style='border:2px solid black; width:150px'>" 
             + "Name:" + PlayerParty[i].Name 
             + "<BR/>Init:" + PlayerParty[i].Initiative 
             + "<BR/>Dmg:" + PlayerParty[i].Damage 
             + "<br/>ToHit:" + PlayerParty[i].ToHit 
             + "<br/>HP:" + HealthIndicatorFont + PlayerParty[i].CurrentHealth + "</span>"
-            + "</div></TD>";
+            + "</div></TD></tr>";
     }
-    document.getElementById("PlayerInfo").innerHTML += "</TD></tr>";
+    //document.getElementById("PlayerInfo").innerHTML += "</TD></tr>";
     UpdateDisplay();
 }
 
 function UpdateDisplay(){
-    for (var i = 0; i < PlayerParty.length; i++){
+    for (let i = 0; i < PlayerParty.length; i++){
         if (!PlayerParty[i].IsAlive){
-            var divID = "PCSlot".concat(i);
+            let divID = "PCSlot".concat(i);
             document.getElementById(divID).style.backgroundColor = "grey";
         }
     }
     if (window.CheckIfPartyIsAllDead()){
-        var ele = document.getElementById("EndGameOverlay");
+        let ele = document.getElementById("EndGameOverlay");
         console.log("<BR>The party is all dead, game over!");
         ele.innerText = "The party is all dead, game over!";
         ele.style.display = "block";
@@ -1029,8 +1029,8 @@ function UpdateDisplay(){
 }
 
 function ConfigurePartyDisplay(){
-    for (var i = 0; i < PlayerParty.length; i++){
-        var divID = "PCSlot".concat(i);
+    for (let i = 0; i < PlayerParty.length; i++){
+        let divID = "PCSlot".concat(i);
         if (PlayerParty[i].IsAlive){
             document.getElementById(divID).addEventListener("click",HandlePartyDisplayClick);
         }else{

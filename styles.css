@@ -1,4 +1,4 @@
-.EventHistory {
+.EventLog {
   background: #CCD1D1;
   position: absolute;
   width: 300px;
@@ -19,27 +19,25 @@ div.EventHistory span.Damage {
 }
 
 .EncounterHistory {
-  background: #CCD1D1;
   position: absolute;
   width: 1224px;
   height: 100px;
   top: 910px;
   left: 175px;
-  overflow-y: scroll;
-  overflow-x: scroll;
-  border: 2px solid black;
 }
 
 .EndGame {
   display: none;
+  position: absolute;
   background: #6E2C00;
-  width: 1500px;
+  width: 2000px;
   height: 1000px;
   text-align: center;
   vertical-align: middle;
   line-height: 300px;
   font-size: 300%;
   z-index: 2;
+  top: 1px;
   border: 2px solid black;
 }
 
@@ -54,11 +52,15 @@ div.EventHistory span.Damage {
   background-size: cover;
 }
 
-.PlayerInfo {
+#PlayerInfo {
   position: absolute;
   top: 50px;
-  left: 10px;
-  width: 160px;
+  left: 1px;
+  width: 150px;
+}
+
+#main {
+  z-index: 1;
 }
 
 /*# sourceMappingURL=styles.css.map */
