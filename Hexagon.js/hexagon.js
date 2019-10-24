@@ -1,3 +1,5 @@
+"use strict"
+
 //#region Enums
 const EncounterTypes = {
     COMBAT: 'combat',
@@ -214,7 +216,7 @@ class Character {
         if (this._CurrentHealth < -1 && this._IsAlive){
             this._IsAlive = false;
             let ele = document.getElementById("EventLog");
-            ele.innerHTML += ("<br><span class='Damage'>" + this._Name + " has died.</span>");
+            ele.innerHTML += (`<br><span class='Damage'> ${this._Name} has died.</span>`);
         }
     }
     get Strength(){
@@ -321,9 +323,7 @@ class Encounter {
         this._DifficultyLevel = value;
     }
     RunEncounter(){
-        //let ele = document.getElementById("EncounterLog");
-        this._EncounterLogElement.innerHTML += "<BR>" + this._Description;
-        //console.log(this._Description);
+        this._EncounterLogElement.innerHTML += `<BR> ${this._Description}`;
     }
 }
 
@@ -358,7 +358,7 @@ class GainPartyMember extends Encounter{
     }
     
     RunEncounter(){
-        this._EncounterLogElement.innerHTML += "<BR>" + this._Description;
+        this._EncounterLogElement.innerHTML += `<BR> ${this._Description}`;
         PlayerParty.push(new Character(8,24,6,9,1,"New PC ".concat(PlayerParty.length-2),PlayerParty.length));
         DisplayParty();
     }
@@ -387,7 +387,7 @@ class Combat extends Encounter{
         let name;
         let party = [];
         for (index = 0; index < partySize;index++){
-            name = "NPC" + index;
+            name = `NPC ${index}`;
             party.push(CreateNPC(name,this._DifficultyLevel));
             party[index].index = index;
         }
@@ -395,7 +395,7 @@ class Combat extends Encounter{
     }
 
     RunEncounter(){
-        this._EncounterLogElement.innerHTML += "<BR>" + this.Description;
+        this._EncounterLogElement.innerHTML += `<BR> ${this.Description}`;
         // Should probably have a global combat engine so I'm not making a new one everytime
         let combatEncounter = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
 
@@ -419,9 +419,8 @@ class Trap extends Encounter{
     }
 
     RunEncounter(){
-        this._EncounterLogElement.innerHTML += "<BR>Trap Damage - " + this._TrapDamage*this._DifficultyLevel + " damage to all party memebers.";
-        console.log("Trap Damage - " + this._TrapDamage*this._DifficultyLevel + " damage to all party memebers.");
-        //PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth - 5;}});
+        this._EncounterLogElement.innerHTML += `<BR>Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`;
+        console.log(`Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`);
         for (idx = 0; idx < PlayerParty.length; idx++){
             if (PlayerParty[idx].IsAlive){
                 PlayerParty[idx].CurrentHealth = (PlayerParty[idx].CurrentHealth - (this._TrapDamage * this._DifficultyLevel));
@@ -494,7 +493,7 @@ class CombatEngine{
     }
 
     IsPartyAllDead(party){
-        for(idx = 0; idx < party.length;idx++){
+        for(idx = 0; idx < party.length; idx++){
             if (party[idx].IsAlive){
                 return false;
             }
@@ -559,7 +558,7 @@ let Hexes = [];
 
 //#region Global Functions
 window.CheckIfPartyIsAllDead = function(){
-    for(idx = 0; idx < PlayerParty.length;idx++){
+    for(let idx = 0; idx < PlayerParty.length;idx++){
         if (PlayerParty[idx].IsAlive){
             return false;
         }
@@ -782,7 +781,7 @@ HexagonGrid.prototype.clickEvent = function(e) {
     if (HexContents != undefined){
         if (!HexContents.IsEncounterComplete) {
             let ele = document.getElementById("EventLog");
-            ele.innerHTML += ("<br><span class='Damage'>" + HexContents.Encounter.Description + "</span>");
+            ele.innerHTML += (`<br><span class='Damage'> ${HexContents.Encounter.Description} </span>`);
             HexContents.Encounter.RunEncounter();
             Hexes[HexIndex].IsEncounterComplete = true;
             this.drawHexAtColRow(HexContents.PointF.Col,HexContents.PointF.Row,"#FF0000","","Done!");
@@ -899,7 +898,7 @@ HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
 
 //#region Unsorted functions 
 function InitializeGameData(){
-    for (index = 0; index < Hexes.length;index++){
+    for (let index = 0; index < Hexes.length;index++){
         Hexes[index].EncounterType = RandomEncounter();
     }
     PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth",PlayerParty.length));
@@ -909,7 +908,7 @@ function InitializeGameData(){
 }
 
 function RandomEncounter(){
-    rnd = Math.ceil(Math.random() * 8);
+    let rnd = Math.ceil(Math.random() * 8);
     switch(rnd){
         case 1:
             return EncounterTypes.COMBAT;
@@ -1000,13 +999,13 @@ function DisplayParty(){
                     HealthIndicatorFont = "<span style='color:black';>";
             }
         }
-        document.getElementById("PlayerInfo").innerHTML += "<tr><TD><div class='PCDisplay' id='PCSlot".concat(i) + "' style='border:2px solid black; width:150px'>" 
-            + "Name:" + PlayerParty[i].Name 
-            + "<BR/>Init:" + PlayerParty[i].Initiative 
-            + "<BR/>Dmg:" + PlayerParty[i].Damage 
-            + "<br/>ToHit:" + PlayerParty[i].ToHit 
-            + "<br/>HP:" + HealthIndicatorFont + PlayerParty[i].CurrentHealth + "</span>"
-            + "</div></TD></tr>";
+        document.getElementById("PlayerInfo").innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px'> 
+            Name: ${PlayerParty[i].Name} 
+            <BR/>Init: ${PlayerParty[i].Initiative} 
+            <BR/>Dmg: ${PlayerParty[i].Damage} 
+            <BR/>ToHit: ${PlayerParty[i].ToHit} 
+            <BR/>HP: ${HealthIndicatorFont + PlayerParty[i].CurrentHealth} </span>
+            </div></TD></tr>`;
     }
     //document.getElementById("PlayerInfo").innerHTML += "</TD></tr>";
     UpdateDisplay();
@@ -1015,7 +1014,7 @@ function DisplayParty(){
 function UpdateDisplay(){
     for (let i = 0; i < PlayerParty.length; i++){
         if (!PlayerParty[i].IsAlive){
-            let divID = "PCSlot".concat(i);
+            let divID = `PCSlot${i}`;
             document.getElementById(divID).style.backgroundColor = "grey";
         }
     }
@@ -1030,7 +1029,7 @@ function UpdateDisplay(){
 
 function ConfigurePartyDisplay(){
     for (let i = 0; i < PlayerParty.length; i++){
-        let divID = "PCSlot".concat(i);
+        let divID = `PCSlot${i}`;
         if (PlayerParty[i].IsAlive){
             document.getElementById(divID).addEventListener("click",HandlePartyDisplayClick);
         }else{
