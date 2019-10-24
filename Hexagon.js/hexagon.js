@@ -342,7 +342,7 @@ class Rest extends Encounter{
 
     PartialPartyHealing(){
         let healingAmount = Math.ceil(Math.random() * 3)*this._DifficultyLevel;
-        for (idx = 0;idx < PlayerParty.length;idx++){
+        for (let idx = 0;idx < PlayerParty.length;idx++){
             if ((PlayerParty[idx].CurrentHealth + healingAmount) > PlayerParty[idx].Health){
                 PlayerParty[idx].CurrentHealth = PlayerParty[idx].Health;
             }else{
@@ -386,7 +386,7 @@ class Combat extends Encounter{
         let partySize = 2 * this._DifficultyLevel;
         let name;
         let party = [];
-        for (index = 0; index < partySize;index++){
+        for (let index = 0; index < partySize;index++){
             name = `NPC ${index}`;
             party.push(CreateNPC(name,this._DifficultyLevel));
             party[index].index = index;
@@ -421,7 +421,7 @@ class Trap extends Encounter{
     RunEncounter(){
         this._EncounterLogElement.innerHTML += `<BR>Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`;
         console.log(`Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`);
-        for (idx = 0; idx < PlayerParty.length; idx++){
+        for (let idx = 0; idx < PlayerParty.length; idx++){
             if (PlayerParty[idx].IsAlive){
                 PlayerParty[idx].CurrentHealth = (PlayerParty[idx].CurrentHealth - (this._TrapDamage * this._DifficultyLevel));
             }
@@ -514,7 +514,7 @@ class CombatEngine{
                     }
                 });
 
-        for (i = 0; i > this._MergedParties.length; i++){
+        for (let i = 0; i > this._MergedParties.length; i++){
             
         }
     }
@@ -793,7 +793,7 @@ HexagonGrid.prototype.clickEvent = function(e) {
 HexagonGrid.prototype.RevealSurroundingHexes = function(HexIndex){
     let surroudingHexGridCords = [];
     surroudingHexGridCords = this.CalculateSurroundingHexes(Hexes[HexIndex].PointF.Row,Hexes[HexIndex].PointF.Col);
-    for (idx = 0;idx < surroudingHexGridCords.length; idx++){
+    for (let idx = 0;idx < surroudingHexGridCords.length; idx++){
         let Hex = this.getHexAtCords(surroudingHexGridCords[idx].Row,surroudingHexGridCords[idx].Col);
         if (!Hex.IsEncounterComplete){
             this.drawHexAtColRow(surroudingHexGridCords[idx].Col,surroudingHexGridCords[idx].Row,Hex.DifficultyLevelColour,"","",Hex.DifficultyLevel);
@@ -813,7 +813,7 @@ HexagonGrid.prototype.IsValidHex = function(cordX,cordY){
 HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
     let sHexes = [];
     
-    for (idx = 1;idx < 7;idx++){
+    for (let idx = 1;idx < 7;idx++){
         switch(idx){
             case 1:
                 if (cordY % 2 != 0){
@@ -872,7 +872,7 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
 
 HexagonGrid.prototype.getHexAtCords = function(cordX,cordY) {
     let tile = new PointF(cordX,cordY);
-    for (index = 0; index < Hexes.length;index++){
+    for (let index = 0; index < Hexes.length;index++){
         if (_.isEqual(tile.Points,Hexes[index].PointF.Points)){
             return Hexes[index];
         }
@@ -882,7 +882,7 @@ HexagonGrid.prototype.getHexAtCords = function(cordX,cordY) {
 
 HexagonGrid.prototype.GetUnitIndexAtSelection = function(mouseX, mouseY){
     let tile = this.getSelectedTile(mouseX, mouseY);
-    for (index = 0; index < Hexes.length;index++){
+    for (let index = 0; index < Hexes.length;index++){
         if (_.isEqual(tile,Hexes[index].PointF.Points)){
             return index;
         }
