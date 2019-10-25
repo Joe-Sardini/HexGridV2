@@ -508,7 +508,9 @@ class CombatEngine{
             function(e)
                 {
                     if (e instanceof Player){ 
-                        
+                        if (e.IsAlive){
+                            OneVOneCombat(e,SelectTarget(this._EnemyParty))
+                        }
                     }else{
 
                     }
@@ -517,6 +519,15 @@ class CombatEngine{
         for (let i = 0; i > this._MergedParties.length; i++){
             
         }
+    }
+
+    SelectTarget(Party){
+        let rnd = Math.ceil(Math.random() * Party.length);
+        return Party[rnd];
+    }
+
+    OneVOneCombat(player1,player2){
+        
     }
 }
 //#endregion
