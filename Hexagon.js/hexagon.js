@@ -118,7 +118,7 @@ class HexObject {
     SetEncounter(){
         switch(this._EncounterType){
             case EncounterTypes.COMBAT:
-                this._Encounter = new Combat(PointF,"","Combat Encounter, you all take damage!");
+                this._Encounter = new Combat(PointF,"","Combat Encounter!");
                 break;
             case EncounterTypes.FRIENDLY:
                 this._Encounter = new Friendly(PointF,"","Party heal");
@@ -136,10 +136,10 @@ class HexObject {
                 this._Encounter = new GainPartyMember(PointF,"","Your party expands!");
                 break;
             case EncounterTypes.SPOTDAMAGE:
-                this._Encounter = new SpotDamage(PointF,"","A bit oh damage.");
+                this._Encounter = new SpotDamage(PointF,"","Encounter Type - Spot Damage.");
                 break;    
             case EncounterTypes.REST:
-                this._Encounter = new Rest(PointF,"","Your party is healed.");
+                this._Encounter = new Rest(PointF,"","Encounter Type - Rest.");
                 break;    
             default:
                 this._Encounter = new Encounter(PointF,"","Default Encounter.");
@@ -176,7 +176,7 @@ class PointF {
 
 //#region Characters
 class Character {
-    constructor(str,health,dmg,tohit,level,name,index){
+    constructor(str,health,dmg,tohit,level,name,index,evasion,armor){
         this._Strength = str;
         this._Health = health;
         this._Damage = dmg;
@@ -187,9 +187,23 @@ class Character {
         this._IsAlive = true;
         this._Initiative = Math.ceil(Math.random() * 20);
         this._Index = index;
+        this._Evasion = evasion; 
+        this._Armor = armor;
     }
 
     //#region Properties
+    get Armor(){
+        return this._Armor;
+    }
+    set Armor(value){
+        this._Armor = value;
+    }
+    get Evasion(){
+        return this._Evasion;
+    }
+    set Evasion(value){
+        this._Evasion = value;
+    }
     get Initiative(){
         return this._Initiative;
     }
@@ -263,8 +277,8 @@ class Character {
 }
 
 class Player extends Character{
-    constructor(str,health,dmg,tohit,level,exppoints,name,index){
-        super(str,health,dmg,tohit,level,name,index);
+    constructor(str,health,dmg,tohit,level,exppoints,name,index,evasion){
+        super(str,health,dmg,tohit,level,name,index,evasion);
         this._ExperiencePoints = exppoints;
     }
     get ExperiencePoints(){
@@ -276,8 +290,8 @@ class Player extends Character{
 }
 
 class NPC extends Character{
-    constructor(str,health,dmg,tohit,level,expvalue,name,index){
-        super(str,health,dmg,tohit,level,name,index);
+    constructor(str,health,dmg,tohit,level,expvalue,name,index,evasion){
+        super(str,health,dmg,tohit,level,name,index,evasion);
         this._ExperienceValue = expvalue;
     }
     get ExperienceValue(){
@@ -359,7 +373,7 @@ class GainPartyMember extends Encounter{
     
     RunEncounter(){
         this._EncounterLogElement.innerHTML += `<BR> ${this._Description}`;
-        PlayerParty.push(new Character(8,24,6,9,1,"New PC ".concat(PlayerParty.length-2),PlayerParty.length));
+        PlayerParty.push(CreatePlayerCharacter("New PC ".concat(PlayerParty.length-2)));
         DisplayParty();
     }
 }
@@ -388,7 +402,7 @@ class Combat extends Encounter{
         let party = [];
         for (let index = 0; index < partySize;index++){
             name = `NPC ${index}`;
-            party.push(CreateNPC(name,this._DifficultyLevel));
+            party.push(CreateNPC(name,this._DifficultyLevel,party.length));
             party[index].index = index;
         }
         return party;
@@ -400,6 +414,7 @@ class Combat extends Encounter{
         let combatEncounter = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
 
         //combatEncounter.DetermineOrderOfBattle();
+        combatEncounter.RandomTargetCombat();
         //PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -3;}});
         DisplayParty();
     }
@@ -477,14 +492,28 @@ class Treasure extends Encounter{
 //#region CombatEngine
 class CombatEngine{
     constructor(PlayerParty,EnemyParty){
-        for (idx = 0; idx > PlayerParty.length; idx++){
+        this._PlayerParty = [];
+        for (let idx = 0; idx < PlayerParty.length; idx++){
             if (PlayerParty[idx].IsAlive){
                 this._PlayerParty.push(PlayerParty[idx]);    
             }
         }
         this._EnemyParty = EnemyParty;
         this._MergedParties = [];
+        this._CombatLogElement = document.getElementById('CombatLog');
+    }
 
+    get PlayerParty(){
+        return this._PlayerParty;
+    }
+    set PlayerParty(value){
+        this._PlayerParty = value;
+    }
+    get EnemyParty(){
+        return this._EnemyParty;
+    }
+    set EnemyParty(value){
+        return this._EnemyParty = value;
     }
 
     DetermineOrderOfBattle(){
@@ -501,33 +530,41 @@ class CombatEngine{
         return true;
     }
 
+    OneVOneCombat(player1,player2){
+        console.log("OneVOne");
+        let damage = 0;
+        let max = 20;
+        let min = 2;
+        let P1Roll = Math.floor(Math.random() * (max - min + 1)) + min;
+        P1Roll = P1Roll-player2.Evasion;
+        this._CombatLogElement.innerHTML += `<BR>${player1.Name} makes an attack and `;
+        if (P1Roll > player1.ToHit){ //Hit scored
+            damage = player1.Damage - player2.Armor;
+            this._CombatLogElement.innerHTML += `hits for ${damage} damage!`;
+        }else{
+            this._CombatLogElement.innerHTML += `misses!`;
+        }
+    }
+
     RandomTargetCombat(){
         this.DetermineOrderOfBattle();
 
-        this._MergedParties.forEach(
-            function(e)
-                {
-                    if (e instanceof Player){ 
-                        if (e.IsAlive){
-                            OneVOneCombat(e,SelectTarget(this._EnemyParty))
-                        }
-                    }else{
+        console.log("RandomTargetCombat");
 
-                    }
-                });
-
-        for (let i = 0; i > this._MergedParties.length; i++){
-            
+        for (let i = 0; i < this._MergedParties.length; i++){
+            if (this._MergedParties[i] instanceof Player){ //Player character turn
+                if (this._MergedParties[i].IsAlive){
+                    this.OneVOneCombat(this._MergedParties[i],this.SelectTarget(this._EnemyParty))
+                }
+            }else{ //NPC combat turn
+                console.log("NPC attack");
+            }
         }
     }
 
     SelectTarget(Party){
         let rnd = Math.ceil(Math.random() * Party.length);
         return Party[rnd];
-    }
-
-    OneVOneCombat(player1,player2){
-        
     }
 }
 //#endregion
@@ -912,8 +949,8 @@ function InitializeGameData(){
     for (let index = 0; index < Hexes.length;index++){
         Hexes[index].EncounterType = RandomEncounter();
     }
-    PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth",PlayerParty.length));
-    PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak",PlayerParty.length));
+    PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth",PlayerParty.length,7,5));
+    PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak",PlayerParty.length,5,3));
     PlayerParty.push(CreatePlayerCharacter("Ralaa"));
     DisplayParty();
 }
@@ -950,7 +987,7 @@ function RandomEncounter(){
     }
 }
 
-function CreateNPC(name,difficultyLevel){
+function CreateNPC(name,difficultyLevel,index){
     let max = 10;
     let min = 2;
     let strength = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -972,7 +1009,19 @@ function CreateNPC(name,difficultyLevel){
     let tohit = Math.floor(Math.random() * (max - min + 1)) + min;
     tohit *= difficultyLevel;
 
-    return new NPC(strength,health,damage,tohit,difficultyLevel,100*difficultyLevel,name);
+    //Evasion
+    max = 8;
+    min = 2;
+    let evasion = Math.floor(Math.random() * (max - min + 1)) + min;
+    evasion *= difficultyLevel;
+
+    //Armor
+    max = 6;
+    min = 0;
+    let armor = Math.floor(Math.random() * (max - min + 1)) + min;
+    armor *= difficultyLevel;
+
+    return new NPC(strength,health,damage,tohit,difficultyLevel,100*difficultyLevel,name,index,evasion,armor);
 }
 
 function CreatePlayerCharacter(name){
@@ -987,8 +1036,8 @@ function CreatePlayerCharacter(name){
     let health = Math.floor(Math.random() * (max - min + 1)) + min;
 
     //dmg
-    max = 2;
-    min = 7;
+    max = 7;
+    min = 2;
     let damage = Math.floor(Math.random() * (max - min + 1)) + min;
 
     //tohit
@@ -996,7 +1045,17 @@ function CreatePlayerCharacter(name){
     min = 9;
     let tohit = Math.floor(Math.random() * (max - min + 1)) + min;
 
-    return new Player(strength,health,damage,tohit,1,0,name,PlayerParty.length);
+    //Evasion
+    max = 8;
+    min = 2;
+    let evasion = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    //Armor
+    max = 6;
+    min = 1;
+    let armor = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    return new Player(strength,health,damage,tohit,1,0,name,PlayerParty.length,PlayerParty.length,evasion,armor);
 }
 
 function DisplayParty(){
@@ -1012,10 +1071,9 @@ function DisplayParty(){
         }
         document.getElementById("PlayerInfo").innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px'> 
             Name: ${PlayerParty[i].Name} 
-            <BR/>Init: ${PlayerParty[i].Initiative} 
-            <BR/>Dmg: ${PlayerParty[i].Damage} 
-            <BR/>ToHit: ${PlayerParty[i].ToHit} 
-            <BR/>HP: ${HealthIndicatorFont + PlayerParty[i].CurrentHealth} </span>
+            <BR/>Init: ${PlayerParty[i].Initiative}&nbsp;&nbsp;&nbsp;Dmg: ${PlayerParty[i].Damage} 
+            <BR/>ToHit: ${PlayerParty[i].ToHit}&nbsp;&nbsp;&nbsp;HP: ${HealthIndicatorFont + PlayerParty[i].CurrentHealth} 
+            <BR/>Evasion: ${PlayerParty[i].Evasion}</span>
             </div></TD></tr>`;
     }
     //document.getElementById("PlayerInfo").innerHTML += "</TD></tr>";

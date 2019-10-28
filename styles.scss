@@ -4,8 +4,19 @@ $top-offset: 50px;
     background: #CCD1D1;
     position: absolute;
     width: 300px;
-    height: 859px;
+    height: 428px;
     top: $top-offset;         
+    left: 1400px;       
+    overflow-y: scroll;
+    border:2px solid black;
+}
+
+.CombatLog {
+    background: #CCD1D1;
+    position: absolute;
+    width: 300px;
+    height: 428px;
+    top: 478px;         
     left: 1400px;       
     overflow-y: scroll;
     border:2px solid black;
