@@ -549,12 +549,10 @@ class CombatEngine{
     RandomTargetCombat(){
         this.DetermineOrderOfBattle();
 
-        console.log("RandomTargetCombat");
-
         for (let i = 0; i < this._MergedParties.length; i++){
             if (this._MergedParties[i] instanceof Player){ //Player character turn
                 if (this._MergedParties[i].IsAlive){
-                    this.OneVOneCombat(this._MergedParties[i],this.SelectTarget(this._EnemyParty))
+                    this.OneVOneCombat(this._MergedParties[i],this.SelectTarget(this._EnemyParty));
                 }
             }else{ //NPC combat turn
                 console.log("NPC attack");
@@ -564,7 +562,7 @@ class CombatEngine{
 
     SelectTarget(Party){
         let rnd = Math.ceil(Math.random() * Party.length);
-        return Party[rnd];
+        return Party[rnd-1];
     }
 }
 //#endregion
@@ -947,7 +945,7 @@ HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
 //#region Unsorted functions 
 function InitializeGameData(){
     for (let index = 0; index < Hexes.length;index++){
-        Hexes[index].EncounterType = RandomEncounter();
+        Hexes[index].EncounterType = EncounterTypes.COMBAT;// RandomEncounter();
     }
     PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth",PlayerParty.length,7,5));
     PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak",PlayerParty.length,5,3));
