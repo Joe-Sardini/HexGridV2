@@ -419,9 +419,11 @@ class Combat extends Encounter{
         // Should probably have a global combat engine so I'm not making a new one everytime
         let combatEncounter = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
 
-        //combatEncounter.DetermineOrderOfBattle();
-        combatEncounter.RandomTargetCombat();
-        //PlayerParty.forEach(function(element){if (element.IsAlive) {element.CurrentHealth = element.CurrentHealth -3;}});
+        do{
+            combatEncounter.RandomTargetCombat();
+        }while(confirm("Continue Combat?") || bCombatIsOver);
+
+        bCombatIsOver = false;
         DisplayParty();
     }
 }
@@ -590,11 +592,15 @@ class CombatEngine{
                         this.NPCvPCombat(this._MergedParties[i],this.SelectTarget(this._PlayerParty));//Gonna have to redo this
                     }
                 }
+                if (this.IsPartyAllDead(this._EnemyParty) || this.IsPartyAllDead(this._PlayerParty)){
+                    bCombatIsOver = true;
+                    break;
+                }
             }
         //}
-        //while (!this.IsPartyAllDead(this._EnemyParty) && !this.IsPartyAllDead(this._PlayerParty));
+        //while (!this.IsPartyAllDead(this._EnemyParty) || !this.IsPartyAllDead(this._PlayerParty));
 
-       // UpdateDisplay();
+        UpdateDisplay();
     }
 
     SelectTarget(Party){
@@ -637,6 +643,7 @@ let PlayerPartyItems = [];
 let c = document.getElementById("HexCanvas");
 let ctx = c.getContext("2d");
 let Hexes = [];
+let bCombatIsOver = false;
 //#endregion 
 
 //#region Global Functions
