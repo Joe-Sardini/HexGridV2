@@ -192,6 +192,12 @@ class Character {
     }
 
     //#region Properties
+    get Index(){
+        return this._Index;
+    }
+    set Index(value){
+        this._Index = value;
+    }
     get Armor(){
         return this._Armor;
     }
@@ -277,8 +283,8 @@ class Character {
 }
 
 class Player extends Character{
-    constructor(str,health,dmg,tohit,level,exppoints,name,index,evasion){
-        super(str,health,dmg,tohit,level,name,index,evasion);
+    constructor(str,health,dmg,tohit,level,exppoints,name,index,evasion,armor){
+        super(str,health,dmg,tohit,level,name,index,evasion,armor);
         this._ExperiencePoints = exppoints;
     }
     get ExperiencePoints(){
@@ -290,8 +296,8 @@ class Player extends Character{
 }
 
 class NPC extends Character{
-    constructor(str,health,dmg,tohit,level,expvalue,name,index,evasion){
-        super(str,health,dmg,tohit,level,name,index,evasion);
+    constructor(str,health,dmg,tohit,level,expvalue,name,index,evasion,armor){
+        super(str,health,dmg,tohit,level,name,index,evasion,armor);
         this._ExperienceValue = expvalue;
     }
     get ExperienceValue(){
@@ -503,6 +509,7 @@ class CombatEngine{
         this._CombatLogElement = document.getElementById('CombatLog');
     }
 
+    //#region Properties
     get PlayerParty(){
         return this._PlayerParty;
     }
@@ -515,6 +522,7 @@ class CombatEngine{
     set EnemyParty(value){
         return this._EnemyParty = value;
     }
+    //#endregion
 
     DetermineOrderOfBattle(){
         this._MergedParties = this._PlayerParty.concat(this._EnemyParty);
@@ -522,7 +530,7 @@ class CombatEngine{
     }
 
     IsPartyAllDead(party){
-        for(idx = 0; idx < party.length; idx++){
+        for(let idx = 0; idx < party.length; idx++){
             if (party[idx].IsAlive){
                 return false;
             }
@@ -530,17 +538,41 @@ class CombatEngine{
         return true;
     }
 
-    OneVOneCombat(player1,player2){
-        console.log("OneVOne");
+    PvNPCCombat(player1,player2){
         let damage = 0;
-        let max = 20;
-        let min = 2;
+        let max = 24;
+        let min = 10;
         let P1Roll = Math.floor(Math.random() * (max - min + 1)) + min;
         P1Roll = P1Roll-player2.Evasion;
         this._CombatLogElement.innerHTML += `<BR>${player1.Name} makes an attack and `;
         if (P1Roll > player1.ToHit){ //Hit scored
-            damage = player1.Damage - player2.Armor;
-            this._CombatLogElement.innerHTML += `hits for ${damage} damage!`;
+            damage = (player1.Damage*2) - player2.Armor;
+            if (damage > 0) {
+                this._CombatLogElement.innerHTML += `hits ${player2.Name} for ${damage} damage!`;
+                this._EnemyParty[player2.Index].CurrentHealth -= damage;
+            }else{
+                this._CombatLogElement.innerHTML += `does no damage!`;
+            }
+        }else{
+            this._CombatLogElement.innerHTML += `misses!`;
+        }
+    }
+
+    NPCvPCombat(player1,player2){
+        let damage = 0;
+        let max = 24;
+        let min = 10;
+        let P1Roll = Math.floor(Math.random() * (max - min + 1)) + min;
+        P1Roll = P1Roll-player2.Evasion;
+        this._CombatLogElement.innerHTML += `<BR>${player1.Name} makes an attack and `;
+        if (P1Roll > player1.ToHit){ //Hit scored
+            damage = (player1.Damage*2) - player2.Armor;
+            if (damage > 0) {
+                this._CombatLogElement.innerHTML += `hits ${player2.Name} for ${damage} damage!`;
+                this._PlayerParty[player2.Index].CurrentHealth -= damage;
+            }else{
+                this._CombatLogElement.innerHTML += `does no damage!`;
+            }
         }else{
             this._CombatLogElement.innerHTML += `misses!`;
         }
@@ -549,15 +581,20 @@ class CombatEngine{
     RandomTargetCombat(){
         this.DetermineOrderOfBattle();
 
-        for (let i = 0; i < this._MergedParties.length; i++){
-            if (this._MergedParties[i] instanceof Player){ //Player character turn
+        //do{
+            for (let i = 0; i < this._MergedParties.length; i++){
                 if (this._MergedParties[i].IsAlive){
-                    this.OneVOneCombat(this._MergedParties[i],this.SelectTarget(this._EnemyParty));
+                    if (this._MergedParties[i] instanceof Player){ //Player character turn
+                        this.PvNPCCombat(this._MergedParties[i],this.SelectTarget(this._EnemyParty));
+                    }else{ //NPC combat turn
+                        this.NPCvPCombat(this._MergedParties[i],this.SelectTarget(this._PlayerParty));//Gonna have to redo this
+                    }
                 }
-            }else{ //NPC combat turn
-                console.log("NPC attack");
             }
-        }
+        //}
+        //while (!this.IsPartyAllDead(this._EnemyParty) && !this.IsPartyAllDead(this._PlayerParty));
+
+       // UpdateDisplay();
     }
 
     SelectTarget(Party){
@@ -1015,7 +1052,7 @@ function CreateNPC(name,difficultyLevel,index){
 
     //Armor
     max = 6;
-    min = 0;
+    min = 1;
     let armor = Math.floor(Math.random() * (max - min + 1)) + min;
     armor *= difficultyLevel;
 
@@ -1049,7 +1086,7 @@ function CreatePlayerCharacter(name){
     let evasion = Math.floor(Math.random() * (max - min + 1)) + min;
 
     //Armor
-    max = 6;
+    max = 3;
     min = 1;
     let armor = Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -1069,12 +1106,11 @@ function DisplayParty(){
         }
         document.getElementById("PlayerInfo").innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px'> 
             Name: ${PlayerParty[i].Name} 
-            <BR/>Init: ${PlayerParty[i].Initiative}&nbsp;&nbsp;&nbsp;Dmg: ${PlayerParty[i].Damage} 
-            <BR/>ToHit: ${PlayerParty[i].ToHit}&nbsp;&nbsp;&nbsp;HP: ${HealthIndicatorFont + PlayerParty[i].CurrentHealth} 
-            <BR/>Evasion: ${PlayerParty[i].Evasion}</span>
+            <BR/>Init: ${PlayerParty[i].Initiative}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${PlayerParty[i].Damage} 
+            <BR/>ToHit: ${PlayerParty[i].ToHit}&nbsp;&nbsp;&nbsp;Ev: ${PlayerParty[i].Evasion}
+            <BR/>HP: ${PlayerParty[i].Health}/${HealthIndicatorFont + PlayerParty[i].CurrentHealth} </span>
             </div></TD></tr>`;
     }
-    //document.getElementById("PlayerInfo").innerHTML += "</TD></tr>";
     UpdateDisplay();
 }
 
@@ -1125,3 +1161,4 @@ function CompareInitiative(a,b){
     return 0;
 }
 //#endregion 
+
