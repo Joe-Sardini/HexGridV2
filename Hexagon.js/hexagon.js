@@ -356,7 +356,7 @@ class Rest extends Encounter{
     RunEncounter(){
         console.log("Your party is partially healed.");
         let ele = document.getElementById("EncounterHistory");
-        ele.innerHTML += "<BR>Your party is fully healed.";
+        ele.innerHTML += "<BR>Your party is partially healed.";
         this.PartialPartyHealing();
         DisplayParty();
     }
@@ -413,6 +413,7 @@ class Combat extends Encounter{
             party[index].index = index;
         }
         NPCParty = party;
+        DisplayNPCParty();
         return party;
     }
 
@@ -423,10 +424,10 @@ class Combat extends Encounter{
         let idx = 0;
         do{
             combatEncounter.RandomTargetCombat();
-            idx++;
-            if (idx > 50){
+            if (idx > 50){ //50 rounds
                 bCombatIsOver = true;
             }
+            idx++;
         }while(!bCombatIsOver);
 
         bCombatIsOver = false;
@@ -508,7 +509,7 @@ class Treasure extends Encounter{
 class CombatEngine{
     constructor(PlayerParty,EnemyParty){
         this._PlayerParty = [];
-        for (let idx = 0; idx < PlayerParty.length; idx++){
+        for (let idx = 0; idx < PlayerParty.length; idx++){ //Only add living players to merged list
             if (PlayerParty[idx].IsAlive){
                 this._PlayerParty.push(PlayerParty[idx]);    
             }
@@ -653,7 +654,15 @@ window.CheckIfPartyIsAllDead = function(){
     return true;
 }
 
-//window.
+window.CheckIfNPCPartyIsAllDead = function(){
+    for(let idx = 0; idx < NPCParty.length;idx++){
+        if (NPCParty[idx].IsAlive){
+            return false;
+        }
+    }
+    return true;
+}
+
 //#endregion 
 
 //#region HexagonGrid
@@ -1146,6 +1155,9 @@ function UpdateNPCDisplay(){
             document.getElementById(divID).style.backgroundColor = "grey";
         }
     }
+    if (window.CheckIfNPCPartyIsAllDead()){
+        //Do something!
+    }
 }
 
 function UpdateDisplay(){
@@ -1157,7 +1169,7 @@ function UpdateDisplay(){
     }
     if (window.CheckIfPartyIsAllDead()){
         let ele = document.getElementById("EndGameOverlay");
-        console.log("<BR>The party is all dead, game over!");
+        console.log("The party is all dead, game over!");
         ele.innerText = "The party is all dead, game over!";
         ele.style.display = "block";
     }
