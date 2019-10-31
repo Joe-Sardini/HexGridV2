@@ -66,7 +66,7 @@ div.EventHistory span.Damage {
 .HexCanvas {
   border: 2px solid black;
   position: absolute;
-  left: 175px;
+  left: 325px;
   top: 50px;
   z-index: 1;
   background: url("./images/back.jpg");
@@ -74,10 +74,21 @@ div.EventHistory span.Damage {
   background-size: cover;
 }
 
+.InfoTableHeaders {
+  align-self: center;
+}
+
 #PlayerInfo {
   position: absolute;
   top: 50px;
   left: 1px;
+  width: 150px;
+}
+
+#NPCInfo {
+  position: absolute;
+  top: 50px;
+  left: 152px;
   width: 150px;
 }
 

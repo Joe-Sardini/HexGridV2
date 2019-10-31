@@ -1,4 +1,5 @@
 $top-offset: 50px;
+$left-offset: 1400px;
 
 .NPCParty {
     background: #CCD1D1;
@@ -6,7 +7,7 @@ $top-offset: 50px;
     width: 500px;
     height: 284px;
     top: 618px;         
-    left: 1400px;       
+    left: $left-offset;       
     overflow-y: scroll;
     border:2px solid black;
 }
@@ -18,7 +19,7 @@ $top-offset: 50px;
     width: 500px;
     height: 284px;
     top: $top-offset;         
-    left: 1400px;       
+    left: $left-offset;   
     overflow-y: scroll;
     border:2px solid black;
 }
@@ -29,7 +30,7 @@ $top-offset: 50px;
     width: 500px;
     height: 284px;
     top: 334px;         
-    left: 1400px;       
+    left: $left-offset;       
     overflow-y: scroll;
     border:2px solid black;
 }
@@ -69,7 +70,7 @@ div.EventHistory span.Damage {
 .HexCanvas {
     border:2px solid black; 
     position: absolute;
-    left: 175px; 
+    left: 325px; 
     top:$top-offset;
     z-index: 1;
     background: url('./images/back.jpg');
@@ -77,10 +78,21 @@ div.EventHistory span.Damage {
     background-size: cover;
 }
 
+.InfoTableHeaders {
+    align-self: center;
+}
+
 #PlayerInfo {
     position: absolute;
     top:$top-offset;
     left: 1px;
+    width: 150px;
+}
+
+#NPCInfo {
+    position: absolute;
+    top:$top-offset;
+    left: 152px;
     width: 150px;
 }
 

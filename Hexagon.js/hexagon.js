@@ -412,6 +412,7 @@ class Combat extends Encounter{
             party.push(CreateNPC(name,this._DifficultyLevel,party.length));
             party[index].index = index;
         }
+        NPCParty = party;
         return party;
     }
 
@@ -429,6 +430,7 @@ class Combat extends Encounter{
         }while(!bCombatIsOver);
 
         bCombatIsOver = false;
+        DisplayNPCParty();
         DisplayParty();
     }
 }
@@ -545,6 +547,7 @@ class CombatEngine{
         return true;
     }
 
+    //One v One combat
     PvNPCCombat(player1,player2,isPC){
         let damage = 0;
         let max = 24;
@@ -590,6 +593,7 @@ class CombatEngine{
         this.DetermineOrderOfBattle();
         this.RandomTargetCombatRound();        
         UpdateDisplay();
+        UpdateNPCDisplay();
     }
 
     SelectTarget(Party){
@@ -632,6 +636,7 @@ class Item {
 //#region Global letiables
 let PlayerParty = [];
 let PlayerPartyItems = [];
+let NPCParty = [];
 let c = document.getElementById("HexCanvas");
 let ctx = c.getContext("2d");
 let Hexes = [];
@@ -1092,6 +1097,27 @@ function CreatePlayerCharacter(name){
     return new Player(strength,health,damage,tohit,1,0,name,PlayerParty.length,PlayerParty.length,evasion,armor);
 }
 
+function DisplayNPCParty(){
+    document.getElementById("NPCInfo").innerHTML = "<thead><tr><Th class='InfoTableHeaders'>NPC Info</th></tr></thead>";
+    let HealthIndicatorFont = "<span style='color:black';>";
+    for (let i = 0; i < NPCParty.length; i++){
+        if (NPCParty[i].IsAlive){
+            if(NPCParty[i].CurrentHealth < NPCParty[i].Health){
+                HealthIndicatorFont = "<span style='color:red';>";
+                }else{
+                    HealthIndicatorFont = "<span style='color:black';>";
+            }
+        }
+        document.getElementById("NPCInfo").innerHTML += `<tr><TD><div class='NPCDisplay' id='NPCSlot${i}' style='border:2px solid black; width:150px'> 
+            Name: ${NPCParty[i].Name} 
+            <BR/>Init: ${NPCParty[i].Initiative}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${NPCParty[i].Damage} 
+            <BR/>ToHit: ${NPCParty[i].ToHit}&nbsp;&nbsp;&nbsp;Ev: ${NPCParty[i].Evasion}
+            <BR/>HP: ${HealthIndicatorFont + NPCParty[i].CurrentHealth}</span>/${NPCParty[i].Health} 
+            </div></TD></tr>`;
+    }
+    UpdateNPCDisplay();
+}
+
 function DisplayParty(){
     document.getElementById("PlayerInfo").innerHTML = "<thead><tr><Th>Character Info</th></tr></thead>";
     let HealthIndicatorFont = "<span style='color:black';>";
@@ -1111,6 +1137,15 @@ function DisplayParty(){
             </div></TD></tr>`;
     }
     UpdateDisplay();
+}
+
+function UpdateNPCDisplay(){
+    for (let i = 0; i < NPCParty.length; i++){
+        if (!NPCParty[i].IsAlive){
+            let divID = `NPCSlot${i}`;
+            document.getElementById(divID).style.backgroundColor = "grey";
+        }
+    }
 }
 
 function UpdateDisplay(){
