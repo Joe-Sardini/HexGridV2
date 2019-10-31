@@ -233,7 +233,7 @@ class Character {
     }
     set CurrentHealth(value){
         this._CurrentHealth = value;
-        if (this._CurrentHealth < -1 && this._IsAlive){
+        if (this._CurrentHealth < 1 && this._IsAlive){
             this._IsAlive = false;
             let ele = document.getElementById("EventLog");
             ele.innerHTML += (`<br><span class='Damage'> ${this._Name} has died.</span>`);
@@ -299,6 +299,7 @@ class NPC extends Character{
     constructor(str,health,dmg,tohit,level,expvalue,name,index,evasion,armor){
         super(str,health,dmg,tohit,level,name,index,evasion,armor);
         this._ExperienceValue = expvalue;
+        document.getElementById("NPCParty").innerHTML += `<BR> Name:${name} | HP:${health}`;
     }
     get ExperienceValue(){
         return this._ExperienceValue;
@@ -403,7 +404,7 @@ class Combat extends Encounter{
     }
     
     ConstructEnemyParty(){
-        let partySize = 2 * this._DifficultyLevel;
+        let partySize = 2 + this._DifficultyLevel;
         let name;
         let party = [];
         for (let index = 0; index < partySize;index++){
@@ -418,10 +419,14 @@ class Combat extends Encounter{
         this._EncounterLogElement.innerHTML += `<BR> ${this.Description}`;
         // Should probably have a global combat engine so I'm not making a new one everytime
         let combatEncounter = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
-
+        let idx = 0;
         do{
             combatEncounter.RandomTargetCombat();
-        }while(confirm("Continue Combat?") || bCombatIsOver);
+            idx++;
+            if (idx > 50){
+                bCombatIsOver = true;
+            }
+        }while(!bCombatIsOver);
 
         bCombatIsOver = false;
         DisplayParty();
@@ -540,7 +545,7 @@ class CombatEngine{
         return true;
     }
 
-    PvNPCCombat(player1,player2){
+    PvNPCCombat(player1,player2,isPC){
         let damage = 0;
         let max = 24;
         let min = 10;
@@ -551,7 +556,11 @@ class CombatEngine{
             damage = (player1.Damage*2) - player2.Armor;
             if (damage > 0) {
                 this._CombatLogElement.innerHTML += `hits ${player2.Name} for ${damage} damage!`;
-                this._EnemyParty[player2.Index].CurrentHealth -= damage;
+                if (isPC){
+                    this._EnemyParty[player2.Index].CurrentHealth -= damage;
+                }else{
+                    this._PlayerParty[player2.Index].CurrentHealth -= damage;    
+                }
             }else{
                 this._CombatLogElement.innerHTML += `does no damage!`;
             }
@@ -560,52 +569,35 @@ class CombatEngine{
         }
     }
 
-    NPCvPCombat(player1,player2){
-        let damage = 0;
-        let max = 24;
-        let min = 10;
-        let P1Roll = Math.floor(Math.random() * (max - min + 1)) + min;
-        P1Roll = P1Roll-player2.Evasion;
-        this._CombatLogElement.innerHTML += `<BR>${player1.Name} makes an attack and `;
-        if (P1Roll > player1.ToHit){ //Hit scored
-            damage = (player1.Damage*2) - player2.Armor;
-            if (damage > 0) {
-                this._CombatLogElement.innerHTML += `hits ${player2.Name} for ${damage} damage!`;
-                this._PlayerParty[player2.Index].CurrentHealth -= damage;
-            }else{
-                this._CombatLogElement.innerHTML += `does no damage!`;
+    RandomTargetCombatRound(){
+        for (let i = 0; i < this._MergedParties.length; i++){
+            if (this._MergedParties[i].IsAlive){
+                if (this._MergedParties[i] instanceof Player){ //Player character turn
+                    this.PvNPCCombat(this._MergedParties[i],this.SelectTarget(this._EnemyParty),true);
+                }else{ //NPC combat turn
+                    this.PvNPCCombat(this._MergedParties[i],this.SelectTarget(this._PlayerParty),false);
+                }
             }
-        }else{
-            this._CombatLogElement.innerHTML += `misses!`;
+            if (this.IsPartyAllDead(this._EnemyParty) || this.IsPartyAllDead(this._PlayerParty)){
+                bCombatIsOver = true;
+                document.getElementById("EventLog").innerHTML += `<BR> Enemy party destroyed!`;
+                break;
+            }
         }
     }
 
     RandomTargetCombat(){
         this.DetermineOrderOfBattle();
-
-        //do{
-            for (let i = 0; i < this._MergedParties.length; i++){
-                if (this._MergedParties[i].IsAlive){
-                    if (this._MergedParties[i] instanceof Player){ //Player character turn
-                        this.PvNPCCombat(this._MergedParties[i],this.SelectTarget(this._EnemyParty));
-                    }else{ //NPC combat turn
-                        this.NPCvPCombat(this._MergedParties[i],this.SelectTarget(this._PlayerParty));//Gonna have to redo this
-                    }
-                }
-                if (this.IsPartyAllDead(this._EnemyParty) || this.IsPartyAllDead(this._PlayerParty)){
-                    bCombatIsOver = true;
-                    break;
-                }
-            }
-        //}
-        //while (!this.IsPartyAllDead(this._EnemyParty) || !this.IsPartyAllDead(this._PlayerParty));
-
+        this.RandomTargetCombatRound();        
         UpdateDisplay();
     }
 
     SelectTarget(Party){
-        let rnd = Math.ceil(Math.random() * Party.length);
-        return Party[rnd-1];
+        let rnd = Math.ceil(Math.random() * Party.length-1);
+        if (!Party[rnd].IsAlive){
+            this.SelectTarget(Party);
+        }
+        return Party[rnd];
     }
 }
 //#endregion
@@ -1115,7 +1107,7 @@ function DisplayParty(){
             Name: ${PlayerParty[i].Name} 
             <BR/>Init: ${PlayerParty[i].Initiative}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${PlayerParty[i].Damage} 
             <BR/>ToHit: ${PlayerParty[i].ToHit}&nbsp;&nbsp;&nbsp;Ev: ${PlayerParty[i].Evasion}
-            <BR/>HP: ${PlayerParty[i].Health}/${HealthIndicatorFont + PlayerParty[i].CurrentHealth} </span>
+            <BR/>HP: ${HealthIndicatorFont + PlayerParty[i].CurrentHealth}</span>/${PlayerParty[i].Health} 
             </div></TD></tr>`;
     }
     UpdateDisplay();
