@@ -451,7 +451,7 @@ class Combat extends Encounter{
         let name;
         let party = [];
         for (let index = 0; index < partySize;index++){
-            name = `NPC ${index}`;
+            name = CreatNPCName("!BsV!i");
             party.push(CreateNPC(name,this._DifficultyLevel,party.length));
             party[index].index = index;
         }
@@ -652,7 +652,7 @@ class CombatEngine{
 
 //#region Items
 class Item {
-    constructor(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType){
+    constructor(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity){
         this._ItemName = itemName; 
         this._DamageMod = damagemod;
         this._Strength = str;
@@ -664,8 +664,15 @@ class Item {
         this._Evasion = evasion; 
         this._Armor = armor;
         this._ItemType = itemType;
+        this._ItemRarity = rarity;
     }
 
+    get ItemRarity(){
+        return this._ItemRarity;
+    }
+    set ItemRarity(value){
+        this._ItemRarity = value;
+    }
     get ItemType(){
         return this._ItemType;
     }
@@ -715,6 +722,7 @@ class Item {
 class ItemManager {
     constructor(level,encounterType){
         this._DifficultyLevel = level;
+        this._ItemList = [];
         switch(encounterType){
             case EncounterTypes.COMBAT:
                 break;
@@ -748,22 +756,27 @@ class ItemManager {
     GenerateTreasure(){
         let numberOfItems = 2 * this._DifficultyLevel;
         let modifier = RarityModifiers.TREASURE + this._DifficultyLevel;
-        for (idx = 0; idx > numberOfItems; idx++){
-            switch(DetermineType()){
+        this.RandomItems(numberOfItems,modifier);
+    }
+
+    RandomItems(numberOfItems,modifier)
+    {
+        for (let idx = 0; idx <= numberOfItems; idx++){
+            switch(this.DetermineType()){
                 case ItemTypes.ARMOR:
-                    this._ItemList.add(this.CreateArmorItem(this.DetermineRarity(modifier)));
+                    this._ItemList.push(this.CreateArmorItem(this.DetermineRarity(modifier)));
                     break;
                 case ItemTypes.WEAPON:
-                    this._ItemList.add(this.CreateWeaponItem(this.DetermineRarity(modifier)));
+                    this._ItemList.push(this.CreateWeaponItem(this.DetermineRarity(modifier)));
                     break;
                 case ItemTypes.JEWLERY:
-                    this._ItemList.add(this.CreateJewleryItem(this.DetermineRarity(modifier)));                                            
+                    this._ItemList.push(this.CreateJewleryItem(this.DetermineRarity(modifier)));                                            
                     break;
                 case ItemTypes.MAGIC:
-                    this._ItemList.add(this.CreateMagicItem(this.DetermineRarity(modifier)));
+                    this._ItemList.push(this.CreateMagicItem(this.DetermineRarity(modifier)));
                     break;
                 default:
-                    this._ItemList.add(this.CreateItem(this.DetermineRarity(modifier)));
+                    this._ItemList.push(this.CreateItem(this.DetermineRarity(modifier)));
                     break;
             }
         }
@@ -772,15 +785,15 @@ class ItemManager {
     DetermineRarity(modifier){
         let rnd = Math.ceil(Math.random() * 100);
         rnd += modifier;
-        if (rnd > 50){
+        if (rnd < 50){
             return Rarity.COMMON;
-        }else if(rnd < 49 && rnd > 70){
+        }else if(rnd > 49 && rnd < 80){
             return Rarity.UNCOMMON;
-        }else if(rnd < 69 && rnd > 85){
+        }else if(rnd > 79 && rnd < 90){
             return Rarity.RARE;
-        }else if(rnd < 84 && rnd > 94){
+        }else if(rnd > 89 && rnd < 96){
             return Rarity.ULTRARARE;
-        }else if(rnd < 93 && rnd > 99){
+        }else if(rnd > 95 && rnd < 100){
             return Rarity.LEGENDARY;
         }else if(rnd > 99){
             return Rarity.UNIQUE;
@@ -790,13 +803,13 @@ class ItemManager {
 
     DetermineType(){
         let rnd = Math.ceil(Math.random() * 10);
-        if (rnd > 4){
+        if (rnd < 4){
             return ItemTypes.ARMOR;
-        }else if (rnd < 3 && rnd > 7) {
+        }else if (rnd > 3 && rnd < 7) {
             return ItemTypes.WEAPON;
-        }else if (rnd < 6 && rnd > 9) {
+        }else if (rnd > 6 && rnd < 9) {
             return ItemTypes.JEWLERY;
-        }else if (rnd < 9) {
+        }else if (rnd > 9) {
             return ItemTypes.MAGIC;
         }
         return ItemTypes.ARMOR;
@@ -807,7 +820,27 @@ class ItemManager {
         return generator.toString();
     }
 
-    CreateArmorItem(rarity){
+    RarityLevel(itemRarity){
+        switch (itemRarity){
+            case Rarity.COMMON:
+                return 1;
+            case Rarity.UNCOMMON:
+                return 2;
+            case Rarity.RARE:
+                return 3;
+            case Rarity.ULTRARARE:
+                return 4;
+            case Rarity.LEGENDARY:
+                return 6;
+            case Rarity.UNIQUE:
+                return 10;
+            default:
+                return 1;
+        }
+    }
+
+    CreateArmorItem(itemRarity){
+        let rarity = this.RarityLevel(itemRarity);
         let itemName = this.CreateItemName(); 
         let damagemod = 0;
         let str = GenerateRandomNumberInRange(1+rarity,3+rarity);
@@ -820,23 +853,62 @@ class ItemManager {
         let armor = GenerateRandomNumberInRange(2+rarity,6+rarity);
         let itemType = ItemTypes.ARMOR;
 
-        return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType);
+        return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);
     }
 
-    CreateWeaponItem(rarity){
+    CreateWeaponItem(itemRarity){
+        let rarity = this.RarityLevel(itemRarity);
+        let itemName = this.CreateItemName(); 
+        let damagemod = GenerateRandomNumberInRange(2+rarity,6+rarity);;
+        let str = GenerateRandomNumberInRange(1+rarity,2+rarity);
+        let health = 0;
+        let dmg = GenerateRandomNumberInRange(2+rarity,4+rarity);;
+        let tohit = GenerateRandomNumberInRange(1+rarity,3+rarity);
+        let level = this._DifficultyLevel;
+        let initiative = GenerateRandomNumberInRange(1+rarity,3+rarity);
+        let evasion = 0;
+        let armor = 0;
+        let itemType = ItemTypes.WEAPON;
 
+        return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);
     }
 
-    CreateJewleryItem(){
+    CreateJewleryItem(itemRarity){
+        let rarity = this.RarityLevel(itemRarity);
+        let itemName = this.CreateItemName(); 
+        let damagemod = GenerateRandomNumberInRange(0+rarity,1+rarity);;
+        let str = GenerateRandomNumberInRange(2+rarity,4+rarity);
+        let health = GenerateRandomNumberInRange(10+rarity,20+rarity);
+        let dmg = GenerateRandomNumberInRange(1+rarity,3+rarity);;
+        let tohit = GenerateRandomNumberInRange(1+rarity,5+rarity);
+        let level = this._DifficultyLevel;
+        let initiative = GenerateRandomNumberInRange(5+rarity,10+rarity);
+        let evasion = GenerateRandomNumberInRange(5+rarity,10+rarity);
+        let armor = GenerateRandomNumberInRange(0+rarity,1+rarity);;
+        let itemType = ItemTypes.JEWLERY;
 
+        return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);
     }
 
-    CreateMagicItem(){
-        
+    CreateMagicItem(itemRarity){
+        let rarity = this.RarityLevel(itemRarity);
+        let itemName = this.CreateItemName(); 
+        let damagemod = GenerateRandomNumberInRange(2+rarity,2*rarity);;
+        let str = GenerateRandomNumberInRange(2+rarity,4*rarity);
+        let health = GenerateRandomNumberInRange(2+rarity,20*rarity);
+        let dmg = GenerateRandomNumberInRange(2+rarity,3*rarity);;
+        let tohit = GenerateRandomNumberInRange(2+rarity,5*rarity);
+        let level = this._DifficultyLevel;
+        let initiative = GenerateRandomNumberInRange(2+rarity,10*rarity);
+        let evasion = GenerateRandomNumberInRange(2+rarity,10*rarity);
+        let armor = GenerateRandomNumberInRange(2+rarity,5*rarity);;
+        let itemType = ItemTypes.MAGIC;
+
+        return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);
     }
 
-    CreateItem(rarity){
-        
+    CreateItem(itemRarity){
+        return this.CreateArmorItem(itemRarity);
     }
 }
 //#endregion 
@@ -1194,6 +1266,10 @@ function InitializeGameData(){
     for (let index = 0; index < Hexes.length;index++){
         Hexes[index].EncounterType = RandomEncounter();
     }
+    
+    let im = new ItemManager(4,EncounterTypes.TREASURE);
+    im.ItemList.forEach(function(e){console.log(e);});
+
     PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth",PlayerParty.length,7,5));
     PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak",PlayerParty.length,5,3));
     PlayerParty.push(CreatePlayerCharacter("Ralaa"));
@@ -1405,6 +1481,11 @@ function CompareInitiative(a,b){
 
 function GenerateRandomNumberInRange(min,max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function CreatNPCName(seed){
+    let generator = NameGen.compile(seed);
+    return generator.toString();
 }
 //#endregion 
 
