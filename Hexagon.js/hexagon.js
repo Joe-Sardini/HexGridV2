@@ -11,6 +11,30 @@ const EncounterTypes = {
     GAINPARTYMEMBER: 'gainpartymember',
     SPOTDAMAGE: 'spotdamage'
 }
+const RarityModifiers = {
+    TREASURE: 8,
+    COMBAT: 4,
+    REST: 2,
+    FRIENDLY: 3,
+    INFORMATION: 5,
+    TRAP: 1,
+    GAINPARTYMEMBER: 6,
+    SPOTDAMAGE: 0
+}
+const Rarity = {
+    COMMON: 1,
+    UNCOMMON: 2,
+    RARE: 3,
+    ULTRARARE: 4,
+    LEGENDARY: 5,
+    UNIQUE: 6
+}
+const ItemTypes = {
+    ARMOR: 1,
+    WEAPON: 2,
+    JEWLERY: 3,
+    MAGIC: 4
+}
 //#endregion 
 
 //#region Global letiables
@@ -138,7 +162,7 @@ class HexObject {
         switch(this._EncounterType){
             case EncounterTypes.COMBAT:
                 let items = new ItemManager(this._DifficultyLevel,this._EncounterType);
-                this._Encounter = new Combat(PointF,items.itemList,"Combat Encounter!");
+                this._Encounter = new Combat(PointF,items.ItemList,"Combat Encounter!");
                 break;
             case EncounterTypes.FRIENDLY:
                 this._Encounter = new Friendly(PointF,"","Party heal");
@@ -690,6 +714,7 @@ class Item {
 //#region Item Manager
 class ItemManager {
     constructor(level,encounterType){
+        this._DifficultyLevel = level;
         switch(encounterType){
             case EncounterTypes.COMBAT:
                 break;
@@ -698,6 +723,7 @@ class ItemManager {
             case EncounterTypes.INFORMATION:
                 break;
             case EncounterTypes.TREASURE:
+                this.GenerateTreasure();
                 break;
             case EncounterTypes.TRAP:
                 break;
@@ -710,6 +736,59 @@ class ItemManager {
             default:
                 break;
         }
+    }
+
+    get ItemList(){
+        return this._ItemList;
+    }
+    set ItemList(value){
+        this._ItemList = value;
+    }
+
+    GenerateTreasure(){
+        let numberOfItems = 2 * this._DifficultyLevel;
+        let modifier = RarityModifiers.TREASURE + this._DifficultyLevel;
+        for (idx = 0; idx > numberOfItems; idx++){
+            this._ItemList.add(this.CreateItem(this.DetermineRarity(modifier)));
+        }
+    }
+
+    DetermineRarity(modifier){
+        let rnd = Math.ceil(Math.random() * 100);
+        rnd += modifier;
+        if (rnd > 50){
+            return Rarity.COMMON;
+        }else if(rnd < 49 && rnd > 70){
+            return Rarity.UNCOMMON;
+        }else if(rnd < 69 && rnd > 85){
+            return Rarity.RARE;
+        }else if(rnd < 84 && rnd > 94){
+            return Rarity.ULTRARARE;
+        }else if(rnd < 93 && rnd > 99){
+            return Rarity.LEGENDARY;
+        }else if(rnd > 99){
+            return Rarity.UNIQUE;
+        }
+        return Rarity.COMMON;
+    }
+
+    DetermineType(){
+        let rnd = Math.ceil(Math.random() * 10);
+        if (rnd > 4){
+            return ItemTypes.ARMOR;
+        }else if (rnd < 3 && rnd > 7) {
+            return ItemTypes.WEAPON;
+        }else if (rnd < 6 && rnd > 9) {
+            return ItemTypes.JEWLERY;
+        }else if (rnd < 9) {
+            return ItemTypes.MAGIC;
+        }
+        return ItemTypes.ARMOR;
+    }
+
+    CreateItem(rarity){
+
+        let newItem = new Item();
     }
 }
 //#endregion 
