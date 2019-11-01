@@ -557,9 +557,8 @@ class Treasure extends Encounter{
         console.log("Running Treasure Encounter");
         this._Items.forEach(function(e){console.log(e);});
         for (let idx = 0; idx < this._Items.length; idx++){
-            
+            SelectTarget(PlayerParty).Inventory.push(this._Items[idx]);
         }
-        //TODO Apply items to group
     }
 }
 //#endregion
@@ -1468,16 +1467,17 @@ function ConfigurePartyDisplay(){
     for (let i = 0; i < PlayerParty.length; i++){
         let divID = `PCSlot${i}`;
         if (PlayerParty[i].IsAlive){
-            document.getElementById(divID).addEventListener("click",HandlePartyDisplayClick);
+            document.getElementById(divID).addEventListener("click",function(){HandlePartyDisplayClick(i);},false);
         }else{
             document.getElementById(divID).addEventListener("click",HandleDeadPartyDisplayClick);
         }
     }
 }
 
-function HandlePartyDisplayClick(){
+function HandlePartyDisplayClick(partyMemberIndex){
     //TODO: What do I want here...
-    console.log("You clicked on a character");
+    //List items
+    console.log(PlayerParty[partyMemberIndex].Inventory);
 }
 
 function HandleDeadPartyDisplayClick(){
@@ -1502,6 +1502,14 @@ function GenerateRandomNumberInRange(min,max){
 function CreatNPCName(seed){
     let generator = NameGen.compile(seed);
     return generator.toString();
+}
+
+function SelectTarget(Party){
+    let rnd = Math.ceil(Math.random() * Party.length-1);
+    if (!Party[rnd].IsAlive){
+        this.SelectTarget(Party);
+    }
+    return Party[rnd];
 }
 //#endregion 
 
