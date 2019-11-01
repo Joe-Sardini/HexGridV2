@@ -41,7 +41,6 @@ class HexObject {
         this._IsSelected = false;
         this._PointF = PointF;
         this._IsVisible = false;
-        //this._EncounterType = encType;
         this._IsEncounterComplete = false;
         this._DifficultyLevel = Math.ceil(Math.random() * 5);
         this._DifficultyLevelColour = this.SetDifficultyLevelColour();
@@ -138,7 +137,8 @@ class HexObject {
     SetEncounter(){
         switch(this._EncounterType){
             case EncounterTypes.COMBAT:
-                this._Encounter = new Combat(PointF,"","Combat Encounter!");
+                let items = new ItemManager(this._DifficultyLevel,this._EncounterType);
+                this._Encounter = new Combat(PointF,items.itemList,"Combat Encounter!");
                 break;
             case EncounterTypes.FRIENDLY:
                 this._Encounter = new Friendly(PointF,"","Party heal");
@@ -628,7 +628,7 @@ class CombatEngine{
 
 //#region Items
 class Item {
-    constructor(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative){
+    constructor(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType){
         this._ItemName = itemName; 
         this._DamageMod = damagemod;
         this._Strength = str;
@@ -639,6 +639,14 @@ class Item {
         this._Initiative = initiative;
         this._Evasion = evasion; 
         this._Armor = armor;
+        this._ItemType = itemType;
+    }
+
+    get ItemType(){
+        return this._ItemType;
+    }
+    set ItemType(value){
+        this._ItemType = value;
     }
     get ItemName(){
         return this._ItemName;
@@ -678,6 +686,33 @@ class Item {
     }
 }
 //#endregion
+
+//#region Item Manager
+class ItemManager {
+    constructor(level,encounterType){
+        switch(encounterType){
+            case EncounterTypes.COMBAT:
+                break;
+            case EncounterTypes.FRIENDLY:
+                break;
+            case EncounterTypes.INFORMATION:
+                break;
+            case EncounterTypes.TREASURE:
+                break;
+            case EncounterTypes.TRAP:
+                break;
+            case EncounterTypes.GAINPARTYMEMBER:
+                break;
+            case EncounterTypes.SPOTDAMAGE:
+                break;    
+            case EncounterTypes.REST:
+                break;    
+            default:
+                break;
+        }
+    }
+}
+//#endregion 
 
 //#region Global Functions
 window.CheckIfPartyIsAllDead = function(){
@@ -1030,7 +1065,7 @@ HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
 //#region Unsorted functions 
 function InitializeGameData(){
     for (let index = 0; index < Hexes.length;index++){
-        Hexes[index].EncounterType = EncounterTypes.COMBAT;// RandomEncounter();
+        Hexes[index].EncounterType = RandomEncounter();
     }
     PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth",PlayerParty.length,7,5));
     PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak",PlayerParty.length,5,3));
