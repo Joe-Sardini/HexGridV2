@@ -15,18 +15,21 @@ const EncounterTypes = {
 
 //#region Global letiables
 let c = document.getElementById("HexCanvas");
-let eventLogElement = document.getElementById("EventLog");
+let ctx = c.getContext("2d");
+
+let EventLogElement = document.getElementById("EventLog");
 let NPCPartyElement = document.getElementById("NPCParty");
-let encounterHistoryElement = document.getElementById("EncounterHistory");
-let combatLogElement = document.getElementById('CombatLog');
+let EncounterHistoryElement = document.getElementById("EncounterHistory");
+let CombatLogElement = document.getElementById('CombatLog');
 let NPCInfoElement = document.getElementById("NPCInfo");
 let PlayerInfoElement = document.getElementById("PlayerInfo");
 let EndGameOverlayElement = document.getElementById("EndGameOverlay");
+
 let PlayerParty = [];
 let PlayerPartyItems = [];
 let NPCParty = [];
-let ctx = c.getContext("2d");
 let Hexes = [];
+
 let bCombatIsOver = false;
 //#endregion 
 
@@ -252,7 +255,7 @@ class Character {
         this._CurrentHealth = value;
         if (this._CurrentHealth < 1 && this._IsAlive){
             this._IsAlive = false;
-            let ele = eventLogElement;
+            let ele = EventLogElement;
             ele.innerHTML += (`<br><span class='Damage'> ${this._Name} has died.</span>`);
         }
     }
@@ -333,7 +336,7 @@ class Encounter {
         this._Location = location;
         this._Items = items;
         this._Description = description;
-        this._EncounterLogElement = encounterHistoryElement;
+        this._EncounterLogElement = EncounterHistoryElement;
     }
     
     get Location(){
@@ -372,7 +375,7 @@ class Rest extends Encounter{
 
     RunEncounter(){
         console.log("Your party is partially healed.");
-        encounterHistoryElement.innerHTML += "<BR>Your party is partially healed.";
+        EncounterHistoryElement.innerHTML += "<BR>Your party is partially healed.";
         this.PartialPartyHealing();
         DisplayParty();
     }
@@ -532,7 +535,7 @@ class CombatEngine{
         }
         this._EnemyParty = EnemyParty;
         this._MergedParties = [];
-        this._CombatLogElement = combatLogElement;
+        this._CombatLogElement = CombatLogElement;
     }
 
     //#region Properties
@@ -600,7 +603,7 @@ class CombatEngine{
             }
             if (this.IsPartyAllDead(this._EnemyParty) || this.IsPartyAllDead(this._PlayerParty)){
                 bCombatIsOver = true;
-                eventLogElement.innerHTML += `<BR> Enemy party destroyed!`;
+                EventLogElement.innerHTML += `<BR> Enemy party destroyed!`;
                 break;
             }
         }
@@ -882,8 +885,7 @@ HexagonGrid.prototype.clickEvent = function(e) {
 
     if (HexContents != undefined){
         if (!HexContents.IsEncounterComplete) {
-            let ele = eventLogElement;
-            ele.innerHTML += (`<br><span class='Damage'> ${HexContents.Encounter.Description} </span>`);
+            EventLogElement.innerHTML += (`<br><span class='Damage'> ${HexContents.Encounter.Description} </span>`);
             HexContents.Encounter.RunEncounter();
             Hexes[HexIndex].IsEncounterComplete = true;
             this.drawHexAtColRow(HexContents.PointF.Col,HexContents.PointF.Row,"#FF0000","","Done!");
