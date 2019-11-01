@@ -13,6 +13,23 @@ const EncounterTypes = {
 }
 //#endregion 
 
+//#region Global letiables
+let c = document.getElementById("HexCanvas");
+let eventLogElement = document.getElementById("EventLog");
+let NPCPartyElement = document.getElementById("NPCParty");
+let encounterHistoryElement = document.getElementById("EncounterHistory");
+let combatLogElement = document.getElementById('CombatLog');
+let NPCInfoElement = document.getElementById("NPCInfo");
+let PlayerInfoElement = document.getElementById("PlayerInfo");
+let EndGameOverlayElement = document.getElementById("EndGameOverlay");
+let PlayerParty = [];
+let PlayerPartyItems = [];
+let NPCParty = [];
+let ctx = c.getContext("2d");
+let Hexes = [];
+let bCombatIsOver = false;
+//#endregion 
+
 //#region Hex object
 //represents a game board tile
 class HexObject {
@@ -235,7 +252,7 @@ class Character {
         this._CurrentHealth = value;
         if (this._CurrentHealth < 1 && this._IsAlive){
             this._IsAlive = false;
-            let ele = document.getElementById("EventLog");
+            let ele = eventLogElement;
             ele.innerHTML += (`<br><span class='Damage'> ${this._Name} has died.</span>`);
         }
     }
@@ -299,7 +316,7 @@ class NPC extends Character{
     constructor(str,health,dmg,tohit,level,expvalue,name,index,evasion,armor){
         super(str,health,dmg,tohit,level,name,index,evasion,armor);
         this._ExperienceValue = expvalue;
-        document.getElementById("NPCParty").innerHTML += `<BR> Name:${name} | HP:${health}`;
+        NPCPartyElement.innerHTML += `<BR> Name:${name} | HP:${health}`;
     }
     get ExperienceValue(){
         return this._ExperienceValue;
@@ -316,7 +333,7 @@ class Encounter {
         this._Location = location;
         this._Items = items;
         this._Description = description;
-        this._EncounterLogElement = document.getElementById("EncounterHistory");
+        this._EncounterLogElement = encounterHistoryElement;
     }
     
     get Location(){
@@ -355,8 +372,7 @@ class Rest extends Encounter{
 
     RunEncounter(){
         console.log("Your party is partially healed.");
-        let ele = document.getElementById("EncounterHistory");
-        ele.innerHTML += "<BR>Your party is partially healed.";
+        encounterHistoryElement.innerHTML += "<BR>Your party is partially healed.";
         this.PartialPartyHealing();
         DisplayParty();
     }
@@ -424,7 +440,7 @@ class Combat extends Encounter{
         let idx = 0;
         do{
             combatEncounter.RandomTargetCombat();
-            if (idx > 50){ //50 rounds
+            if (idx > 50){ //50 rounds max
                 bCombatIsOver = true;
             }
             idx++;
@@ -516,7 +532,7 @@ class CombatEngine{
         }
         this._EnemyParty = EnemyParty;
         this._MergedParties = [];
-        this._CombatLogElement = document.getElementById('CombatLog');
+        this._CombatLogElement = combatLogElement;
     }
 
     //#region Properties
@@ -584,7 +600,7 @@ class CombatEngine{
             }
             if (this.IsPartyAllDead(this._EnemyParty) || this.IsPartyAllDead(this._PlayerParty)){
                 bCombatIsOver = true;
-                document.getElementById("EventLog").innerHTML += `<BR> Enemy party destroyed!`;
+                eventLogElement.innerHTML += `<BR> Enemy party destroyed!`;
                 break;
             }
         }
@@ -633,16 +649,6 @@ class Item {
     }
 }
 //#endregion
-
-//#region Global letiables
-let PlayerParty = [];
-let PlayerPartyItems = [];
-let NPCParty = [];
-let c = document.getElementById("HexCanvas");
-let ctx = c.getContext("2d");
-let Hexes = [];
-let bCombatIsOver = false;
-//#endregion 
 
 //#region Global Functions
 window.CheckIfPartyIsAllDead = function(){
@@ -876,7 +882,7 @@ HexagonGrid.prototype.clickEvent = function(e) {
 
     if (HexContents != undefined){
         if (!HexContents.IsEncounterComplete) {
-            let ele = document.getElementById("EventLog");
+            let ele = eventLogElement;
             ele.innerHTML += (`<br><span class='Damage'> ${HexContents.Encounter.Description} </span>`);
             HexContents.Encounter.RunEncounter();
             Hexes[HexIndex].IsEncounterComplete = true;
@@ -1107,7 +1113,7 @@ function CreatePlayerCharacter(name){
 }
 
 function DisplayNPCParty(){
-    document.getElementById("NPCInfo").innerHTML = "<thead><tr><Th class='InfoTableHeaders'>NPC Info</th></tr></thead>";
+    NPCInfoElement.innerHTML = "<thead><tr><Th class='InfoTableHeaders'>NPC Info</th></tr></thead>";
     let HealthIndicatorFont = "<span style='color:black';>";
     for (let i = 0; i < NPCParty.length; i++){
         if (NPCParty[i].IsAlive){
@@ -1117,7 +1123,7 @@ function DisplayNPCParty(){
                     HealthIndicatorFont = "<span style='color:black';>";
             }
         }
-        document.getElementById("NPCInfo").innerHTML += `<tr><TD><div class='NPCDisplay' id='NPCSlot${i}' style='border:2px solid black; width:150px'> 
+        NPCInfoElement.innerHTML += `<tr><TD><div class='NPCDisplay' id='NPCSlot${i}' style='border:2px solid black; width:150px'> 
             Name: ${NPCParty[i].Name} 
             <BR/>Init: ${NPCParty[i].Initiative}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${NPCParty[i].Damage} 
             <BR/>ToHit: ${NPCParty[i].ToHit}&nbsp;&nbsp;&nbsp;Ev: ${NPCParty[i].Evasion}
@@ -1128,7 +1134,7 @@ function DisplayNPCParty(){
 }
 
 function DisplayParty(){
-    document.getElementById("PlayerInfo").innerHTML = "<thead><tr><Th>Character Info</th></tr></thead>";
+    PlayerInfoElement.innerHTML = "<thead><tr><Th>Character Info</th></tr></thead>";
     let HealthIndicatorFont = "<span style='color:black';>";
     for (let i = 0; i < PlayerParty.length; i++){
         if (PlayerParty[i].IsAlive){
@@ -1138,7 +1144,7 @@ function DisplayParty(){
                     HealthIndicatorFont = "<span style='color:black';>";
             }
         }
-        document.getElementById("PlayerInfo").innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px'> 
+        PlayerInfoElement.innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px'> 
             Name: ${PlayerParty[i].Name} 
             <BR/>Init: ${PlayerParty[i].Initiative}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${PlayerParty[i].Damage} 
             <BR/>ToHit: ${PlayerParty[i].ToHit}&nbsp;&nbsp;&nbsp;Ev: ${PlayerParty[i].Evasion}
@@ -1168,10 +1174,9 @@ function UpdateDisplay(){
         }
     }
     if (window.CheckIfPartyIsAllDead()){
-        let ele = document.getElementById("EndGameOverlay");
         console.log("The party is all dead, game over!");
-        ele.innerText = "The party is all dead, game over!";
-        ele.style.display = "block";
+        EndGameOverlayElement.innerText = "The party is all dead, game over!";
+        EndGameOverlayElement.style.display = "block";
     }
     ConfigurePartyDisplay();
 }
