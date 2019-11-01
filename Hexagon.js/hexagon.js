@@ -37,7 +37,7 @@ const ItemTypes = {
 }
 //#endregion 
 
-//#region Global letiables
+//#region Global letables
 let c = document.getElementById("HexCanvas");
 let ctx = c.getContext("2d");
 
@@ -159,19 +159,23 @@ class HexObject {
     }
 
     SetEncounter(){
+        let items;
         switch(this._EncounterType){
             case EncounterTypes.COMBAT:
-                let items = new ItemManager(this._DifficultyLevel,this._EncounterType);
+                items = new ItemManager(this._DifficultyLevel,this._EncounterType);
                 this._Encounter = new Combat(PointF,items.ItemList,"Combat Encounter!");
                 break;
             case EncounterTypes.FRIENDLY:
+                items = new ItemManager(this._DifficultyLevel,this._EncounterType);
                 this._Encounter = new Friendly(PointF,"","Party heal");
                 break;
             case EncounterTypes.INFORMATION:
+                items = new ItemManager(this._DifficultyLevel,this._EncounterType);
                 this._Encounter = new Encounter(PointF,"","Info not done");
                 break;
             case EncounterTypes.TREASURE:
-                this._Encounter = new Treasure(PointF,"","Treasure Not complete");
+                items = new ItemManager(this._DifficultyLevel,this._EncounterType);
+                this._Encounter = new Treasure(PointF,items.ItemList,"Treasure Not complete");
                 break;
             case EncounterTypes.TRAP:
                 this._Encounter = new Trap(PointF,"","It's a trap!!");
@@ -233,9 +237,16 @@ class Character {
         this._Index = index;
         this._Evasion = evasion; 
         this._Armor = armor;
+        this._Inventory = [];
     }
 
     //#region Properties
+    get Inventory(){
+        return this._Inventory;
+    }
+    set Inventory(value){
+        this._Inventory = value;
+    }
     get Index(){
         return this._Index;
     }
@@ -543,7 +554,12 @@ class Treasure extends Encounter{
     }
 
     RunEncounter(){
-        //TODO
+        console.log("Running Treasure Encounter");
+        this._Items.forEach(function(e){console.log(e);});
+        for (let idx = 0; idx < this._Items.length; idx++){
+            
+        }
+        //TODO Apply items to group
     }
 }
 //#endregion
@@ -1264,11 +1280,11 @@ HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
 //#region Unsorted functions 
 function InitializeGameData(){
     for (let index = 0; index < Hexes.length;index++){
-        Hexes[index].EncounterType = RandomEncounter();
+        Hexes[index].EncounterType = EncounterTypes.TREASURE;//RandomEncounter();
     }
     
-    let im = new ItemManager(4,EncounterTypes.TREASURE);
-    im.ItemList.forEach(function(e){console.log(e);});
+    //let im = new ItemManager(4,EncounterTypes.TREASURE);
+    //im.ItemList.forEach(function(e){console.log(e);});
 
     PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth",PlayerParty.length,7,5));
     PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak",PlayerParty.length,5,3));
