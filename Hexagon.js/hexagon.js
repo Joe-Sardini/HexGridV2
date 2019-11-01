@@ -628,9 +628,17 @@ class CombatEngine{
 
 //#region Items
 class Item {
-    constructor(itemName,damagemod){
+    constructor(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative){
         this._ItemName = itemName; 
         this._DamageMod = damagemod;
+        this._Strength = str;
+        this._Health = health;
+        this._Damage = dmg;
+        this._ToHit = tohit;
+        this._Level = level;
+        this._Initiative = initiative;
+        this._Evasion = evasion; 
+        this._Armor = armor;
     }
     get ItemName(){
         return this._ItemName;
@@ -649,6 +657,24 @@ class Item {
     }
     set Owner(value){
         this._Owner = value;
+    }
+    get Armor(){
+        return this._Armor;
+    }
+    set Armor(value){
+        this._Armor = value;
+    }
+    get Evasion(){
+        return this._Evasion;
+    }
+    set Evasion(value){
+        this._Evasion = value;
+    }
+    get Initiative(){
+        return this._Initiative;
+    }
+    set Initiative(value){
+        this._Initiative = value;
     }
 }
 //#endregion
@@ -914,6 +940,7 @@ HexagonGrid.prototype.IsValidHex = function(cordX,cordY){
 }
 
 //TODO make an algo to replace this.
+//Returns a list of hex grid coordinates that surround the selected location
 HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
     let sHexes = [];
     
