@@ -1,5 +1,15 @@
 "use strict"
 
+/*
+TODO: Combat rounds
+TODO: Inventory Window
+TODO: Movable inventory
+TODO: Better combat system
+TODO: UI improvements
+TODO: Refactoring (general)
+TODO: oraganize loose functions
+*/
+
 //#region Enums
 const EncounterTypes = {
     COMBAT: 'combat',
@@ -38,8 +48,8 @@ const ItemTypes = {
 //#endregion 
 
 //#region Global letables
-let c = document.getElementById("HexCanvas");
-let ctx = c.getContext("2d");
+const c = document.getElementById("HexCanvas");
+const ctx = c.getContext("2d");
 
 const EventLogElement = document.getElementById("EventLog");
 const NPCPartyElement = document.getElementById("NPCParty");
@@ -52,10 +62,10 @@ const modal = document.getElementById("myModal");
 const span = document.getElementsByClassName("close")[0];
 const inventoryListElement = document.getElementById("characterInventory");
 
-const PlayerParty = [];
-const PlayerPartyItems = [];
-const NPCParty = [];
-const Hexes = [];
+let PlayerParty = [];
+let PlayerPartyItems = [];
+let NPCParty = [];
+let Hexes = [];
 
 let bCombatIsOver = false;
 //#endregion 
