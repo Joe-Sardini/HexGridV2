@@ -226,21 +226,40 @@ class PointF {
 class Character {
     constructor(str,health,dmg,tohit,level,name,index,evasion,armor){
         this._Strength = str;
+        this._BaseStrength = str;
         this._Health = health;
+        this._BaseHealth = health;
         this._Damage = dmg;
+        this._BaseDamage = dmg;
         this._ToHit = tohit;
+        this._BaseToHit = tohit;
         this._Level = level;
         this._CurrentHealth = health;
         this._Name = name;
         this._IsAlive = true;
         this._Initiative = Math.ceil(Math.random() * 20);
+        this._BaseInitiative = this._Initiative
         this._Index = index;
         this._Evasion = evasion; 
+        this._BaseEvasion = evasion; 
         this._Armor = armor;
+        this._BaseArmor = armor;
         this._Inventory = [];
     }
 
     //#region Properties
+    get BaseInitiative(){
+        return this._BaseInitiative;
+    }
+    get BaseEvasion(){
+        return this._BaseEvasion;
+    }
+    get BaseToHit(){
+        return this._BaseToHit;
+    }
+    get BaseDamage(){
+        return this._BaseDamage;
+    }
     get Inventory(){
         return this._Inventory;
     }
@@ -332,6 +351,21 @@ class Character {
                 this._CurrentHealth += Amount;
             }else{
                 this._CurrentHealth = this._Health;
+            }
+        }
+    }
+
+    ApplyItems(){
+        for (let idx = 0; idx < this._Inventory.length; idx++){
+            if (!this._Inventory[idx].IsApplied){
+                this._Strength += this._Inventory[idx].Strength;
+                this._Health += this._Inventory[idx].Health;
+                this._Damage += this._Inventory[idx].DamageMod;
+                this._ToHit += this._Inventory[idx].ToHit;
+                this._Initiative += this._Inventory[idx].Initiative;
+                this._Evasion += this._Inventory[idx].Evasion;
+                this._Armor += this._Inventory[idx].Armor;
+                this._Inventory[idx].IsApplied = true;
             }
         }
     }
@@ -557,8 +591,10 @@ class Treasure extends Encounter{
         console.log("Running Treasure Encounter");
         this._Items.forEach(function(e){console.log(e);});
         for (let idx = 0; idx < this._Items.length; idx++){
-            SelectTarget(PlayerParty).Inventory.push(this._Items[idx]);
+            PlayerParty[RandomPartyMemberIndex(PlayerParty)].Inventory.push(this._Items[idx]);
+            //SelectTarget(PlayerParty).Inventory.push(this._Items[idx]);
         }
+        ApplyPartyItems();
     }
 }
 //#endregion
@@ -680,8 +716,33 @@ class Item {
         this._Armor = armor;
         this._ItemType = itemType;
         this._ItemRarity = rarity;
+        this._IsApplied = false;
     }
 
+    get IsApplied(){
+        return this._IsApplied;
+    }
+    set IsApplied(value){
+        this._IsApplied = value;
+    }
+    get ToHit(){
+        return this._ToHit;
+    }
+    set ToHit(value){
+        this._ToHit = value;
+    }
+    get Health(){
+        return this._Health;
+    }
+    set Health(value){
+        this._Health = value;
+    }
+    get Strength(){
+        return this._Strength;
+    }
+    set Strength(value){
+        this._Strength = value;
+    }
     get ItemRarity(){
         return this._ItemRarity;
     }
@@ -1282,12 +1343,9 @@ function InitializeGameData(){
         Hexes[index].EncounterType = EncounterTypes.TREASURE;//RandomEncounter();
     }
     
-    //let im = new ItemManager(4,EncounterTypes.TREASURE);
-    //im.ItemList.forEach(function(e){console.log(e);});
-
-    PlayerParty.push(new Player(10,20,5,10,1,0,"Sargoth",PlayerParty.length,7,5));
-    PlayerParty.push(new Player(8,20,5,10,1,0,"Torvak",PlayerParty.length,5,3));
-    PlayerParty.push(CreatePlayerCharacter("Ralaa"));
+    PlayerParty.push(new Player(10,20,5,10,1,0,"CP1",PlayerParty.length,7,5));
+    PlayerParty.push(new Player(8,20,5,10,1,0,"CP2",PlayerParty.length,5,3));
+    PlayerParty.push(CreatePlayerCharacter("CP3"));
     DisplayParty();
 }
 
@@ -1415,23 +1473,25 @@ function DisplayNPCParty(){
     UpdateNPCDisplay();
 }
 
+function DetermineStatColor(newValue,oldValue){
+    if (newValue < oldValue){
+        return "<span style='color:red';>";
+    }
+    if (newValue > oldValue){
+        return "<span style='color:#49fb35';>";
+    }
+    return "<span style='color:black';>";
+}
+
 function DisplayParty(){
     PlayerInfoElement.innerHTML = "<thead><tr><Th>Character Info</th></tr></thead>";
-    let HealthIndicatorFont = "<span style='color:black';>";
     for (let i = 0; i < PlayerParty.length; i++){
-        if (PlayerParty[i].IsAlive){
-            if(PlayerParty[i].CurrentHealth < PlayerParty[i].Health){
-                HealthIndicatorFont = "<span style='color:red';>";
-                }else{
-                    HealthIndicatorFont = "<span style='color:black';>";
-            }
-        }
         PlayerInfoElement.innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px'> 
-            Name: ${PlayerParty[i].Name} 
-            <BR/>Init: ${PlayerParty[i].Initiative}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${PlayerParty[i].Damage} 
-            <BR/>ToHit: ${PlayerParty[i].ToHit}&nbsp;&nbsp;&nbsp;Ev: ${PlayerParty[i].Evasion}
-            <BR/>HP: ${HealthIndicatorFont + PlayerParty[i].CurrentHealth}</span>/${PlayerParty[i].Health} 
-            </div></TD></tr>`;
+        Name: ${PlayerParty[i].Name} 
+        <BR/>Init: ${DetermineStatColor(PlayerParty[i].Initiative,PlayerParty[i].BaseInitiative) + PlayerParty[i].Initiative}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${DetermineStatColor(PlayerParty[i].Damage,PlayerParty[i].BaseDamage) + PlayerParty[i].Damage}</span> 
+        <BR/>ToHit: ${DetermineStatColor(PlayerParty[i].ToHit,PlayerParty[i].BaseToHit) + PlayerParty[i].ToHit}</span>&nbsp;&nbsp;&nbsp;Ev: ${DetermineStatColor(PlayerParty[i].Evasion,PlayerParty[i].BaseEvasion) + PlayerParty[i].Evasion}</span>
+        <BR/>HP: ${DetermineStatColor(PlayerParty[i].CurrentHealth,PlayerParty[i].Health) + PlayerParty[i].CurrentHealth}</span>/${PlayerParty[i].Health} 
+        </div></TD></tr>`;
     }
     UpdateDisplay();
 }
@@ -1475,8 +1535,6 @@ function ConfigurePartyDisplay(){
 }
 
 function HandlePartyDisplayClick(partyMemberIndex){
-    //TODO: What do I want here...
-    //List items
     console.log(PlayerParty[partyMemberIndex].Inventory);
 }
 
@@ -1504,12 +1562,25 @@ function CreatNPCName(seed){
     return generator.toString();
 }
 
+function RandomPartyMemberIndex(Party){
+    let rnd = Math.ceil(Math.random() * Party.length-1);
+    if (!Party[rnd].IsAlive){
+        this.SelectTarget(Party);
+    }
+    return rnd;
+}
+
 function SelectTarget(Party){
     let rnd = Math.ceil(Math.random() * Party.length-1);
     if (!Party[rnd].IsAlive){
         this.SelectTarget(Party);
     }
     return Party[rnd];
+}
+
+function ApplyPartyItems(){
+    PlayerParty.forEach(function(e){e.ApplyItems();});
+    DisplayParty();
 }
 //#endregion 
 
