@@ -41,18 +41,21 @@ const ItemTypes = {
 let c = document.getElementById("HexCanvas");
 let ctx = c.getContext("2d");
 
-let EventLogElement = document.getElementById("EventLog");
-let NPCPartyElement = document.getElementById("NPCParty");
-let EncounterHistoryElement = document.getElementById("EncounterHistory");
-let CombatLogElement = document.getElementById('CombatLog');
-let NPCInfoElement = document.getElementById("NPCInfo");
-let PlayerInfoElement = document.getElementById("PlayerInfo");
-let EndGameOverlayElement = document.getElementById("EndGameOverlay");
+const EventLogElement = document.getElementById("EventLog");
+const NPCPartyElement = document.getElementById("NPCParty");
+const EncounterHistoryElement = document.getElementById("EncounterHistory");
+const CombatLogElement = document.getElementById('CombatLog');
+const NPCInfoElement = document.getElementById("NPCInfo");
+const PlayerInfoElement = document.getElementById("PlayerInfo");
+const EndGameOverlayElement = document.getElementById("EndGameOverlay");
+const modal = document.getElementById("myModal");
+const span = document.getElementsByClassName("close")[0];
+const inventoryListElement = document.getElementById("characterInventory");
 
-let PlayerParty = [];
-let PlayerPartyItems = [];
-let NPCParty = [];
-let Hexes = [];
+const PlayerParty = [];
+const PlayerPartyItems = [];
+const NPCParty = [];
+const Hexes = [];
 
 let bCombatIsOver = false;
 //#endregion 
@@ -592,7 +595,6 @@ class Treasure extends Encounter{
         this._Items.forEach(function(e){console.log(e);});
         for (let idx = 0; idx < this._Items.length; idx++){
             PlayerParty[RandomPartyMemberIndex(PlayerParty)].Inventory.push(this._Items[idx]);
-            //SelectTarget(PlayerParty).Inventory.push(this._Items[idx]);
         }
         ApplyPartyItems();
     }
@@ -1535,6 +1537,11 @@ function ConfigurePartyDisplay(){
 }
 
 function HandlePartyDisplayClick(partyMemberIndex){
+    modal.style.display = "block";
+    inventoryListElement.innerHTML = "<p>Inventory</p>"
+    for (let idx = 0; idx < PlayerParty[partyMemberIndex].Inventory.length; idx++){
+        inventoryListElement.innerHTML += PlayerParty[partyMemberIndex].Inventory[idx].ItemName + " " + StringOfEnum(ItemTypes,PlayerParty[partyMemberIndex].Inventory[idx].ItemType) + " " + StringOfEnum(Rarity,PlayerParty[partyMemberIndex].Inventory[idx].ItemRarity) + "<br>";
+    }
     console.log(PlayerParty[partyMemberIndex].Inventory);
 }
 
@@ -1582,5 +1589,34 @@ function ApplyPartyItems(){
     PlayerParty.forEach(function(e){e.ApplyItems();});
     DisplayParty();
 }
+
+function StringOfEnum(enumObj,value){
+    for (let k in enumObj) if (enumObj[k] == value) return k;
+    return null;
+}
+
+function ItemTypeToString(ItemEnum){
+    if (ItemEnum === 1){
+        return "Armor";
+    }else if(ItemEnum === 2){
+        return "Weapon";
+    }else if(ItemEnum === 3){
+        return "Jewlery";
+    }else if(ItemEnum === 4){
+        return "Magic";
+    }
+}
+
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+}
+
+
 //#endregion 
 
