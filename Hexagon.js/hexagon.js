@@ -3,7 +3,7 @@
 /*
 TODO: Combat rounds
 TODO: Inventory Window
-TODO: Movable inventory
+TODO: Movable inventory (drag and drop)
 TODO: Better combat system
 TODO: UI improvements
 TODO: Refactoring (general)
@@ -847,8 +847,7 @@ class ItemManager {
         this.RandomItems(numberOfItems,modifier);
     }
 
-    RandomItems(numberOfItems,modifier)
-    {
+    RandomItems(numberOfItems,modifier){
         for (let idx = 0; idx <= numberOfItems; idx++){
             switch(this.DetermineType()){
                 case ItemTypes.ARMOR:
@@ -919,9 +918,9 @@ class ItemManager {
             case Rarity.ULTRARARE:
                 return 4;
             case Rarity.LEGENDARY:
-                return 6;
+                return 5;
             case Rarity.UNIQUE:
-                return 10;
+                return 6;
             default:
                 return 1;
         }
@@ -941,7 +940,7 @@ class ItemManager {
         let armor = GenerateRandomNumberInRange(2+rarity,6+rarity);
         let itemType = ItemTypes.ARMOR;
 
-        return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);
+        return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,itemRarity);
     }
 
     CreateWeaponItem(itemRarity){
@@ -1605,28 +1604,14 @@ function StringOfEnum(enumObj,value){
     return null;
 }
 
-function ItemTypeToString(ItemEnum){
-    if (ItemEnum === 1){
-        return "Armor";
-    }else if(ItemEnum === 2){
-        return "Weapon";
-    }else if(ItemEnum === 3){
-        return "Jewlery";
-    }else if(ItemEnum === 4){
-        return "Magic";
-    }
-}
-
-span.onclick = function() {
+span.onclick = function(){
     modal.style.display = "none";
 }
 
-window.onclick = function(event) {
+window.onclick = function(event){
     if (event.target == modal) {
       modal.style.display = "none";
     }
 }
-
-
 //#endregion 
 
