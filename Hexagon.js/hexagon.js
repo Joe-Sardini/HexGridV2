@@ -8,6 +8,7 @@ TODO: Better combat system
 TODO: UI improvements
 TODO: Refactoring (general)
 TODO: oraganize loose functions
+TODO: Unit tests?
 */
 
 //#region Enums
@@ -188,7 +189,7 @@ class HexObject {
                 break;
             case EncounterTypes.TREASURE:
                 items = new ItemManager(this._DifficultyLevel,this._EncounterType);
-                this._Encounter = new Treasure(PointF,items.ItemList,"Treasure Not complete");
+                this._Encounter = new Treasure(PointF,items.ItemList,"Your party found some items!");
                 break;
             case EncounterTypes.TRAP:
                 this._Encounter = new Trap(PointF,"","It's a trap!!");
@@ -565,7 +566,7 @@ class Trap extends Encounter{
 class SpotDamage extends Encounter{
     constructor(location,items,description){
         super(location,items,description);
-        this._SpotDamage = 5;
+        this._SpotDamage = 5; //Base damage value
     }
 
     get SpotDamage(){
@@ -601,7 +602,6 @@ class Treasure extends Encounter{
     }
 
     RunEncounter(){
-        console.log("Running Treasure Encounter");
         this._Items.forEach(function(e){console.log(e);});
         for (let idx = 0; idx < this._Items.length; idx++){
             PlayerParty[RandomPartyMemberIndex(PlayerParty)].Inventory.push(this._Items[idx]);
@@ -1348,7 +1348,7 @@ HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
 }
 //#endregion
 
-//#region Unsorted functions 
+//#region helper functions 
 function InitializeGameData(){
     for (let index = 0; index < Hexes.length;index++){
         Hexes[index].EncounterType = EncounterTypes.TREASURE;//RandomEncounter();
@@ -1589,7 +1589,7 @@ function RandomPartyMemberIndex(Party){
 function SelectTarget(Party){
     let rnd = Math.ceil(Math.random() * Party.length-1);
     if (!Party[rnd].IsAlive){
-        this.SelectTarget(Party);
+        SelectTarget(Party);
     }
     return Party[rnd];
 }
