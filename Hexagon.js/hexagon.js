@@ -1210,7 +1210,7 @@ HexagonGrid.prototype.sign = function(p1, p2, p3) {
 }
 
 //TODO: Replace with optimized barycentric coordinate method
-HexagonGrid.prototype.isPointInTriangle = function isPointInTriangle(pt, v1, v2, v3) {
+HexagonGrid.prototype.isPointInTriangle = function(pt, v1, v2, v3) {
     let b1, b2, b3;
 
     b1 = this.sign(pt, v1, v2) < 0.0;
@@ -1351,7 +1351,7 @@ HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
 //#region helper functions 
 function InitializeGameData(){
     for (let index = 0; index < Hexes.length;index++){
-        Hexes[index].EncounterType = EncounterTypes.TREASURE;//RandomEncounter();
+        Hexes[index].EncounterType = EncounterTypes.COMBAT; //RandomEncounter();
     }
     
     PlayerParty.push(new Player(10,20,5,10,1,0,"CP1",PlayerParty.length,7,5));
@@ -1581,7 +1581,7 @@ function CreatNPCName(seed){
 function RandomPartyMemberIndex(Party){
     let rnd = Math.ceil(Math.random() * Party.length-1);
     if (!Party[rnd].IsAlive){
-        this.SelectTarget(Party);
+        SelectTarget(Party);
     }
     return rnd;
 }

@@ -1,0 +1,17 @@
+{
+  "name": "hexgridv2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Hexagon.js",
+  "dependencies": {
+    "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.2"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC"
+}
