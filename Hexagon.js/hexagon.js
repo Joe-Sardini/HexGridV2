@@ -1474,7 +1474,7 @@ function DisplayNPCParty(){
                     HealthIndicatorFont = "<span style='color:black';>";
             }
         }
-        NPCInfoElement.innerHTML += `<tr><TD><div class='NPCDisplay' id='NPCSlot${i}' style='border:2px solid black; width:350px'> 
+        NPCInfoElement.innerHTML += `<tr><TD><div class='NPCDisplay' id='NPCSlot${i}' style='border:2px solid black; width:450px'> 
             Name: ${NPCParty[i].Name} 
             <BR/>Init: ${NPCParty[i].Initiative}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${NPCParty[i].Damage} 
             <BR/>ToHit: ${NPCParty[i].ToHit}&nbsp;&nbsp;&nbsp;Ev: ${NPCParty[i].Evasion}
