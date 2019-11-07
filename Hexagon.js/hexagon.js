@@ -1351,7 +1351,7 @@ HexagonGrid.prototype.DetermineEncounter = function(mouseX, mouseY){
 //#region helper functions 
 function InitializeGameData(){
     for (let index = 0; index < Hexes.length;index++){
-        Hexes[index].EncounterType = EncounterTypes.COMBAT; //RandomEncounter();
+        Hexes[index].EncounterType = EncounterTypes.TREASURE; //RandomEncounter();
     }
     
     PlayerParty.push(new Player(10,20,5,10,1,0,"CP1",PlayerParty.length,7,5));
@@ -1446,8 +1446,8 @@ function CreatePlayerCharacter(name){
     let damage = Math.floor(Math.random() * (max - min + 1)) + min;
 
     //tohit
-    max = 16;
-    min = 9;
+    max = 12;
+    min = 6;
     let tohit = Math.floor(Math.random() * (max - min + 1)) + min;
 
     //Evasion
@@ -1474,7 +1474,7 @@ function DisplayNPCParty(){
                     HealthIndicatorFont = "<span style='color:black';>";
             }
         }
-        NPCInfoElement.innerHTML += `<tr><TD><div class='NPCDisplay' id='NPCSlot${i}' style='border:2px solid black; width:150px'> 
+        NPCInfoElement.innerHTML += `<tr><TD><div class='NPCDisplay' id='NPCSlot${i}' style='border:2px solid black; width:350px'> 
             Name: ${NPCParty[i].Name} 
             <BR/>Init: ${NPCParty[i].Initiative}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${NPCParty[i].Damage} 
             <BR/>ToHit: ${NPCParty[i].ToHit}&nbsp;&nbsp;&nbsp;Ev: ${NPCParty[i].Evasion}
@@ -1547,11 +1547,22 @@ function ConfigurePartyDisplay(){
 
 function HandlePartyDisplayClick(partyMemberIndex){
     modal.style.display = "block";
-    inventoryListElement.innerHTML = "<p>Inventory</p>"
+    let invenTableHTML = "<table class='steelBlueCols'><thead><tr><th colspan=4>Inventory</th></tr></thead><tbody><tr>";
+    
     for (let idx = 0; idx < PlayerParty[partyMemberIndex].Inventory.length; idx++){
-        inventoryListElement.innerHTML += PlayerParty[partyMemberIndex].Inventory[idx].ItemName + " " + StringOfEnum(ItemTypes,PlayerParty[partyMemberIndex].Inventory[idx].ItemType) + " " + StringOfEnum(Rarity,PlayerParty[partyMemberIndex].Inventory[idx].ItemRarity) + "<br>";
+        if (idx == 4 || idx == 8 || idx == 12){
+            invenTableHTML += "<tr>";
+        }
+        let tooltipdata = PlayerParty[partyMemberIndex].Inventory[idx].ItemName + "\n" + StringOfEnum(ItemTypes,PlayerParty[partyMemberIndex].Inventory[idx].ItemType) + "\n" + StringOfEnum(Rarity,PlayerParty[partyMemberIndex].Inventory[idx].ItemRarity);
+        invenTableHTML += "<td><a class='test' href='#' data-toggle='tooltip' data-html=true data-placement='bottom' title='" + tooltipdata + "'>" + PlayerParty[partyMemberIndex].Inventory[idx].ItemName + "</a></td>"
+        if (idx == 4 || idx == 8 || idx == 12){
+            invenTableHTML += "</tr>";
+        }
+
     }
-    console.log(PlayerParty[partyMemberIndex].Inventory);
+    invenTableHTML += "</tr></table>";
+
+    inventoryListElement.innerHTML = invenTableHTML;
 }
 
 function HandleDeadPartyDisplayClick(){
@@ -1613,5 +1624,9 @@ window.onclick = function(event){
       modal.style.display = "none";
     }
 }
+
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
 //#endregion 
 
