@@ -26,7 +26,7 @@ let bCombatIsOver = false;
 //#region helper functions 
 function InitializeGameData(){
     for (let index = 0; index < Hexes.length;index++){
-        Hexes[index].EncounterType = EncounterTypes.TREASURE; //RandomEncounter();
+        Hexes[index].EncounterType = RandomEncounter();
     }
     
     PlayerParty.push(new Player(10,20,5,10,1,0,"CP1",PlayerParty.length,7,5));

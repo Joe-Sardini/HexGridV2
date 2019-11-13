@@ -207,6 +207,7 @@ HexagonGrid.prototype.clickEvent = function(e) {
     let localY = mouseY - this.canvasOriginY;
 
     let HexIndex = this.GetUnitIndexAtSelection(localX,localY);
+    
     let HexContents = Hexes[HexIndex];
 
     if (HexContents != undefined){
@@ -358,6 +359,7 @@ HexagonGrid.prototype.getHexAtCords = function(cordX,cordY) {
 HexagonGrid.prototype.GetUnitIndexAtSelection = function(mouseX, mouseY){
     let tile = this.getSelectedTile(mouseX, mouseY);
     let nPointF = new PointF(tile.row,tile.column);
+
     let obj = Hexes.find(HexObject => _.isEqual(HexObject.PointF,nPointF));
 
     return obj.HexIndex;
