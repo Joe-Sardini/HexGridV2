@@ -358,7 +358,7 @@ HexagonGrid.prototype.getHexAtCords = function(cordX,cordY) {
 HexagonGrid.prototype.GetUnitIndexAtSelection = function(mouseX, mouseY){
     let tile = this.getSelectedTile(mouseX, mouseY);
     let nPointF = new PointF(tile.row,tile.column);
-    let obj = Hexes.find(HexObject => JSON.stringify(HexObject.PointF) === JSON.stringify(nPointF));
+    let obj = Hexes.find(HexObject => _.isEqual(HexObject.PointF,nPointF));
 
     return obj.HexIndex;
 }
