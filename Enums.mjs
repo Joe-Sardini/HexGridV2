@@ -1,6 +1,6 @@
-
+'use strict'
 //#region Enums
-const EncounterTypes = {
+export const EncounterTypes = {
     COMBAT: 'combat',
     TREASURE: 'treasure',
     REST: 'rest',
@@ -10,7 +10,7 @@ const EncounterTypes = {
     GAINPARTYMEMBER: 'gainpartymember',
     SPOTDAMAGE: 'spotdamage'
 }
-const RarityModifiers = {
+export const RarityModifiers = {
     TREASURE: 8,
     COMBAT: 4,
     REST: 2,
@@ -20,7 +20,7 @@ const RarityModifiers = {
     GAINPARTYMEMBER: 6,
     SPOTDAMAGE: 0
 }
-const Rarity = {
+export const Rarity = {
     COMMON: 1,
     UNCOMMON: 2,
     RARE: 3,
@@ -28,7 +28,7 @@ const Rarity = {
     LEGENDARY: 5,
     UNIQUE: 6
 }
-const ItemTypes = {
+export const ItemTypes = {
     ARMOR: 1,
     WEAPON: 2,
     JEWLERY: 3,

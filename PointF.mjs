@@ -1,6 +1,7 @@
+'use strict'
 
 //#region Grid Cords
-class PointF {
+export class PointF {
     constructor(x,y){
         this._Row = x;
         this._Col = y;

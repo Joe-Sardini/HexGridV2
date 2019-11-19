@@ -26,7 +26,7 @@
                 <TR>
                     <TD><table class="table table-hover" id="PlayerInfo" class="PlayerInfo"></table></TD>
                     <TD><table class="table table-hover" id="NPCInfo" class="NPCInfo"></table></TD>
-                    <TD><canvas id="HexCanvas" class="HexCanvas" width="1075px" height="855px"></canvas></TD>
+                    <TD id="tdCanvas"><canvas id="HexCanvas" class="HexCanvas" width="1075px" height="855px"></canvas></TD>
                     <TD>
                         <div class="EventLog">
                             <a href="#EventLog" class="btn btn-primary" data-toggle="collapse">Event Log</a>
@@ -60,17 +60,16 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 
+<script src="/node_modules/lodash/lodash.js"></script>
+<script src="/NameGen/namegen.js"></script>    
+<script src="Global.js?v=2"></script>
+<script type="module" src="Main.mjs"></script>
+
 <script src="HexObject.js"></script>    
 <script src="Characters.js"></script>
 <script src="CombatEngine.js"></script>
-<script src="Items.js"></script>
 <script src="Encounters.js"></script>
-<script src="Enums.js"></script>
-<script src="PointF.js"></script>
-<script src="Main.js"></script>
-<script src="/Hexagon.js/hexagon.js"></script>
-<script src="/NameGen/namegen.js"></script>
-<script src="/node_modules/lodash/lodash.js"></script>
+<script src="/Hexagon.js/hexagon.js?v=1"></script>
     
 <script>
     var hexagonGrid = new HexagonGrid("HexCanvas",20);
@@ -78,3 +77,4 @@
     InitializeGameData();
 </script>
 </html>
+

@@ -1,26 +1,5 @@
+'use strict'
 
-//#region Global letables
-const c = document.getElementById("HexCanvas");
-const ctx = c.getContext("2d");
-
-const EventLogElement = document.getElementById("EventLog");
-const NPCPartyElement = document.getElementById("NPCParty");
-const EncounterHistoryElement = document.getElementById("EncounterHistory");
-const CombatLogElement = document.getElementById('CombatLog');
-const NPCInfoElement = document.getElementById("NPCInfo");
-const PlayerInfoElement = document.getElementById("PlayerInfo");
-const EndGameOverlayElement = document.getElementById("EndGameOverlay");
-const modal = document.getElementById("myModal");
-const span = document.getElementsByClassName("close")[0];
-const inventoryListElement = document.getElementById("characterInventory");
-
-let PlayerParty = [];
-let PlayerPartyItems = [];
-let NPCParty = [];
-let Hexes = [];
-
-let bCombatIsOver = false;
-//#endregion 
 
 
 //#region helper functions 
@@ -40,28 +19,20 @@ function RandomEncounter(){
     switch(rnd){
         case 1:
             return EncounterTypes.COMBAT;
-            break;
         case 2:
             return EncounterTypes.FRIENDLY;
-            break;
         case 3:
             return EncounterTypes.INFORMATION;
-            break;
         case 4:
             return EncounterTypes.REST;
-            break;
         case 5:
             return EncounterTypes.TREASURE;
-            break;
         case 6:
             return EncounterTypes.TRAP;
-            break;
         case 7:
             return EncounterTypes.GAINPARTYMEMBER;
-            break;
         case 8:
             return EncounterTypes.SPOTDAMAGE;
-            break;
         default:
             return EncounterTypes.REST;
     }

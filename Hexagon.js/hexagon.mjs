@@ -1,5 +1,23 @@
 "use strict"
 
+export class HexagonGrid {
+    constructor(canvasID, radius){
+        this.radius = radius;
+
+        this.height = Math.sqrt(3) * radius;
+        this.width = 2 * radius;
+        this.side = (3 / 2) * radius;
+
+        this.canvas = document.getElementById(canvasId);
+        this.context = this.canvas.getContext('2d');
+
+        this.canvasOriginX = 0;
+        this.canvasOriginY = 0;
+        
+        this.canvas.addEventListener("mousedown", this.clickEvent.bind(this), false);
+    }
+}
+
 //#region HexagonGrid
 function HexagonGrid(canvasId, radius) {
     this.radius = radius;
@@ -46,7 +64,6 @@ HexagonGrid.prototype.drawHexGrid = function (rows, cols, originX, originY, isDe
             }
             
             if (Hexes.length < this.hexCount+1){ //Add all hexes to the hex list
-
                 Hexes.push(new HexObject("",new PointF(row,col),Hexes.length));
             }
 
@@ -107,7 +124,7 @@ HexagonGrid.prototype.getRelativeCanvasOffset = function() {
         do {
             x += layoutElement.offsetLeft;
             y += layoutElement.offsetTop;
-        } while (layoutElement = layoutElement.offsetParent);
+        } while (layoutElement == layoutElement.offsetParent);
         
         return { x: x, y: y };
     }
