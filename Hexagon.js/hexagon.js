@@ -223,7 +223,7 @@ HexagonGrid.prototype.clickEvent = function(e) {
 
 HexagonGrid.prototype.RevealSurroundingHexes = function(HexIndex){
     let surroudingHexGridCords = [];
-    surroudingHexGridCords = this.CalculateSurroundingHexesV3(Hexes[HexIndex].PointF.Row,Hexes[HexIndex].PointF.Col,2);
+    surroudingHexGridCords = this.CalculateSurroundingHexesV2(Hexes[HexIndex].PointF.Row,Hexes[HexIndex].PointF.Col,1);
     for (let idx = 0;idx < surroudingHexGridCords.length; idx++){
         let Hex = this.getHexAtCords(surroudingHexGridCords[idx].Row,surroudingHexGridCords[idx].Col);
         if (!Hex.IsEncounterComplete){
@@ -240,6 +240,7 @@ HexagonGrid.prototype.IsValidHex = function(cordX,cordY){
     }
 }
 
+//TODO: not finished
 HexagonGrid.prototype.CalculateSurroundingHexesV3 = function(cordX,cordY,range){
     let Hexes = [];
     let iterations = range+1;
@@ -256,15 +257,19 @@ HexagonGrid.prototype.CalculateSurroundingHexesV3 = function(cordX,cordY,range){
 }
 
 HexagonGrid.prototype.CalculateSurroundingHexesV2 = function(cordX,cordY,range){
-    let Hexes = [];
+    let SurroundingHexes = [];
 
     if (cordY % 2 == 0){
         for (let y = 0; y < range+2; y++){
             for (let x = 0; x < range+1; x++){
                 if (cordX === (cordX-(range-x)) && cordY === (cordY-(range-y))){ //identify and skip selected hex
-                    Hexes.push(new PointF(cordX+range,cordY));
+                    if (this.IsValidHex(cordX+range,cordY)) {
+                        SurroundingHexes.push(new PointF(cordX+range,cordY));
+                    }
                 }else{
-                    Hexes.push(new PointF(cordX-(range-x),cordY-(range-y)));
+                    if (this.IsValidHex(cordX-(range-x),cordY-(range-y))){
+                        SurroundingHexes.push(new PointF(cordX-(range-x),cordY-(range-y)));
+                    }
                 }
             }
         }
@@ -272,20 +277,21 @@ HexagonGrid.prototype.CalculateSurroundingHexesV2 = function(cordX,cordY,range){
         for (let y = 0; y < range+2; y++){
             for (let x = 1; x < range+2; x++){
                 if (cordX === (cordX-(range-x)) && cordY === (cordY-(range-y))){ //identify and skip selected hex
-                    Hexes.push(new PointF(cordX-range,cordY));
+                    if (this.IsValidHex(cordX-range,cordY)) {
+                        SurroundingHexes.push(new PointF(cordX-range,cordY));
+                    }
                 }else{
-                    Hexes.push(new PointF(cordX-(range-x),cordY-(range-y)));
+                    if (this.IsValidHex(cordX-(range-x),cordY-(range-y))){
+                        SurroundingHexes.push(new PointF(cordX-(range-x),cordY-(range-y)));
+                    }
                 }
-                console.log(cordX-(range-x),cordY-(range-y));
             }
         }
     }
-
-    return Hexes;
+    console.log(SurroundingHexes);
+    return SurroundingHexes;
 }
 
-//TODO make an algo to replace this.
-//Returns a list of hex grid coordinates that surround the selected location
 HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
     let sHexes = [];
     
@@ -301,10 +307,12 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
                         sHexes.push(new PointF(cordX-1,cordY-1));
                     }
                 }
+                break;
             case 2:
                 if (this.IsValidHex(cordX-1,cordY)){
                     sHexes.push(new PointF(cordX-1,cordY));
                 }
+                break;
             case 3:
                 if (cordY % 2 != 0){
                     if (this.IsValidHex(cordX,cordY+1)){
@@ -315,6 +323,7 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
                         sHexes.push(new PointF(cordX-1,cordY+1));
                     }
                 }
+                break;
             case 4:
                 if (cordY % 2 != 0){
                     if (this.IsValidHex(cordX+1,cordY+1)){
@@ -325,10 +334,12 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
                         sHexes.push(new PointF(cordX,cordY+1));
                     }
                 }
+                break;
             case 5:
                 if (this.IsValidHex(cordX+1,cordY)){
                     sHexes.push(new PointF(cordX+1,cordY));
                 }
+                break;
             case 6:
                 if (cordY % 2 != 0){
                     if (this.IsValidHex(cordX+1,cordY-1)){
@@ -339,6 +350,7 @@ HexagonGrid.prototype.CalculateSurroundingHexes = function(cordX,cordY){
                         sHexes.push(new PointF(cordX,cordY-1));
                     }
                 }
+                break;
             default:
                 break;
         }
