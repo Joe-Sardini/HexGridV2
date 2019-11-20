@@ -2,9 +2,10 @@
 
 import { InitializeGameData } from './Init.mjs';
 import { HexagonGrid } from './Hexagon.mjs';
-import { create } from './canvas.mjs';
 
-let myCanvas = create('HexCanvas','tdCanvas',1075,855);
-let HG = new HexagonGrid(myCanvas,20);
+let HG = new HexagonGrid('HexCanvas',20);
+HG.DrawHexGrid(24, 35, 5, 5, true);
 InitializeGameData();
+
+
 

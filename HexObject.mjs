@@ -5,6 +5,7 @@ import { ItemManager } from './ItemManager.mjs';
 import { Encounter, Rest, GainPartyMember, Friendly, Combat, Trap, SpotDamage, Treasure } from './Encounters.mjs';
 import { PointF } from './PointF.mjs';
 
+
 //#region Hex object
 //represents a game board tile
 export class HexObject {

@@ -39,3 +39,7 @@ export function ApplyPartyItems(){
     window.PlayerParty.forEach(function(e){e.ApplyItems();});
     DisplayParty();
 }
+
+export function GenerateRandomNumberInRange(min,max){
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}

@@ -26,7 +26,7 @@ export function DisplayNPCParty(){
     UpdateNPCDisplay();
 }
 
-function UpdateNPCDisplay(){
+export function UpdateNPCDisplay(){
     for (let i = 0; i < window.NPCParty.length; i++){
         if (!window.NPCParty[i].IsAlive){
             let divID = `NPCSlot${i}`;
@@ -88,7 +88,7 @@ function ConfigurePartyDisplay(){
 }
 
 function HandlePartyDisplayClick(partyMemberIndex){
-    modal.style.display = "block";
+    //modal.style.display = "block";
     let invenTableHTML = "<table class='steelBlueCols'><thead><tr><th colspan=4>Inventory</th></tr></thead><tbody><tr>";
     
     for (let idx = 0; idx < window.PlayerParty[partyMemberIndex].Inventory.length; idx++){

@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 "use strict"
 
 import { PointF } from './PointF.mjs';
@@ -13,13 +12,13 @@ export class HexagonGrid {
         this._width = 2 * radius;
         this._side = (3 / 2) * radius;
 
-        this._canvas = canvas;
-        this._context = this.canvas.getContext('2d');
+        this._canvas = document.getElementById(canvas);
+        this._context = this._canvas.getContext('2d');
 
         this._canvasOriginX = 0;
         this._canvasOriginY = 0;
         
-        this._canvas.addEventListener("mousedown", this.clickEvent.bind(this), false);
+        this._canvas.addEventListener("mousedown", this.ClickEvent.bind(this), false);
     }
 
     DrawHexGrid(rows, cols, originX, originY, isDebug){
@@ -28,7 +27,7 @@ export class HexagonGrid {
         this._hexCount = rows*cols;
         this._rows = rows;
         this._cols = cols;
-    
+
         let currentHexX;
         let currentHexY;
         let debugText = "";
@@ -39,22 +38,22 @@ export class HexagonGrid {
             for (let row = 0; row < rows; row++) {
     
                 if (!offsetColumn) {
-                    currentHexX = (col * this.side) + originX;
-                    currentHexY = (row * this.height) + originY;
+                    currentHexX = (col * this._side) + originX;
+                    currentHexY = (row * this._height) + originY;
                 } else {
-                    currentHexX = col * this.side + originX;
-                    currentHexY = (row * this.height) + originY + (this.height * 0.5);
+                    currentHexX = col * this._side + originX;
+                    currentHexY = (row * this._height) + originY + (this._height * 0.5);
                 }
     
                 if (isDebug) {
                     debugText = row + "," + col;
                 }
                 
-                if (window.Hexes.length < this.hexCount+1){ //Add all hexes to the hex list
+                if (window.Hexes.length < this._hexCount+1){ //Add all hexes to the hex list
                     window.Hexes.push(new HexObject("",new PointF(row,col),window.Hexes.length));
                 }
     
-                this.drawHex(currentHexX, currentHexY, "#ddd", debugText);
+                this.DrawHex(currentHexX, currentHexY, "#ddd", debugText);
             }
             offsetColumn = !offsetColumn;
         }
@@ -357,7 +356,7 @@ export class HexagonGrid {
     GetHexAtCords(cordX,cordY){
         let tile = new PointF(cordX,cordY);
         for (let index = 0; index < window.Hexes.length;index++){
-            if (_.isEqual(tile.Points,window.Hexes[index].PointF.Points)){
+            if (window._.isEqual(tile.Points,window.Hexes[index].PointF.Points)){
                 return window.Hexes[index];
             }
         }
@@ -368,7 +367,7 @@ export class HexagonGrid {
         let tile = this.GetSelectedTile(mouseX, mouseY);
         let nPointF = new PointF(tile.row,tile.column);
     
-        let obj = window.Hexes.find(HexObject => _.isEqual(HexObject.PointF,nPointF));
+        let obj = window.Hexes.find(HexObject => window._.isEqual(HexObject.PointF,nPointF));
     
         return obj.HexIndex;
 

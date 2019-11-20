@@ -1,6 +1,9 @@
 'use strict'
 
 import { EncounterTypes, RarityModifiers, ItemTypes, Rarity } from './Enums.mjs';
+import { GenerateRandomNumberInRange } from './Utilities.mjs';
+import { Item } from './Item.mjs';
+
 
 //#region Item Manager
 export class ItemManager {
@@ -99,7 +102,7 @@ export class ItemManager {
     }
 
     CreateItemName(){
-        let generator = NameGen.compile("!BsV!i");
+        let generator = window.NameGen.compile("!BsV!i");
         return generator.toString();
     }
 
@@ -142,10 +145,10 @@ export class ItemManager {
     CreateWeaponItem(itemRarity){
         let rarity = this.RarityLevel(itemRarity);
         let itemName = this.CreateItemName(); 
-        let damagemod = GenerateRandomNumberInRange(2+rarity,6+rarity);;
+        let damagemod = GenerateRandomNumberInRange(2+rarity,6+rarity);
         let str = GenerateRandomNumberInRange(1+rarity,2+rarity);
         let health = 0;
-        let dmg = GenerateRandomNumberInRange(2+rarity,4+rarity);;
+        let dmg = GenerateRandomNumberInRange(2+rarity,4+rarity);
         let tohit = GenerateRandomNumberInRange(1+rarity,3+rarity);
         let level = this._DifficultyLevel;
         let initiative = GenerateRandomNumberInRange(1+rarity,3+rarity);
@@ -159,15 +162,15 @@ export class ItemManager {
     CreateJewleryItem(itemRarity){
         let rarity = this.RarityLevel(itemRarity);
         let itemName = this.CreateItemName(); 
-        let damagemod = GenerateRandomNumberInRange(0+rarity,1+rarity);;
+        let damagemod = GenerateRandomNumberInRange(0+rarity,1+rarity);
         let str = GenerateRandomNumberInRange(2+rarity,4+rarity);
         let health = GenerateRandomNumberInRange(10+rarity,20+rarity);
-        let dmg = GenerateRandomNumberInRange(1+rarity,3+rarity);;
+        let dmg = GenerateRandomNumberInRange(1+rarity,3+rarity);
         let tohit = GenerateRandomNumberInRange(1+rarity,5+rarity);
         let level = this._DifficultyLevel;
         let initiative = GenerateRandomNumberInRange(5+rarity,10+rarity);
         let evasion = GenerateRandomNumberInRange(5+rarity,10+rarity);
-        let armor = GenerateRandomNumberInRange(0+rarity,1+rarity);;
+        let armor = GenerateRandomNumberInRange(0+rarity,1+rarity);
         let itemType = ItemTypes.JEWLERY;
 
         return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);
@@ -176,15 +179,15 @@ export class ItemManager {
     CreateMagicItem(itemRarity){
         let rarity = this.RarityLevel(itemRarity);
         let itemName = this.CreateItemName(); 
-        let damagemod = GenerateRandomNumberInRange(2+rarity,2*rarity);;
+        let damagemod = GenerateRandomNumberInRange(2+rarity,2*rarity);
         let str = GenerateRandomNumberInRange(2+rarity,4*rarity);
         let health = GenerateRandomNumberInRange(2+rarity,20*rarity);
-        let dmg = GenerateRandomNumberInRange(2+rarity,3*rarity);;
+        let dmg = GenerateRandomNumberInRange(2+rarity,3*rarity);
         let tohit = GenerateRandomNumberInRange(2+rarity,5*rarity);
         let level = this._DifficultyLevel;
         let initiative = GenerateRandomNumberInRange(2+rarity,10*rarity);
         let evasion = GenerateRandomNumberInRange(2+rarity,10*rarity);
-        let armor = GenerateRandomNumberInRange(2+rarity,5*rarity);;
+        let armor = GenerateRandomNumberInRange(2+rarity,5*rarity);
         let itemType = ItemTypes.MAGIC;
 
         return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);

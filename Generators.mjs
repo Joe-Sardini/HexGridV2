@@ -3,6 +3,7 @@
 import { EncounterTypes } from './Enums.mjs';
 import { NPC, Player } from './Characters.mjs'
 
+
 export function RandomEncounter(){
     let rnd = Math.ceil(Math.random() * 8);
     switch(rnd){
@@ -80,7 +81,7 @@ function GenerateRandomNumberInRange(min,max){
 }
 
 // eslint-disable-next-line no-unused-vars
-function CreatNPCName(seed){
+export function CreatNPCName(seed){
     // eslint-disable-next-line no-undef
     let generator = NameGen.compile(seed);
     return generator.toString();
