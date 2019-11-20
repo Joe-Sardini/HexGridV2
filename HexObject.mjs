@@ -1,6 +1,6 @@
 'use strict'
 
-import { EncounterTypes } from './Encounters.mjs';
+import { EncounterTypes } from './Enums.mjs';
 import { ItemManager } from './ItemManager.mjs';
 import { Encounter, Rest, GainPartyMember, Friendly, Combat, Trap, SpotDamage, Treasure } from './Encounters.mjs';
 import { PointF } from './PointF.mjs';

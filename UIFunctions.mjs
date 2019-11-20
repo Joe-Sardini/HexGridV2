@@ -2,7 +2,7 @@
 
 import { NPCInfoElement, EndGameOverlayElement, PlayerInfoElement, inventoryListElement } from './Elements.mjs';
 import { StringOfEnum, CheckIfPartyIsAllDead, CheckIfNPCPartyIsAllDead } from './Utilities.mjs';
-import { ItemTypes, Rarity } from './Encounters.mjs';
+import { ItemTypes, Rarity } from './Enums.mjs';
 
 
 export function DisplayNPCParty(){

@@ -1,6 +1,6 @@
 'use strict'
 
-import { EncounterTypes } from './Encounters.mjs';
+import { EncounterTypes } from './Enums.mjs';
 import { NPC, Player } from './Characters.mjs'
 
 export function RandomEncounter(){

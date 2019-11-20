@@ -2,6 +2,10 @@
 'use strict'
 
 import { EncounterHistoryElement } from './Elements.mjs';
+import { CombatEngine } from './CombatEngine.mjs';
+import { DisplayParty, DisplayNPCParty } from './UIFunctions.mjs';
+import { CreatePlayerCharacter, CreatNPCName, CreateNPC, RandomPartyMemberIndex } from './Generators.mjs';
+import { ApplyPartyItems } from './Utilities.mjs';
 
 //#region Encounters
 export class Encounter {
@@ -104,7 +108,7 @@ export class Combat extends Encounter{
             party.push(CreateNPC(name,this._DifficultyLevel,party.length));
             party[index].index = index;
         }
-        NPCParty = party;
+        window.NPCParty = party;
         DisplayNPCParty();
         return party;
     }

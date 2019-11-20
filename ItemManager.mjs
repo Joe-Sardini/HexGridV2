@@ -1,6 +1,6 @@
 'use strict'
 
-import { EncounterTypes, RarityModifiers, ItemTypes, Rarity } from './Encounters.mjs';
+import { EncounterTypes, RarityModifiers, ItemTypes, Rarity } from './Enums.mjs';
 
 //#region Item Manager
 export class ItemManager {
