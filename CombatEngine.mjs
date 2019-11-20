@@ -2,6 +2,8 @@
 
 import { CombatLogElement, EventLogElement } from './Elements.mjs';
 import { Player } from './Characters.mjs';
+import { CompareInitiative } from './Utilities.mjs';
+import { UpdateDisplay, UpdateNPCDisplay } from './UIFunctions.mjs';
 
 //#region CombatEngine
 export class CombatEngine{

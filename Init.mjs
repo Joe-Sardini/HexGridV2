@@ -2,6 +2,7 @@
 
 import { RandomEncounter, CreatePlayerCharacter } from './Generators.mjs';
 import { Player } from './Characters.mjs';
+import { DisplayParty } from './UIFunctions.mjs';
 
 export function InitializeGameData(){
     for (let index = 0; index < window.Hexes.length;index++){

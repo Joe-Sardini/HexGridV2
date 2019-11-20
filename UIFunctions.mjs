@@ -38,7 +38,7 @@ function UpdateNPCDisplay(){
     }
 }
 
-function UpdateDisplay(){
+export function UpdateDisplay(){
     for (let i = 0; i < window.PlayerParty.length; i++){
         if (!window.PlayerParty[i].IsAlive){
             let divID = `PCSlot${i}`;
