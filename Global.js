@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 'use strict'
 
@@ -7,9 +8,7 @@ window.PlayerPartyItems = [];
 window.NPCParty = [];
 window.Hexes = [];
 window.bCombatIsOver = false;
-// eslint-disable-next-line no-undef
 window.NameGen = NameGen;
-// eslint-disable-next-line no-undef
 window._.isEqual = _.isEqual;
 //#endregion 
 
