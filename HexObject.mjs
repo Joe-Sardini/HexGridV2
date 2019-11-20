@@ -1,7 +1,13 @@
+'use strict'
+
+import { EncounterTypes } from './Encounters.mjs';
+import { ItemManager } from './ItemManager.mjs';
+import { Encounter, Rest, GainPartyMember, Friendly, Combat, Trap, SpotDamage, Treasure } from './Encounters.mjs';
+import { PointF } from './PointF.mjs';
 
 //#region Hex object
 //represents a game board tile
-class HexObject {
+export class HexObject {
     constructor(image, PointF, index){
         //this._Image = image;
         this._IsSelected = false;
@@ -69,6 +75,7 @@ class HexObject {
         this._EncounterType = value;
         this.SetEncounter();
     }
+
     get IsEncounterComplete(){
         return this._IsEncounterComplete;
     }
@@ -97,7 +104,6 @@ class HexObject {
             default:
                 return "#F7F9F9";
         }
-        return "#D6DBDF";
     }
 
     SetEncounter(){

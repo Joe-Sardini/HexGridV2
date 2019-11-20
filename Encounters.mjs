@@ -1,6 +1,10 @@
 
+'use strict'
+
+import { EncounterHistoryElement } from './Elements.mjs';
+
 //#region Encounters
-class Encounter {
+export class Encounter {
     constructor(location, items, description){
         this._Location = location;
         this._Items = items;
@@ -37,7 +41,7 @@ class Encounter {
     }
 }
 
-class Rest extends Encounter{
+export class Rest extends Encounter{
     constructor(location,items,description){
         super(location,items,description);    
     }
@@ -51,29 +55,29 @@ class Rest extends Encounter{
 
     PartialPartyHealing(){
         let healingAmount = Math.ceil(Math.random() * 3)*this._DifficultyLevel;
-        for (let idx = 0;idx < PlayerParty.length;idx++){
-            if ((PlayerParty[idx].CurrentHealth + healingAmount) > PlayerParty[idx].Health){
-                PlayerParty[idx].CurrentHealth = PlayerParty[idx].Health;
+        for (let idx = 0;idx < window.PlayerParty.length;idx++){
+            if ((window.PlayerParty[idx].CurrentHealth + healingAmount) > window.PlayerParty[idx].Health){
+                window.PlayerParty[idx].CurrentHealth = window.PlayerParty[idx].Health;
             }else{
-                PlayerParty[idx].CurrentHealth += healingAmount;
+                window.PlayerParty[idx].CurrentHealth += healingAmount;
             }
         }
     }
 }
 
-class GainPartyMember extends Encounter{
+export class GainPartyMember extends Encounter{
     constructor(location,items,description){
         super(location,items,description);
     }
     
     RunEncounter(){
         this._EncounterLogElement.innerHTML += `<BR> ${this._Description}`;
-        PlayerParty.push(CreatePlayerCharacter("New PC ".concat(PlayerParty.length-2)));
+        window.PlayerParty.push(CreatePlayerCharacter("New PC ".concat(window.PlayerParty.length-2)));
         DisplayParty();
     }
 }
 
-class Friendly extends Encounter{
+export class Friendly extends Encounter{
     constructor(location,items,description){
         super(location,items,description);
     }
@@ -81,12 +85,12 @@ class Friendly extends Encounter{
     RunEncounter(){
         console.log("Your party is fully healed.");
         this._EncounterLogElement.innerHTML += "<BR>Your party is fully healed.";
-        PlayerParty.forEach(function(player){player.RestoreHealth();});
+        window.PlayerParty.forEach(function(player){player.RestoreHealth();});
         DisplayParty();
     }
 }
 
-class Combat extends Encounter{
+export class Combat extends Encounter{
     constructor(location,items,description){
         super(location,items,description);
     }
@@ -108,23 +112,23 @@ class Combat extends Encounter{
     RunEncounter(){
         this._EncounterLogElement.innerHTML += `<BR> ${this.Description}`;
         // Should probably have a global combat engine so I'm not making a new one everytime
-        let combatEncounter = new CombatEngine(PlayerParty,this.ConstructEnemyParty());
+        let combatEncounter = new CombatEngine(window.PlayerParty,this.ConstructEnemyParty());
         let idx = 0;
         do{
             combatEncounter.RandomTargetCombat();
             if (idx > 50){ //50 rounds max
-                bCombatIsOver = true;
+                window.bCombatIsOver = true;
             }
             idx++;
-        }while(!bCombatIsOver);
+        }while(!window.bCombatIsOver);
 
-        bCombatIsOver = false;
+        window.bCombatIsOver = false;
         DisplayNPCParty();
         DisplayParty();
     }
 }
 
-class Trap extends Encounter{
+export class Trap extends Encounter{
     constructor(location,items,description){
         super(location,items,description);
         this._TrapDamage = 3;
@@ -140,16 +144,16 @@ class Trap extends Encounter{
     RunEncounter(){
         this._EncounterLogElement.innerHTML += `<BR>Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`;
         console.log(`Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`);
-        for (let idx = 0; idx < PlayerParty.length; idx++){
-            if (PlayerParty[idx].IsAlive){
-                PlayerParty[idx].CurrentHealth = (PlayerParty[idx].CurrentHealth - (this._TrapDamage * this._DifficultyLevel));
+        for (let idx = 0; idx < window.PlayerParty.length; idx++){
+            if (window.PlayerParty[idx].IsAlive){
+                window.PlayerParty[idx].CurrentHealth = (window.PlayerParty[idx].CurrentHealth - (this._TrapDamage * this._DifficultyLevel));
             }
         }
         DisplayParty();
     }
 }
 
-class SpotDamage extends Encounter{
+export class SpotDamage extends Encounter{
     constructor(location,items,description){
         super(location,items,description);
         this._SpotDamage = 5; //Base damage value
@@ -170,19 +174,19 @@ class SpotDamage extends Encounter{
     }
 
     SprinkleDamage(){
-        let numberOfVictims = Math.ceil(Math.random() * (PlayerParty.length+1)/2)+1;
+        let numberOfVictims = Math.ceil(Math.random() * (window.PlayerParty.length+1)/2)+1;
         for (let i = 0; i < numberOfVictims; i++){
-            let playerIndex = Math.ceil(Math.random() * PlayerParty.length-1);
+            let playerIndex = Math.ceil(Math.random() * window.PlayerParty.length-1);
             let damageTaken = Math.ceil(Math.random() * this._SpotDamage+1)*this._DifficultyLevel;
-            if (PlayerParty[playerIndex].IsAlive){
-                PlayerParty[playerIndex].CurrentHealth -= damageTaken;
+            if (window.PlayerParty[playerIndex].IsAlive){
+                window.PlayerParty[playerIndex].CurrentHealth -= damageTaken;
 
             }
         }
     }
 }
 
-class Treasure extends Encounter{
+export class Treasure extends Encounter{
     constructor(location,items,description){
         super(location,items,description);
     }
@@ -190,7 +194,7 @@ class Treasure extends Encounter{
     RunEncounter(){
         this._Items.forEach(function(e){console.log(e);});
         for (let idx = 0; idx < this._Items.length; idx++){
-            PlayerParty[RandomPartyMemberIndex(PlayerParty)].Inventory.push(this._Items[idx]);
+            window.PlayerParty[RandomPartyMemberIndex(window.PlayerParty)].Inventory.push(this._Items[idx]);
         }
         ApplyPartyItems();
     }

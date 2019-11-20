@@ -1,6 +1,10 @@
+'use strict'
+
+import { CombatLogElement, EventLogElement } from './Elements.mjs';
+import { Player } from './Characters.mjs';
 
 //#region CombatEngine
-class CombatEngine{
+export class CombatEngine{
     constructor(PlayerParty,EnemyParty){
         this._PlayerParty = [];
         for (let idx = 0; idx < PlayerParty.length; idx++){ //Only add living players to merged list
@@ -77,7 +81,7 @@ class CombatEngine{
                 }
             }
             if (this.IsPartyAllDead(this._EnemyParty) || this.IsPartyAllDead(this._PlayerParty)){
-                bCombatIsOver = true;
+                window.bCombatIsOver = true;
                 EventLogElement.innerHTML += `<BR> Enemy party destroyed!`;
                 break;
             }

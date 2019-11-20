@@ -1,6 +1,9 @@
+'use strict'
+
+import { EventLogElement, NPCPartyElement } from './Elements.mjs';
 
 //#region Characters
-class Character {
+export class Character {
     constructor(str,health,dmg,tohit,level,name,index,evasion,armor){
         this._Strength = str;
         this._BaseStrength = str;
@@ -147,7 +150,7 @@ class Character {
     }
 }
 
-class Player extends Character{
+export class Player extends Character{
     constructor(str,health,dmg,tohit,level,exppoints,name,index,evasion,armor){
         super(str,health,dmg,tohit,level,name,index,evasion,armor);
         this._ExperiencePoints = exppoints;
@@ -160,7 +163,7 @@ class Player extends Character{
     }
 }
 
-class NPC extends Character{
+export class NPC extends Character{
     constructor(str,health,dmg,tohit,level,expvalue,name,index,evasion,armor){
         super(str,health,dmg,tohit,level,name,index,evasion,armor);
         this._ExperienceValue = expvalue;

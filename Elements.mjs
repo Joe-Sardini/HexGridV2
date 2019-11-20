@@ -1,7 +1,7 @@
 'use strict'
 
-const c = document.getElementById("HexCanvas");
-const ctx = c.getContext("2d");
+//const c = document.getElementById("HexCanvas");
+//const ctx = c.getContext("2d");
 
 export const EventLogElement = document.getElementById("EventLog");
 export const NPCPartyElement = document.getElementById("NPCParty");

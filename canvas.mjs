@@ -1,7 +1,8 @@
 'use strict'
 
-export function create(id,parent,width,height){
+export function create(id,parentId,width,height){
     let canvasElem = document.createElement('canvas');
+    let parent = document.getElementById(parentId);
 
     parent.appendChild(canvasElem);
     canvasElem.width = width;
