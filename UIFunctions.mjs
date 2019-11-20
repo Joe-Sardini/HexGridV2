@@ -1,6 +1,6 @@
 'use strict'
 
-import { NPCInfoElement, EndGameOverlayElement, PlayerInfoElement, inventoryListElement } from './Elements.mjs';
+import { NPCInfoElement, EndGameOverlayElement, PlayerInfoElement, inventoryListElement, modal } from './Elements.mjs';
 import { StringOfEnum, CheckIfPartyIsAllDead, CheckIfNPCPartyIsAllDead } from './Utilities.mjs';
 import { ItemTypes, Rarity } from './Enums.mjs';
 
@@ -88,7 +88,7 @@ function ConfigurePartyDisplay(){
 }
 
 function HandlePartyDisplayClick(partyMemberIndex){
-    //modal.style.display = "block";
+    modal.style.display = "block";
     let invenTableHTML = "<table class='steelBlueCols'><thead><tr><th colspan=4>Inventory</th></tr></thead><tbody><tr>";
     
     for (let idx = 0; idx < window.PlayerParty[partyMemberIndex].Inventory.length; idx++){
