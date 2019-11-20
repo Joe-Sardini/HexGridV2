@@ -46,7 +46,6 @@ export function UpdateDisplay(){
         }
     }
     if (CheckIfPartyIsAllDead()){
-        console.log("The party is all dead, game over!");
         EndGameOverlayElement.innerText = "The party is all dead, game over!";
         EndGameOverlayElement.style.display = "block";
     }

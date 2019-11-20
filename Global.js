@@ -8,10 +8,13 @@ window.PlayerPartyItems = [];
 window.NPCParty = [];
 window.Hexes = [];
 window.bCombatIsOver = false;
+
+//Attaching included library functions to global scope so they can be used with modules
 window.NameGen = NameGen;
 window._.isEqual = _.isEqual;
 //#endregion 
 
+//These elements are also referenced in the elements module
 const modal = document.getElementById("myModal");
 const span = document.getElementsByClassName("close")[0];
 
