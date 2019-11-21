@@ -51,7 +51,6 @@ export class Rest extends Encounter{
     }
 
     RunEncounter(){
-        console.log("Your party is partially healed.");
         EncounterHistoryElement.innerHTML += "<BR>Your party is partially healed.";
         this.PartialPartyHealing();
         DisplayParty();
@@ -87,7 +86,6 @@ export class Friendly extends Encounter{
     }
 
     RunEncounter(){
-        console.log("Your party is fully healed.");
         this._EncounterLogElement.innerHTML += "<BR>Your party is fully healed.";
         window.PlayerParty.forEach(function(player){player.RestoreHealth();});
         DisplayParty();
@@ -147,7 +145,6 @@ export class Trap extends Encounter{
 
     RunEncounter(){
         this._EncounterLogElement.innerHTML += `<BR>Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`;
-        console.log(`Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`);
         for (let idx = 0; idx < window.PlayerParty.length; idx++){
             if (window.PlayerParty[idx].IsAlive){
                 window.PlayerParty[idx].CurrentHealth = (window.PlayerParty[idx].CurrentHealth - (this._TrapDamage * this._DifficultyLevel));
@@ -171,7 +168,6 @@ export class SpotDamage extends Encounter{
     }
 
     RunEncounter(){
-        console.log("A few of your party members take damage...")
         this._EncounterLogElement.innerHTML += "<BR>A few of your party members take damage...";
         this.SprinkleDamage();
         DisplayParty();

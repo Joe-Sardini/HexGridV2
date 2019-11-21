@@ -55,12 +55,16 @@ export function UpdateDisplay(){
 export function DisplayParty(){
     PlayerInfoElement.innerHTML = "<thead><tr><Th>Character Info</th></tr></thead>";
     for (let i = 0; i < window.PlayerParty.length; i++){
-        PlayerInfoElement.innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px'> 
-        Name: ${window.PlayerParty[i].Name} 
-        <BR/>Init: ${DetermineStatColor(window.PlayerParty[i].Initiative,window.PlayerParty[i].BaseInitiative) + window.PlayerParty[i].Initiative}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${DetermineStatColor(window.PlayerParty[i].Damage,window.PlayerParty[i].BaseDamage) + window.PlayerParty[i].Damage}</span> 
-        <BR/>ToHit: ${DetermineStatColor(window.PlayerParty[i].ToHit,window.PlayerParty[i].BaseToHit) + window.PlayerParty[i].ToHit}</span>&nbsp;&nbsp;&nbsp;Ev: ${DetermineStatColor(window.PlayerParty[i].Evasion,window.PlayerParty[i].BaseEvasion) + window.PlayerParty[i].Evasion}</span>
-        <BR/>HP: ${DetermineStatColor(window.PlayerParty[i].CurrentHealth,window.PlayerParty[i].Health) + window.PlayerParty[i].CurrentHealth}</span>/${window.PlayerParty[i].Health} 
-        </div></TD></tr>`;
+        let PlayerCharacter = window.PlayerParty[i];
+        PlayerInfoElement.innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px' ondrop='drop_handler(event)' ondragover='dragover_handler(event)'> 
+            Name: ${PlayerCharacter.Name} 
+            <BR/>Init: ${DetermineStatColor(PlayerCharacter.Initiative,PlayerCharacter.BaseInitiative) 
+            + PlayerCharacter.Initiative}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${DetermineStatColor(PlayerCharacter.Damage,PlayerCharacter.BaseDamage) 
+            + PlayerCharacter.Damage}</span><BR/>ToHit: ${DetermineStatColor(PlayerCharacter.ToHit,PlayerCharacter.BaseToHit) 
+            + PlayerCharacter.ToHit}</span>&nbsp;&nbsp;&nbsp;Ev: ${DetermineStatColor(PlayerCharacter.Evasion,PlayerCharacter.BaseEvasion) 
+            + PlayerCharacter.Evasion}</span><BR/>HP: ${DetermineStatColor(PlayerCharacter.CurrentHealth,PlayerCharacter.Health) 
+            + PlayerCharacter.CurrentHealth}</span>/${PlayerCharacter.Health} 
+            </div></TD></tr>`;
     }
     UpdateDisplay();
 }
@@ -86,24 +90,31 @@ function ConfigurePartyDisplay(){
     }
 }
 
-function HandlePartyDisplayClick(partyMemberIndex){
+function HandlePartyDisplayClick(PartyMemberIndex){
+    inventoryListElement.innerHTML = BuildCharacterInventoryDisplay(window.PlayerParty[PartyMemberIndex]);
+}
+
+function BuildCharacterInventoryDisplay(Character){
     modal.style.display = "block";
     let invenTableHTML = "<table class='steelBlueCols'><thead><tr><th colspan=4>Inventory</th></tr></thead><tbody><tr>";
     
-    for (let idx = 0; idx < window.PlayerParty[partyMemberIndex].Inventory.length; idx++){
+    for (let idx = 0; idx < Character.Inventory.length; idx++){
         if (idx == 4 || idx == 8 || idx == 12){
             invenTableHTML += "<tr>";
         }
-        let tooltipdata = window.PlayerParty[partyMemberIndex].Inventory[idx].ItemName + "\n" + StringOfEnum(ItemTypes,window.PlayerParty[partyMemberIndex].Inventory[idx].ItemType) + "\n" + StringOfEnum(Rarity,window.PlayerParty[partyMemberIndex].Inventory[idx].ItemRarity);
-        invenTableHTML += "<td><a class='test' href='#' data-toggle='tooltip' data-html=true data-placement='bottom' title='" + tooltipdata + "'>" + window.PlayerParty[partyMemberIndex].Inventory[idx].ItemName + "</a></td>"
+        let ToolTipData = Character.Inventory[idx].ItemName 
+        + "\n" + StringOfEnum(ItemTypes,Character.Inventory[idx].ItemType) 
+        + "\n" + StringOfEnum(Rarity,Character.Inventory[idx].ItemRarity);
+
+        invenTableHTML += `<td><a href='#' draggable='true' ondragstart='dragstart_handler(event)' data-toggle='tooltip' data-html=true data-placement='bottom' title='${ToolTipData}'>${Character.Inventory[idx].ItemName}</a></td>`;
+
         if (idx == 4 || idx == 8 || idx == 12){
             invenTableHTML += "</tr>";
         }
 
     }
     invenTableHTML += "</tr></table>";
-
-    inventoryListElement.innerHTML = invenTableHTML;
+    return invenTableHTML;
 }
 
 function HandleDeadPartyDisplayClick(){

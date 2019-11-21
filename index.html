@@ -21,10 +21,10 @@
         <div class="container" id="main">
             <table class="table">
                 <TR>
-                    <Th colspan="4" class="text-center">Roguesweeper</Th>
+                    <Th colspan="4" class="text-center">TITLE</Th>
                 </TR>
                 <TR>
-                    <TD><table class="table table-hover" id="PlayerInfo" class="PlayerInfo"></table></TD>
+                    <TD><table class="table table-hover" id="PlayerInfo" class="PlayerInfo" ondrop="drop_handler(event)" ondragover="dragover_handler(event)"></table></TD>
                     <TD><table class="table table-hover" id="NPCInfo" class="NPCInfo"></table></TD>
                     <TD id="tdCanvas"><canvas id="HexCanvas" class="HexCanvas" width="1075px" height="855px"></canvas></TD>
                     <TD>
@@ -62,8 +62,8 @@
        
 <script src="/node_modules/lodash/lodash.js"></script>
 <script src="/NameGen/namegen.js"></script>    
-<script src="Global.js?v=5"></script>
-<script type="module" src="Main.mjs?v=1"></script>
+<script src="Global.js?v=8"></script>
+<script type="module" src="Main.mjs?v=2"></script>
 
 </html>
 

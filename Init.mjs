@@ -1,12 +1,14 @@
 'use strict'
 
+// eslint-disable-next-line no-unused-vars
 import { RandomEncounter, CreatePlayerCharacter } from './Generators.mjs';
 import { Player } from './Characters.mjs';
 import { DisplayParty } from './UIFunctions.mjs';
+import { EncounterTypes } from './Enums.mjs';
 
 export function InitializeGameData(){
     for (let index = 0; index < window.Hexes.length;index++){
-        window.Hexes[index].EncounterType = RandomEncounter();
+        window.Hexes[index].EncounterType = EncounterTypes.TREASURE; //RandomEncounter();
     }
     
     window.PlayerParty.push(new Player(10,20,5,10,1,0,"CP1",window.PlayerParty.length,7,5));

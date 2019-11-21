@@ -28,6 +28,24 @@ window.onclick = function(event){
     }
 }
 
+window.dragstart_handler = function(ev){
+    console.log("drag started");
+    ev.dataTransfer.setData("text/plain", ev.target.innerText);
+}
+
+window.dragover_handler = function(ev) {
+    ev.preventDefault();
+    ev.dataTransfer.dropEffect = "move";
+}
+
+window.drop_handler = function(ev) {
+    console.log("Dro ZOne");
+    ev.preventDefault();
+    // Get the id of the target and add the moved element to the target's DOM
+    //var data = ev.dataTransfer.getData("text/plain");
+    //ev.target.appendChild(document.getElementById(data));
+}
+
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
 });
