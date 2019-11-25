@@ -43,3 +43,12 @@ export function ApplyPartyItems(){
 export function GenerateRandomNumberInRange(min,max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export function TransferItems(from,to,item){
+    //find who it's from
+    //find who it goes to
+    //find the item
+    console.log(from + " " + to + " " + item);
+    
+}
+

@@ -40,13 +40,10 @@ window.dragover_handler = function(ev) {
 
 window.drop_handler = function(ev) {
     ev.preventDefault();
-    // Get the id of the target and add the moved element to the target's DOM
-    let data = ev.dataTransfer.getData("text/plain");
-    let cName = ev.dataTransfer.getData("CharacterName");
-    //console.log(cName + "-->" + ev.target.id);
-    var event = new CustomEvent('TransferItem',{from:data,to:cName});
-    window.dispatchEvent(event)
-    //ev.target.appendChild(document.getElementById(data));
+    let ItemData = ev.dataTransfer.getData("text/plain");
+    let FromChar = ev.dataTransfer.getData("CharacterName");
+    let ToCharSlot = ev.target.id; 
+    window.TransferItems(FromChar,ToCharSlot,ItemData);
 }
 
 $(document).ready(function(){
