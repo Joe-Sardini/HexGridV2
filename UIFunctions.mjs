@@ -106,7 +106,7 @@ function BuildCharacterInventoryDisplay(Character){
         + "\n" + StringOfEnum(ItemTypes,Character.Inventory[idx].ItemType) 
         + "\n" + StringOfEnum(Rarity,Character.Inventory[idx].ItemRarity);
 
-        invenTableHTML += `<td><a href='#' draggable='true' ondragstart='dragstart_handler(event)' data-toggle='tooltip' data-html=true data-placement='bottom' title='${ToolTipData}'>${Character.Inventory[idx].ItemName}</a></td>`;
+        invenTableHTML += `<td><a href='#' draggable='true' ondragstart='dragstart_handler(event)' data-toggle='tooltip' id='${Character.Name}' data-html=true data-placement='bottom' title='${ToolTipData}'>${Character.Inventory[idx].ItemName}</a></td>`;
 
         if (idx == 4 || idx == 8 || idx == 12){
             invenTableHTML += "</tr>";
@@ -121,3 +121,4 @@ function HandleDeadPartyDisplayClick(){
     //TODO 
     console.log("This character is dead.");
 }
+

@@ -377,5 +377,9 @@ export class HexagonGrid {
         let tile = this.GetSelectedTile(mouseX, mouseY);
         return tile;
     }
+
+    TransferItem(e){
+        console.log(e.from);
+    }
 }
 //#endregion

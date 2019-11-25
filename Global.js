@@ -29,8 +29,8 @@ window.onclick = function(event){
 }
 
 window.dragstart_handler = function(ev){
-    console.log("drag started");
-    ev.dataTransfer.setData("text/plain", ev.target.innerText);
+    ev.dataTransfer.setData("text/plain", ev.target.innerHTML);
+    ev.dataTransfer.setData("CharacterName", ev.target.id);
 }
 
 window.dragover_handler = function(ev) {
@@ -39,10 +39,13 @@ window.dragover_handler = function(ev) {
 }
 
 window.drop_handler = function(ev) {
-    console.log("Dro ZOne");
     ev.preventDefault();
     // Get the id of the target and add the moved element to the target's DOM
-    //var data = ev.dataTransfer.getData("text/plain");
+    let data = ev.dataTransfer.getData("text/plain");
+    let cName = ev.dataTransfer.getData("CharacterName");
+    //console.log(cName + "-->" + ev.target.id);
+    var event = new CustomEvent('TransferItem',{from:data,to:cName});
+    window.dispatchEvent(event)
     //ev.target.appendChild(document.getElementById(data));
 }
 
