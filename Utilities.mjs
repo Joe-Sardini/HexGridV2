@@ -1,6 +1,8 @@
 'use strict'
 
-import { DisplayParty } from './UIFunctions.mjs';
+import { UpdateDisplay, DisplayParty } from './UIFunctions.mjs';
+import { Player } from './Characters.mjs';
+import { Item } from './Item.mjs';
 
 export function CompareInitiative(a,b){
     if (a.Initiative < b.Initiative){
@@ -44,11 +46,27 @@ export function GenerateRandomNumberInRange(min,max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export function TransferItems(from,to,item){
+//Used in drag and drop inventory window to charcter slots
+export function TransferItems(from,to,itemName){
     //find who it's from
-    //find who it goes to
+    let fromChar = window.PlayerParty.find(Player => window._.isEqual(Player.Name,from));
+
     //find the item
-    console.log(from + " " + to + " " + item);
+    const sItem = (Item) => Item.ItemName === itemName;
+    let itemIndex = window.PlayerParty[fromChar.Index].Inventory.findIndex(sItem); 
     
+    //make a copy of the item
+    let item = window.PlayerParty[fromChar.Index].Inventory.find(Item => window._.isEqual(Item.ItemName,itemName));
+    
+    //get index of party memeber that we drop to
+    let PCToIndex = to.substring(6,to.length);
+
+    //doa  switcheroo
+    if (itemIndex > -1) {
+        item.IsApplied = false;
+        window.PlayerParty[fromChar.Index].RemoveItem(item);
+        window.PlayerParty[PCToIndex].AddItem(item);
+        DisplayParty();
+    }
 }
 

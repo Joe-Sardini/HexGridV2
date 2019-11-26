@@ -148,6 +148,27 @@ export class Character {
             }
         }
     }
+
+    RemoveItem(item){
+        const sItem = (Item) => Item.ItemName === item.ItemName;
+        let itemIndex = this._Inventory.findIndex(sItem); 
+        if (itemIndex > -1) {
+            this._Inventory.splice(itemIndex,1);
+            
+            this._Strength -= item.Strength;
+            this._Health -= item.Health;
+            this._Damage -= item.DamageMod;
+            this._ToHit -= item.ToHit;
+            this._Initiative -= item.Initiative;
+            this._Evasion -= item.Evasion;
+            this._Armor -= item.Armor;
+        }
+    }
+
+    AddItem(item){
+        this._Inventory.push(item);
+        this.ApplyItems();
+    }
 }
 
 export class Player extends Character{
