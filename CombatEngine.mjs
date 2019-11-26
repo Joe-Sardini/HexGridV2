@@ -98,7 +98,7 @@ export class CombatEngine{
     }
 
     SelectTarget(Party){
-        let rnd = Math.ceil(Math.random() * Party.length-1);
+        const rnd = Math.ceil(Math.random() * Party.length-1);
         if (!Party[rnd].IsAlive){
             this.SelectTarget(Party);
         }

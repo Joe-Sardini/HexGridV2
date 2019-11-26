@@ -57,7 +57,7 @@ export class Rest extends Encounter{
     }
 
     PartialPartyHealing(){
-        let healingAmount = Math.ceil(Math.random() * 3)*this._DifficultyLevel;
+        const healingAmount = Math.ceil(Math.random() * 3)*this._DifficultyLevel;
         for (let idx = 0;idx < window.PlayerParty.length;idx++){
             if ((window.PlayerParty[idx].CurrentHealth + healingAmount) > window.PlayerParty[idx].Health){
                 window.PlayerParty[idx].CurrentHealth = window.PlayerParty[idx].Health;
@@ -114,7 +114,7 @@ export class Combat extends Encounter{
     RunEncounter(){
         this._EncounterLogElement.innerHTML += `<BR> ${this.Description}`;
         // Should probably have a global combat engine so I'm not making a new one everytime
-        let combatEncounter = new CombatEngine(window.PlayerParty,this.ConstructEnemyParty());
+        const combatEncounter = new CombatEngine(window.PlayerParty,this.ConstructEnemyParty());
         let idx = 0;
         do{
             combatEncounter.RandomTargetCombat();
@@ -174,7 +174,7 @@ export class SpotDamage extends Encounter{
     }
 
     SprinkleDamage(){
-        let numberOfVictims = Math.ceil(Math.random() * (window.PlayerParty.length+1)/2)+1;
+        const numberOfVictims = Math.ceil(Math.random() * (window.PlayerParty.length+1)/2)+1;
         for (let i = 0; i < numberOfVictims; i++){
             let playerIndex = Math.ceil(Math.random() * window.PlayerParty.length-1);
             let damageTaken = Math.ceil(Math.random() * this._SpotDamage+1)*this._DifficultyLevel;

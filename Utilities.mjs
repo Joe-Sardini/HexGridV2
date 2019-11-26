@@ -61,7 +61,7 @@ export function TransferItems(from,to,itemName){
     //get index of party memeber that we drop to
     let PCToIndex = to.substring(6,to.length);
 
-    //doa  switcheroo
+    //do a switcheroo
     if (itemIndex > -1) {
         item.IsApplied = false;
         window.PlayerParty[fromChar.Index].RemoveItem(item);

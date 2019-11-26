@@ -41,8 +41,8 @@ export class ItemManager {
     }
 
     GenerateTreasure(){
-        let numberOfItems = 2 * this._DifficultyLevel;
-        let modifier = RarityModifiers.TREASURE + this._DifficultyLevel;
+        const numberOfItems = 2 * this._DifficultyLevel;
+        const modifier = RarityModifiers.TREASURE + this._DifficultyLevel;
         this.RandomItems(numberOfItems,modifier);
     }
 
@@ -88,7 +88,7 @@ export class ItemManager {
     }
 
     DetermineType(){
-        let rnd = Math.ceil(Math.random() * 10);
+        const rnd = Math.ceil(Math.random() * 10);
         if (rnd < 4){
             return ItemTypes.ARMOR;
         }else if (rnd > 3 && rnd < 7) {
@@ -102,7 +102,7 @@ export class ItemManager {
     }
 
     CreateItemName(){
-        let generator = window.NameGen.compile("!BsV!i");
+        const generator = window.NameGen.compile("!BsV!i");
         return generator.toString();
     }
 
@@ -126,69 +126,69 @@ export class ItemManager {
     }
 
     CreateArmorItem(itemRarity){
-        let rarity = this.RarityLevel(itemRarity);
-        let itemName = this.CreateItemName(); 
-        let damagemod = 0;
-        let str = GenerateRandomNumberInRange(1+rarity,3+rarity);
-        let health = GenerateRandomNumberInRange(2+rarity,4+rarity);
-        let dmg = 0;
-        let tohit = GenerateRandomNumberInRange(-4+rarity,4+rarity);
-        let level = this._DifficultyLevel;
-        let initiative = GenerateRandomNumberInRange(-4+rarity,4+rarity);
-        let evasion = GenerateRandomNumberInRange(-4+rarity,4+rarity);
-        let armor = GenerateRandomNumberInRange(2+rarity,6+rarity);
-        let itemType = ItemTypes.ARMOR;
+        const rarity = this.RarityLevel(itemRarity);
+        const itemName = this.CreateItemName(); 
+        const damagemod = 0;
+        const str = GenerateRandomNumberInRange(1+rarity,3+rarity);
+        const health = GenerateRandomNumberInRange(2+rarity,4+rarity);
+        const dmg = 0;
+        const tohit = GenerateRandomNumberInRange(-4+rarity,4+rarity);
+        const level = this._DifficultyLevel;
+        const initiative = GenerateRandomNumberInRange(-4+rarity,4+rarity);
+        const evasion = GenerateRandomNumberInRange(-4+rarity,4+rarity);
+        const armor = GenerateRandomNumberInRange(2+rarity,6+rarity);
+        const itemType = ItemTypes.ARMOR;
 
         return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,itemRarity);
     }
 
     CreateWeaponItem(itemRarity){
-        let rarity = this.RarityLevel(itemRarity);
-        let itemName = this.CreateItemName(); 
-        let damagemod = GenerateRandomNumberInRange(2+rarity,6+rarity);
-        let str = GenerateRandomNumberInRange(1+rarity,2+rarity);
-        let health = 0;
-        let dmg = GenerateRandomNumberInRange(2+rarity,4+rarity);
-        let tohit = GenerateRandomNumberInRange(1+rarity,3+rarity);
-        let level = this._DifficultyLevel;
-        let initiative = GenerateRandomNumberInRange(1+rarity,3+rarity);
-        let evasion = 0;
-        let armor = 0;
-        let itemType = ItemTypes.WEAPON;
+        const rarity = this.RarityLevel(itemRarity);
+        const itemName = this.CreateItemName(); 
+        const damagemod = GenerateRandomNumberInRange(2+rarity,6+rarity);
+        const str = GenerateRandomNumberInRange(1+rarity,2+rarity);
+        const health = 0;
+        const dmg = GenerateRandomNumberInRange(2+rarity,4+rarity);
+        const tohit = GenerateRandomNumberInRange(1+rarity,3+rarity);
+        const level = this._DifficultyLevel;
+        const initiative = GenerateRandomNumberInRange(1+rarity,3+rarity);
+        const evasion = 0;
+        const armor = 0;
+        const itemType = ItemTypes.WEAPON;
 
         return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);
     }
 
     CreateJewleryItem(itemRarity){
-        let rarity = this.RarityLevel(itemRarity);
-        let itemName = this.CreateItemName(); 
-        let damagemod = GenerateRandomNumberInRange(0+rarity,1+rarity);
-        let str = GenerateRandomNumberInRange(2+rarity,4+rarity);
-        let health = GenerateRandomNumberInRange(10+rarity,20+rarity);
-        let dmg = GenerateRandomNumberInRange(1+rarity,3+rarity);
-        let tohit = GenerateRandomNumberInRange(1+rarity,5+rarity);
-        let level = this._DifficultyLevel;
-        let initiative = GenerateRandomNumberInRange(5+rarity,10+rarity);
-        let evasion = GenerateRandomNumberInRange(5+rarity,10+rarity);
-        let armor = GenerateRandomNumberInRange(0+rarity,1+rarity);
-        let itemType = ItemTypes.JEWLERY;
+        const rarity = this.RarityLevel(itemRarity);
+        const itemName = this.CreateItemName(); 
+        const damagemod = GenerateRandomNumberInRange(0+rarity,1+rarity);
+        const str = GenerateRandomNumberInRange(2+rarity,4+rarity);
+        const health = GenerateRandomNumberInRange(10+rarity,20+rarity);
+        const dmg = GenerateRandomNumberInRange(1+rarity,3+rarity);
+        const tohit = GenerateRandomNumberInRange(1+rarity,5+rarity);
+        const level = this._DifficultyLevel;
+        const initiative = GenerateRandomNumberInRange(5+rarity,10+rarity);
+        const evasion = GenerateRandomNumberInRange(5+rarity,10+rarity);
+        const armor = GenerateRandomNumberInRange(0+rarity,1+rarity);
+        const itemType = ItemTypes.JEWLERY;
 
         return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);
     }
 
     CreateMagicItem(itemRarity){
-        let rarity = this.RarityLevel(itemRarity);
-        let itemName = this.CreateItemName(); 
-        let damagemod = GenerateRandomNumberInRange(2+rarity,2*rarity);
-        let str = GenerateRandomNumberInRange(2+rarity,4*rarity);
-        let health = GenerateRandomNumberInRange(2+rarity,20*rarity);
-        let dmg = GenerateRandomNumberInRange(2+rarity,3*rarity);
-        let tohit = GenerateRandomNumberInRange(2+rarity,5*rarity);
-        let level = this._DifficultyLevel;
-        let initiative = GenerateRandomNumberInRange(2+rarity,10*rarity);
-        let evasion = GenerateRandomNumberInRange(2+rarity,10*rarity);
-        let armor = GenerateRandomNumberInRange(2+rarity,5*rarity);
-        let itemType = ItemTypes.MAGIC;
+        const rarity = this.RarityLevel(itemRarity);
+        const itemName = this.CreateItemName(); 
+        const damagemod = GenerateRandomNumberInRange(2+rarity,2*rarity);
+        const str = GenerateRandomNumberInRange(2+rarity,4*rarity);
+        const health = GenerateRandomNumberInRange(2+rarity,20*rarity);
+        const dmg = GenerateRandomNumberInRange(2+rarity,3*rarity);
+        const tohit = GenerateRandomNumberInRange(2+rarity,5*rarity);
+        const level = this._DifficultyLevel;
+        const initiative = GenerateRandomNumberInRange(2+rarity,10*rarity);
+        const evasion = GenerateRandomNumberInRange(2+rarity,10*rarity);
+        const armor = GenerateRandomNumberInRange(2+rarity,5*rarity);
+        const itemType = ItemTypes.MAGIC;
 
         return new Item(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity);
     }

@@ -40,9 +40,9 @@ window.dragover_handler = function(ev) {
 
 window.drop_handler = function(ev) {
     ev.preventDefault();
-    let ItemData = ev.dataTransfer.getData("text/plain");
-    let FromChar = ev.dataTransfer.getData("CharacterName");
-    let ToCharSlot = ev.target.id; 
+    const ItemData = ev.dataTransfer.getData("text/plain");
+    const FromChar = ev.dataTransfer.getData("CharacterName");
+    const ToCharSlot = ev.target.id; 
     window.TransferItems(FromChar,ToCharSlot,ItemData);
 }
 

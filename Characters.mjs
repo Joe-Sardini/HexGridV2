@@ -151,7 +151,7 @@ export class Character {
 
     RemoveItem(item){
         const sItem = (Item) => Item.ItemName === item.ItemName;
-        let itemIndex = this._Inventory.findIndex(sItem); 
+        const itemIndex = this._Inventory.findIndex(sItem); 
         if (itemIndex > -1) {
             this._Inventory.splice(itemIndex,1);
             
