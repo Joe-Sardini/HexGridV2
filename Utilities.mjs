@@ -1,7 +1,9 @@
 'use strict'
 
-import { DisplayParty } from './UIFunctions.mjs';
+import { DisplayParty } from './UIFunctions.mjs?v=1';
+// eslint-disable-next-line no-unused-vars
 import { Player } from './Characters.mjs';
+// eslint-disable-next-line no-unused-vars
 import { Item } from './Item.mjs';
 
 export function CompareInitiative(a,b){

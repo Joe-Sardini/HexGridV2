@@ -115,7 +115,7 @@ export class Item {
                 this._ImageLocation = 'images/Magic.jpg';
                 break;
             default:
-                this._ImageLocation = 'images/ssword.jpg';
+                this._ImageLocation = 'images/jewlery.jpg';
                 break;
         }
     }

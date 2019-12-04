@@ -97,7 +97,7 @@ export function HandlePartyDisplayClick(PartyMemberIndex){
 
 function BuildCharacterInventoryDisplay(Character){
     modal.style.display = "block";
-    let invenTableHTML = "<table class='steelBlueCols'><thead><tr><th colspan=4>Inventory</th></tr></thead><tbody><tr>";
+    let invenTableHTML = `<table class='steelBlueCols'><thead><tr><th colspan=4>Inventory - ${Character.Name} </th></tr></thead><tbody><tr>`;
     
     for (let idx = 0; idx < Character.Inventory.length; idx++){
         let ToolTipData = Character.Inventory[idx].ItemName 
