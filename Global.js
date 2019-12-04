@@ -8,10 +8,12 @@ window.PlayerPartyItems = [];
 window.NPCParty = [];
 window.Hexes = [];
 window.bCombatIsOver = false;
+window.PlayerMemberIndex = 0;
 
 //Attaching included library functions to global scope so they can be used with modules
 window.NameGen = NameGen;
 window._.isEqual = _.isEqual;
+var dragged;
 //#endregion 
 
 //These elements are also referenced in the elements module
@@ -26,11 +28,13 @@ window.onclick = function(event){
     if (event.target == modal) {
       modal.style.display = "none";
     }
+    console.log(event);
 }
 
 window.dragstart_handler = function(ev){
     ev.dataTransfer.setData("text/plain", ev.target.innerHTML);
     ev.dataTransfer.setData("CharacterName", ev.target.id);
+    dragged = ev.target;
 }
 
 window.dragover_handler = function(ev) {
@@ -43,7 +47,13 @@ window.drop_handler = function(ev) {
     const ItemData = ev.dataTransfer.getData("text/plain");
     const FromChar = ev.dataTransfer.getData("CharacterName");
     const ToCharSlot = ev.target.id; 
-    window.TransferItems(FromChar,ToCharSlot,ItemData);
+    if (dragged.parentNode !== null){
+        dragged.parentNode.removeChild(dragged);
+        window.TransferItems(FromChar,ToCharSlot,ItemData);
+        window.DisplayParty();
+        let event = new Event('click');
+        document.getElementById(`PCSlot${window.PlayerMemberIndex}`).dispatchEvent(event);
+    }
 }
 
 $(document).ready(function(){

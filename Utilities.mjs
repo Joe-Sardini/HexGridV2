@@ -1,6 +1,6 @@
 'use strict'
 
-import { UpdateDisplay, DisplayParty } from './UIFunctions.mjs';
+import { DisplayParty } from './UIFunctions.mjs';
 import { Player } from './Characters.mjs';
 import { Item } from './Item.mjs';
 
@@ -65,7 +65,9 @@ export function TransferItems(from,to,itemName){
     if (itemIndex > -1) {
         item.IsApplied = false;
         window.PlayerParty[fromChar.Index].RemoveItem(item);
-        window.PlayerParty[PCToIndex].AddItem(item);
+        if (window.PlayerParty[PCToIndex] != undefined){
+            window.PlayerParty[PCToIndex].AddItem(item);
+        }
         DisplayParty();
     }
 }

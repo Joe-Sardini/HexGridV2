@@ -90,7 +90,8 @@ function ConfigurePartyDisplay(){
     }
 }
 
-function HandlePartyDisplayClick(PartyMemberIndex){
+export function HandlePartyDisplayClick(PartyMemberIndex){
+    window.PlayerMemberIndex = PartyMemberIndex;
     inventoryListElement.innerHTML = BuildCharacterInventoryDisplay(window.PlayerParty[PartyMemberIndex]);
 }
 
@@ -99,19 +100,15 @@ function BuildCharacterInventoryDisplay(Character){
     let invenTableHTML = "<table class='steelBlueCols'><thead><tr><th colspan=4>Inventory</th></tr></thead><tbody><tr>";
     
     for (let idx = 0; idx < Character.Inventory.length; idx++){
-        if (idx == 4 || idx == 8 || idx == 12){
-            invenTableHTML += "<tr>";
-        }
         let ToolTipData = Character.Inventory[idx].ItemName 
         + "\n" + StringOfEnum(ItemTypes,Character.Inventory[idx].ItemType) 
         + "\n" + StringOfEnum(Rarity,Character.Inventory[idx].ItemRarity);
 
         invenTableHTML += `<td><a href='#' draggable='true' ondragstart='dragstart_handler(event)' data-toggle='tooltip' id='${Character.Name}' data-html=true data-placement='bottom' title='${ToolTipData}'>${Character.Inventory[idx].ItemName}</a></td>`;
 
-        if (idx == 4 || idx == 8 || idx == 12){
-            invenTableHTML += "</tr>";
+        if ((idx-3) % 4 === 0){
+            invenTableHTML += "</tr><tr>";
         }
-
     }
     invenTableHTML += "</tr></table>";
     return invenTableHTML;
