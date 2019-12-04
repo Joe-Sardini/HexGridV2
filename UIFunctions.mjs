@@ -104,7 +104,7 @@ function BuildCharacterInventoryDisplay(Character){
         + "\n" + StringOfEnum(ItemTypes,Character.Inventory[idx].ItemType) 
         + "\n" + StringOfEnum(Rarity,Character.Inventory[idx].ItemRarity);
 
-        invenTableHTML += `<td><a href='#' draggable='true' ondragstart='dragstart_handler(event)' data-toggle='tooltip' id='${Character.Name}' data-html=true data-placement='bottom' title='${ToolTipData}'>${Character.Inventory[idx].ItemName}</a></td>`;
+        invenTableHTML += `<td><a href='#' draggable='true' ondragstart='dragstart_handler(event)' data-toggle='tooltip' id='${Character.Name}' data-html=true data-placement='bottom' title='${ToolTipData}'><img src='${Character.Inventory[idx].ImageLocation}' width='20px' height='20px' />${Character.Inventory[idx].ItemName}</a></td>`;
 
         if ((idx-3) % 4 === 0){
             invenTableHTML += "</tr><tr>";

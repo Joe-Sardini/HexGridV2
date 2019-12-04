@@ -1,5 +1,7 @@
 'use strict'
 
+import { ItemTypes } from './Enums.mjs';
+
 //#region Items
 export class Item {
     constructor(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity){
@@ -16,6 +18,7 @@ export class Item {
         this._ItemType = itemType;
         this._ItemRarity = rarity;
         this._IsApplied = false;
+        this.SetImage();
     }
 
     get IsApplied(){
@@ -89,6 +92,32 @@ export class Item {
     }
     set Initiative(value){
         this._Initiative = value;
+    }
+    get ImageLocation(){
+        return this._ImageLocation;
+    }
+    set ImageLocation(value){
+        this._ImageLocation = value;
+    }
+
+    SetImage(){
+        switch(this._ItemType){
+            case ItemTypes.ARMOR:
+                this._ImageLocation = 'images/Armor.jpg';
+                break;
+            case ItemTypes.WEAPON:
+                this._ImageLocation = 'images/ssword.jpg';
+                break;
+            case ItemTypes.JEWLERY:
+                this._ImageLocation = 'images/jewlery.jpg';
+                break;
+            case ItemTypes.MAGIC:
+                this._ImageLocation = 'images/Magic.jpg';
+                break;
+            default:
+                this._ImageLocation = 'images/ssword.jpg';
+                break;
+        }
     }
 }
 //#endregion

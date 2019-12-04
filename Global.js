@@ -28,11 +28,15 @@ window.onclick = function(event){
     if (event.target == modal) {
       modal.style.display = "none";
     }
-    console.log(event);
+}
+
+function extractItemName(item){
+    const itemName = item.substring(item.lastIndexOf('>')+1);
+    return itemName;
 }
 
 window.dragstart_handler = function(ev){
-    ev.dataTransfer.setData("text/plain", ev.target.innerHTML);
+    ev.dataTransfer.setData("text/plain", extractItemName(ev.target.innerHTML));
     ev.dataTransfer.setData("CharacterName", ev.target.id);
     dragged = ev.target;
 }
@@ -51,7 +55,7 @@ window.drop_handler = function(ev) {
         dragged.parentNode.removeChild(dragged);
         window.TransferItems(FromChar,ToCharSlot,ItemData);
         window.DisplayParty();
-        let event = new Event('click');
+        const event = new Event('click');
         document.getElementById(`PCSlot${window.PlayerMemberIndex}`).dispatchEvent(event);
     }
 }

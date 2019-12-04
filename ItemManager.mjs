@@ -2,7 +2,7 @@
 
 import { EncounterTypes, RarityModifiers, ItemTypes, Rarity } from './Enums.mjs';
 import { GenerateRandomNumberInRange } from './Utilities.mjs';
-import { Item } from './Item.mjs';
+import { Item } from './Item.mjs?v=1';
 
 
 //#region Item Manager
