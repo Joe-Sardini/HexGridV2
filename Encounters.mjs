@@ -196,6 +196,7 @@ export class Treasure extends Encounter{
         for (let idx = 0; idx < this._Items.length; idx++){
             window.PlayerParty[RandomPartyMemberIndex(window.PlayerParty)].Inventory.push(this._Items[idx]);
         }
+        window.PlayerParty.forEach(function(e){e.ApplyExperience(5)})
         ApplyPartyItems();
     }
 }

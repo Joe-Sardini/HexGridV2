@@ -57,7 +57,8 @@ export function DisplayParty(){
     for (let i = 0; i < window.PlayerParty.length; i++){
         let PlayerCharacter = window.PlayerParty[i];
         PlayerInfoElement.innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px' ondrop='drop_handler(event)' ondragover='dragover_handler(event)'> 
-            Name: ${PlayerCharacter.Name} 
+            Name: ${PlayerCharacter.Name}
+            <BR/>Level: ${PlayerCharacter.Level}&nbsp;&nbsp;&nbsp; Exp: ${PlayerCharacter.ExperiencePoints}  
             <BR/>Init: ${DetermineStatColor(PlayerCharacter.Initiative,PlayerCharacter.BaseInitiative) 
             + PlayerCharacter.Initiative}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dmg: ${DetermineStatColor(PlayerCharacter.Damage,PlayerCharacter.BaseDamage) 
             + PlayerCharacter.Damage}</span><BR/>ToHit: ${DetermineStatColor(PlayerCharacter.ToHit,PlayerCharacter.BaseToHit) 

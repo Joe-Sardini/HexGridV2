@@ -123,7 +123,7 @@ export class Character {
         return this._Level = value;
     }
     //#endregion 
-    
+
     RestoreHealth(Amount){
         if (this._IsAlive){
             if (Amount != undefined){
@@ -152,7 +152,7 @@ export class Character {
     RemoveItem(item){
         const sItem = (Item) => Item.ItemName === item.ItemName;
         const itemIndex = this._Inventory.findIndex(sItem); 
-        
+
         if (itemIndex > -1) {
             this._Inventory.splice(itemIndex,1);
             
@@ -182,6 +182,12 @@ export class Player extends Character{
     }
     set ExperiencePoints(value){
         return this._ExperiencePoints = value;
+    }
+        
+    ApplyExperience(Amount){
+        if (Amount != undefined){
+            this._ExperiencePoints += Amount;                
+        }
     }
 }
 
