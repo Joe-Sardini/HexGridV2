@@ -184,10 +184,8 @@ export class Player extends Character{
         return this._ExperiencePoints = value;
     }
         
-    ApplyExperience(Amount){
-        if (Amount != undefined){
-            this._ExperiencePoints += Amount;                
-        }
+    ApplyExperience(Amount = 0){
+        this._ExperiencePoints += Amount;                
     }
 }
 

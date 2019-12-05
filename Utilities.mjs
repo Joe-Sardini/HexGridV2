@@ -40,7 +40,7 @@ export function CheckIfNPCPartyIsAllDead(){
 }
 
 export function ApplyPartyItems(){
-    window.PlayerParty.forEach(function(e){e.ApplyItems();});
+    window.PlayerParty.forEach(e => {e.ApplyItems();});
     DisplayParty();
 }
 

@@ -87,7 +87,7 @@ export class Friendly extends Encounter{
 
     RunEncounter(){
         this._EncounterLogElement.innerHTML += "<BR>Your party is fully healed.";
-        window.PlayerParty.forEach(function(player){player.RestoreHealth();});
+        window.PlayerParty.forEach(player => {player.RestoreHealth();});
         DisplayParty();
     }
 }
@@ -192,11 +192,11 @@ export class Treasure extends Encounter{
     }
 
     RunEncounter(){
-        this._Items.forEach(function(e){console.log(e);});
+        this._Items.forEach(e => {console.log(e);});
         for (let idx = 0; idx < this._Items.length; idx++){
             window.PlayerParty[RandomPartyMemberIndex(window.PlayerParty)].Inventory.push(this._Items[idx]);
         }
-        window.PlayerParty.forEach(function(e){e.ApplyExperience(5)})
+        window.PlayerParty.forEach(e => {e.ApplyExperience(5)})
         ApplyPartyItems();
     }
 }
