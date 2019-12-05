@@ -53,6 +53,7 @@ export class Rest extends Encounter{
     RunEncounter(){
         EncounterHistoryElement.innerHTML += "<BR>Your party is partially healed.";
         this.PartialPartyHealing();
+        window.PlayerParty.forEach(e => {e.ApplyExperience(3)})
         DisplayParty();
     }
 
@@ -76,6 +77,7 @@ export class GainPartyMember extends Encounter{
     RunEncounter(){
         this._EncounterLogElement.innerHTML += `<BR> ${this._Description}`;
         window.PlayerParty.push(CreatePlayerCharacter("New PC ".concat(window.PlayerParty.length-2)));
+        window.PlayerParty.forEach(e => {e.ApplyExperience(1)})
         DisplayParty();
     }
 }
@@ -88,6 +90,7 @@ export class Friendly extends Encounter{
     RunEncounter(){
         this._EncounterLogElement.innerHTML += "<BR>Your party is fully healed.";
         window.PlayerParty.forEach(player => {player.RestoreHealth();});
+        window.PlayerParty.forEach(e => {e.ApplyExperience(2)})
         DisplayParty();
     }
 }
@@ -150,6 +153,7 @@ export class Trap extends Encounter{
                 window.PlayerParty[idx].CurrentHealth = (window.PlayerParty[idx].CurrentHealth - (this._TrapDamage * this._DifficultyLevel));
             }
         }
+        window.PlayerParty.forEach(e => {e.ApplyExperience(8)})
         DisplayParty();
     }
 }
@@ -170,6 +174,7 @@ export class SpotDamage extends Encounter{
     RunEncounter(){
         this._EncounterLogElement.innerHTML += "<BR>A few of your party members take damage...";
         this.SprinkleDamage();
+        window.PlayerParty.forEach(e => {e.ApplyExperience(7)})
         DisplayParty();
     }
 

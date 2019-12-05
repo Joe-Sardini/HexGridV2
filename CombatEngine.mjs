@@ -51,8 +51,8 @@ export class CombatEngine{
     //One v One combat
     PvNPCCombat(player1,player2,isPC){
         let damage = 0;
-        let max = 24;
-        let min = 10;
+        const max = 24;
+        const min = 10;
         let P1Roll = Math.floor(Math.random() * (max - min + 1)) + min;
         P1Roll = P1Roll-player2.Evasion;
         this._CombatLogElement.innerHTML += `<BR>${player1.Name} makes an attack and `;
@@ -62,6 +62,9 @@ export class CombatEngine{
                 this._CombatLogElement.innerHTML += `hits ${player2.Name} for ${damage} damage!`;
                 if (isPC){
                     this._EnemyParty[player2.Index].CurrentHealth -= damage;
+                    if (this._EnemyParty[player2.Index].IsAlive === false){
+                        this._PlayerParty[player1.Index].ExperiencePoints += this._EnemyParty[player2.Index].ExperinceValue;
+                    }
                 }else{
                     this._PlayerParty[player2.Index].CurrentHealth -= damage;    
                 }
@@ -84,7 +87,7 @@ export class CombatEngine{
             }
             if (this.IsPartyAllDead(this._EnemyParty) || this.IsPartyAllDead(this._PlayerParty)){
                 window.bCombatIsOver = true;
-                EventLogElement.innerHTML += `<BR> Enemy party destroyed!`;
+                EventLogElement.innerHTML += `<BR> party destroyed!`;
                 break;
             }
         }
