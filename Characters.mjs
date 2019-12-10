@@ -183,7 +183,6 @@ export class Player extends Character{
     set ExperiencePoints(value){
         return this._ExperiencePoints = value;
     }
-        
     ApplyExperience(Amount = 0){
         this._ExperiencePoints += Amount;                
     }

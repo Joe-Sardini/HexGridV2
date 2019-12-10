@@ -54,8 +54,14 @@ export class CombatEngine{
         const max = 24;
         const min = 10;
         let P1Roll = Math.floor(Math.random() * (max - min + 1)) + min;
+        console.log("Start");
+        console.log(`P1: ${player1.Name} vs ${player2.Name}`);
+        console.log(`P1Roll(random)=${P1Roll}`);
+        console.log(`P2Evasion=${player2.Evasion}`);
         P1Roll = P1Roll-player2.Evasion;
+        console.log(`After Evasion = ${P1Roll}`);
         this._CombatLogElement.innerHTML += `<BR>${player1.Name} makes an attack and `;
+        console.log(`P1Roll > player1.ToHit ${P1Roll} > ${player1.ToHit}`);
         if (P1Roll > player1.ToHit){ //Hit scored
             damage = (player1.Damage*2) - player2.Armor;
             if (damage > 0) {
@@ -63,7 +69,8 @@ export class CombatEngine{
                 if (isPC){
                     this._EnemyParty[player2.Index].CurrentHealth -= damage;
                     if (this._EnemyParty[player2.Index].IsAlive === false){
-                        this._PlayerParty[player1.Index].ExperiencePoints += this._EnemyParty[player2.Index].ExperinceValue;
+                        console.log(`EXP Value:${this._EnemyParty[player2.Index].ExperienceValue}`)
+                        this._PlayerParty[player1.Index].ExperiencePoints += this._EnemyParty[player2.Index].ExperienceValue;
                     }
                 }else{
                     this._PlayerParty[player2.Index].CurrentHealth -= damage;    
@@ -74,6 +81,7 @@ export class CombatEngine{
         }else{
             this._CombatLogElement.innerHTML += `misses!`;
         }
+        console.log("End");
     }
 
     RandomTargetCombatRound(){

@@ -75,7 +75,7 @@ export class HexagonGrid {
         this._context.lineTo(x0 + this._width - this._side, y0 + this._height);
         this._context.lineTo(x0, y0 + (this._height / 2));
     
-        if (fillColor) {
+        if (fillColor){
             this._context.fillStyle = fillColor;
             this._context.fill();
         }
@@ -87,13 +87,13 @@ export class HexagonGrid {
             this._context.drawImage(image,x0 + (this._width / 2) - (this._width/4),y0 + this._height-30,20,20);
         }
     
-        if (debugText) {
+        if (debugText){
             this._context.font = "8px";
             this._context.fillStyle = "#000";
             this._context.fillText(debugText, x0 + (this._width / 2) - (this._width/4), y0 + (this._height - 5));
         }
     
-        if (hexText) {
+        if (hexText){
             this._context.font = "10px";
             this._context.fillStyle = "#000";
             this._context.fillText(hexText, x0 + (this._width / 2) - (this._width/4) + 10, y0 + (this._height - 14));
@@ -199,16 +199,13 @@ export class HexagonGrid {
     ClickEvent(e){
         let mouseX = e.pageX;
         let mouseY = e.pageY;
-    
         let localX = mouseX - this._canvasOriginX;
         let localY = mouseY - this._canvasOriginY;
-    
         let HexIndex = this.GetUnitIndexAtSelection(localX,localY);
-        
         let HexContents = window.Hexes[HexIndex];
     
         if (HexContents != undefined){
-            if (!HexContents.IsEncounterComplete) {
+            if (!HexContents.IsEncounterComplete){
                 EventLogElement.innerHTML += (`<br><span class='Damage'> ${HexContents.Encounter.Description} </span>`);
                 HexContents.Encounter.RunEncounter();
                 window.Hexes[HexIndex].IsEncounterComplete = true;
@@ -366,11 +363,9 @@ export class HexagonGrid {
     GetUnitIndexAtSelection(mouseX, mouseY){
         let tile = this.GetSelectedTile(mouseX, mouseY);
         let nPointF = new PointF(tile.row,tile.column);
-    
         let obj = window.Hexes.find(HexObject => window._.isEqual(HexObject.PointF,nPointF));
     
         return obj.HexIndex;
-
     }
 
     DetermineEncounter(mouseX, mouseY){

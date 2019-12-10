@@ -1,6 +1,6 @@
 'use strict'
 
-import { InitializeGameData } from './Init.mjs';
+import { InitializeGameData } from './Init.mjs?v=1';
 import { HexagonGrid } from './Hexagon.mjs';
 
 const HG = new HexagonGrid('HexCanvas',20);

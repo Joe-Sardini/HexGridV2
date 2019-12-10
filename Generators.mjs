@@ -28,7 +28,7 @@ export function RandomEncounter(){
     }
 }
 
-export function CreateNPC(name,difficultyLevel,index){
+export function CreateNPC(name,difficultyLevel = 1,index){
     let strength = GenerateRandomNumberInRange(2,10);
     strength *= difficultyLevel;
 
@@ -44,14 +44,14 @@ export function CreateNPC(name,difficultyLevel,index){
     tohit *= difficultyLevel;
 
     //Evasion
-    let evasion = GenerateRandomNumberInRange(2,8);
+    let evasion = GenerateRandomNumberInRange(0,4);
     evasion *= difficultyLevel;
 
     //Armor
     let armor = GenerateRandomNumberInRange(1,6);
     armor *= difficultyLevel;
 
-    return new NPC(strength,health,damage,tohit,difficultyLevel,100*difficultyLevel,name,index,evasion,armor);
+    return new NPC(strength,health,damage,tohit,difficultyLevel,25*difficultyLevel,name,index,evasion,armor);
 }
 
 export function CreatePlayerCharacter(name){
@@ -83,7 +83,7 @@ function GenerateRandomNumberInRange(min,max){
 // eslint-disable-next-line no-unused-vars
 export function CreatNPCName(seed){
     // eslint-disable-next-line no-undef
-    let generator = NameGen.compile(seed);
+    const generator = NameGen.compile(seed);
     return generator.toString();
 }
 

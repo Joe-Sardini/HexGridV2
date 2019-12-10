@@ -50,7 +50,7 @@ export function GenerateRandomNumberInRange(min,max){
 
 //Used in drag and drop inventory window to charcter slots
 export function TransferItems(from,to,itemName){
-    //find who it's from
+    // who it's from
     let fromChar = window.PlayerParty.find(Player => window._.isEqual(Player.Name,from));
 
     //find the item

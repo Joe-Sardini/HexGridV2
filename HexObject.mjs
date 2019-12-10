@@ -19,6 +19,7 @@ export class HexObject {
         this._DifficultyLevelColour = this.SetDifficultyLevelColour();
         this._HexIndex = index;
     }
+
     //#region Properties
     get DifficultyLevelColour(){
         return this._DifficultyLevelColour;
@@ -88,6 +89,7 @@ export class HexObject {
         return this._Encounter;
     }
     //#endregion 
+    
     SetDifficultyLevelColour(){
         switch(this._DifficultyLevel){
             case 1:

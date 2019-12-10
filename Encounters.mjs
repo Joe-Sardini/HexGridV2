@@ -51,6 +51,7 @@ export class Rest extends Encounter{
     }
 
     RunEncounter(){
+        console.log("REST");
         EncounterHistoryElement.innerHTML += "<BR>Your party is partially healed.";
         this.PartialPartyHealing();
         window.PlayerParty.forEach(e => {e.ApplyExperience(3)})
@@ -75,6 +76,7 @@ export class GainPartyMember extends Encounter{
     }
     
     RunEncounter(){
+        console.log("GainPartyMember");
         this._EncounterLogElement.innerHTML += `<BR> ${this._Description}`;
         window.PlayerParty.push(CreatePlayerCharacter("New PC ".concat(window.PlayerParty.length-2)));
         window.PlayerParty.forEach(e => {e.ApplyExperience(1)})
@@ -88,6 +90,7 @@ export class Friendly extends Encounter{
     }
 
     RunEncounter(){
+        console.log("Friendly");
         this._EncounterLogElement.innerHTML += "<BR>Your party is fully healed.";
         window.PlayerParty.forEach(player => {player.RestoreHealth();});
         window.PlayerParty.forEach(e => {e.ApplyExperience(2)})
@@ -115,6 +118,7 @@ export class Combat extends Encounter{
     }
 
     RunEncounter(){
+        console.log("Combat");
         this._EncounterLogElement.innerHTML += `<BR> ${this.Description}`;
         // Should probably have a global combat engine so I'm not making a new one everytime
         const combatEncounter = new CombatEngine(window.PlayerParty,this.ConstructEnemyParty());
@@ -147,6 +151,7 @@ export class Trap extends Encounter{
     }
 
     RunEncounter(){
+        console.log("Trap");
         this._EncounterLogElement.innerHTML += `<BR>Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`;
         for (let idx = 0; idx < window.PlayerParty.length; idx++){
             if (window.PlayerParty[idx].IsAlive){
@@ -172,6 +177,7 @@ export class SpotDamage extends Encounter{
     }
 
     RunEncounter(){
+        console.log("SpotDamage");
         this._EncounterLogElement.innerHTML += "<BR>A few of your party members take damage...";
         this.SprinkleDamage();
         window.PlayerParty.forEach(e => {e.ApplyExperience(7)})
@@ -181,8 +187,8 @@ export class SpotDamage extends Encounter{
     SprinkleDamage(){
         const numberOfVictims = Math.ceil(Math.random() * (window.PlayerParty.length+1)/2)+1;
         for (let i = 0; i < numberOfVictims; i++){
-            let playerIndex = Math.ceil(Math.random() * window.PlayerParty.length-1);
-            let damageTaken = Math.ceil(Math.random() * this._SpotDamage+1)*this._DifficultyLevel;
+            const playerIndex = Math.ceil(Math.random() * window.PlayerParty.length-1);
+            const damageTaken = Math.ceil(Math.random() * this._SpotDamage+1)*this._DifficultyLevel;
             if (window.PlayerParty[playerIndex].IsAlive){
                 window.PlayerParty[playerIndex].CurrentHealth -= damageTaken;
 
