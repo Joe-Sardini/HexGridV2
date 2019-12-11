@@ -11,7 +11,7 @@ export function InitializeGameData(){
         window.Hexes[index].EncounterType = EncounterTypes.COMBAT; //RandomEncounter();
     }
     
-    window.PlayerParty.push(new Player(10,20,5,2,1,0,"CP1",window.PlayerParty.length,7,5));
+    window.PlayerParty.push(new Player(20,25,5,2,1,0,"CP1",window.PlayerParty.length,7,5));
     window.PlayerParty.push(new Player(8,20,5,4,1,0,"CP2",window.PlayerParty.length,5,3));
     window.PlayerParty.push(CreatePlayerCharacter("CP3"));
     DisplayParty();

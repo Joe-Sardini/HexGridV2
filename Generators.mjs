@@ -33,7 +33,7 @@ export function CreateNPC(name,difficultyLevel = 1,index){
     strength *= difficultyLevel;
 
     //health
-    let health = GenerateRandomNumberInRange(10,22);
+    let health = GenerateRandomNumberInRange(2,10);
     health *= difficultyLevel;
     //dmg
     let damage = GenerateRandomNumberInRange(2,7);

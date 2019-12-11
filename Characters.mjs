@@ -1,6 +1,7 @@
 'use strict'
 
 import { EventLogElement, NPCPartyElement } from './Elements.mjs';
+import { LevelBreakdown } from './Data.mjs';
 
 //#region Characters
 export class Character {
@@ -180,11 +181,36 @@ export class Player extends Character{
     get ExperiencePoints(){
         return this._ExperiencePoints;
     }
-    set ExperiencePoints(value){
-        return this._ExperiencePoints = value;
+    set ExperiencePoints(value = 0){
+        this._ExperiencePoints = value;
+        this.ApplyExperience();
     }
     ApplyExperience(Amount = 0){
-        this._ExperiencePoints += Amount;                
+        this._ExperiencePoints += Amount; 
+        this.CheckLevel();
+    }
+
+    LevelUp(level){
+        this._Strength += level;
+        this._Health += level;
+        this._Damage += level;
+        this._ToHit += level;
+        this._Initiative += level;
+        this._Evasion += level;
+        this._Armor += level;
+    }
+
+    CheckLevel(){
+        const expNextLevel = LevelBreakdown[this._Level-1][1];
+        console.log("Check Level");
+        console.log("this._ExperiencePoints " + this._ExperiencePoints);
+        console.log("expNextLevel " + expNextLevel);
+        if (this._ExperiencePoints > expNextLevel){
+            this._Level++;
+            console.log(this._Level);
+            this.LevelUp(this._Level);
+            this.CheckLevel();
+        }
     }
 }
 
