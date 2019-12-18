@@ -4,8 +4,7 @@
 import { EncounterHistoryElement } from './Elements.mjs';
 import { CombatEngine } from './CombatEngine.mjs';
 import { DisplayParty, DisplayNPCParty } from './UIFunctions.mjs';
-import { CreatePlayerCharacter, CreatNPCName, CreateNPC, RandomPartyMemberIndex } from './Generators.mjs';
-import { ApplyPartyItems } from './Utilities.mjs';
+import { CreatePlayerCharacter, CreatNPCName, CreateNPC } from './Generators.mjs';
 
 //#region Encounters
 export class Encounter {
@@ -206,13 +205,7 @@ export class Treasure extends Encounter{
         console.log("Treasure");
         this._Items.forEach(e => {console.log(e);});
         this._Items.forEach(e => {window.PartyBackpack.push(e);});
-        console.log(window.PartyBackpack.length);
-
-//        for (let idx = 0; idx < this._Items.length; idx++){
-//           window.PlayerParty[RandomPartyMemberIndex(window.PlayerParty)].Inventory.push(this._Items[idx]);
-//        }
         window.PlayerParty.forEach(e => {e.ApplyExperience(5);});
-//        ApplyPartyItems();
     }
 }
 

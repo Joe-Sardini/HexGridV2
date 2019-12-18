@@ -1,9 +1,12 @@
 'use strict'
 
-import { NPCInfoElement, EndGameOverlayElement, PlayerInfoElement, inventoryListElement, modal, modalBackpack, PartyBackpackElement } from './Elements.mjs';
+import { NPCInfoElement, EndGameOverlayElement, PlayerInfoElement, inventoryListElement, modal, modalBackpack, PartyBackpackElement, WinGameOverlayElement } from './Elements.mjs';
 import { StringOfEnum, CheckIfPartyIsAllDead, CheckIfNPCPartyIsAllDead } from './Utilities.mjs';
 import { ItemTypes, Rarity } from './Enums.mjs';
 
+export function DisplayWinScreen(){
+    WinGameOverlayElement.style.display = "block";
+}
 
 export function DisplayNPCParty(){
     NPCInfoElement.innerHTML = "<thead><tr><Th class='InfoTableHeaders'>NPC Info</th></tr></thead>";

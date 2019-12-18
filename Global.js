@@ -10,6 +10,8 @@ window.Hexes = [];
 window.bCombatIsOver = false;
 window.PlayerMemberIndex = 0;
 window.PartyBackpack = [];
+window.HexesCompletedTracker = 0;
+window.HexCount = 0;
 
 //Attaching included library functions to global scope so they can be used with modules
 window.NameGen = NameGen;

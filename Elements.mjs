@@ -10,6 +10,7 @@ export const CombatLogElement = document.getElementById('CombatLog');
 export const NPCInfoElement = document.getElementById("NPCInfo");
 export const PlayerInfoElement = document.getElementById("PlayerInfo");
 export const EndGameOverlayElement = document.getElementById("EndGameOverlay");
+export const WinGameOverlayElement = document.getElementById("WinGameOverlay");
 export const modal = document.getElementById("myModal");
 export const modalBackpack = document.getElementById("modalBackpack");
 export const span = document.getElementsByClassName("close")[0];

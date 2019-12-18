@@ -21,6 +21,13 @@ export function StringOfEnum(enumObj,value){
     return null;
 }
 
+export function CheckWinCondition(){
+    if (window.HexesCompletedTracker === window.HexCount){
+        return true;
+    }
+    return false;
+}
+
 export function CheckIfPartyIsAllDead(){
     for(let idx = 0; idx < window.PlayerParty.length;idx++){
         if (window.PlayerParty[idx].IsAlive){
@@ -93,13 +100,18 @@ function TransferItemFromCharacter(from,to,itemName){
     const PCToIndex = to.substring(6,to.length);
 
     //do a switcheroo
-    if (itemIndex > -1) {
+    if (itemIndex > -1){
         item.IsApplied = false;
         window.PlayerParty[fromChar.Index].RemoveItem(item);
         if (window.PlayerParty[PCToIndex] != undefined){
             window.PlayerParty[PCToIndex].AddItem(item);
         }
-        DisplayParty();
     }
+
+    if (to === "backpack"){
+        item.IsApplied = false;
+        window.PartyBackpack.push(item);
+    }
+    DisplayParty();
 }
 

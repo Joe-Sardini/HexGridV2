@@ -3,6 +3,8 @@
 import { PointF } from './PointF.mjs';
 import { HexObject } from './HexObject.mjs';
 import { EventLogElement } from './Elements.mjs';
+import { CheckWinCondition } from './Utilities.mjs';
+import { DisplayWinScreen } from './UIFunctions.mjs';
 
 export class HexagonGrid {
     constructor(canvas, radius){
@@ -33,7 +35,9 @@ export class HexagonGrid {
         let debugText = "";
     
         let offsetColumn = false;
-    
+
+        window.HexCount = rows*cols;
+
         for (let col = 0; col < cols; col++) {
             for (let row = 0; row < rows; row++) {
     
@@ -209,6 +213,10 @@ export class HexagonGrid {
                 EventLogElement.innerHTML += (`<br><span class='Damage'> ${HexContents.Encounter.Description} </span>`);
                 HexContents.Encounter.RunEncounter();
                 window.Hexes[HexIndex].IsEncounterComplete = true;
+                window.HexesCompletedTracker++;
+                if (CheckWinCondition()){
+                    DisplayWinScreen(); 
+                }
                 this.DrawHexAtColRow(HexContents.PointF.Col,HexContents.PointF.Row,"#FF0000","","Done!");
                 this.RevealSurroundingHexes(HexIndex);
             }
@@ -371,10 +379,6 @@ export class HexagonGrid {
     DetermineEncounter(mouseX, mouseY){
         let tile = this.GetSelectedTile(mouseX, mouseY);
         return tile;
-    }
-
-    TransferItem(e){
-        console.log(e.from);
     }
 }
 //#endregion
