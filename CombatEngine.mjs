@@ -69,7 +69,9 @@ export class CombatEngine{
                 if (isPC){
                     this._EnemyParty[player2.Index].CurrentHealth -= damage;
                     if (this._EnemyParty[player2.Index].IsAlive === false){
-                        this._PlayerParty[player1.Index].ExperiencePoints += this._EnemyParty[player2.Index].ExperienceValue;
+                        if (this._PlayerParty[player1.Index].ExperiencePoints != undefined){
+                            this._PlayerParty[player1.Index].ExperiencePoints += this._EnemyParty[player2.Index].ExperienceValue;
+                        }
                     }
                 }else{
                     this._PlayerParty[player2.Index].CurrentHealth -= damage;    
@@ -80,7 +82,6 @@ export class CombatEngine{
         }else{
             this._CombatLogElement.innerHTML += `misses!`;
         }
-        //console.log("End");
     }
 
     RandomTargetCombatRound(){

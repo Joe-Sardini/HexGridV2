@@ -5,7 +5,7 @@ import { NPC, Player } from './Characters.mjs'
 
 
 export function RandomEncounter(){
-    let rnd = Math.ceil(Math.random() * 8);
+    let rnd = Math.ceil(Math.random() * 9);
     switch(rnd){
         case 1:
             return EncounterTypes.COMBAT;
@@ -23,55 +23,31 @@ export function RandomEncounter(){
             return EncounterTypes.GAINPARTYMEMBER;
         case 8:
             return EncounterTypes.SPOTDAMAGE;
+        case 9:
+            return EncounterTypes.RESURRECTION;
         default:
             return EncounterTypes.REST;
     }
 }
 
 export function CreateNPC(name,difficultyLevel = 1,index){
-    let strength = GenerateRandomNumberInRange(2,10);
-    strength *= difficultyLevel;
-
-    //health
-    let health = GenerateRandomNumberInRange(2,10);
-    health *= difficultyLevel;
-    //dmg
-    let damage = GenerateRandomNumberInRange(2,7);
-    damage *= difficultyLevel;
-
-    //tohit
-    let tohit = GenerateRandomNumberInRange(4,8);
-    tohit *= difficultyLevel;
-
-    //Evasion
-    let evasion = GenerateRandomNumberInRange(0,4);
-    evasion *= difficultyLevel;
-
-    //Armor
-    let armor = GenerateRandomNumberInRange(1,6);
-    armor *= difficultyLevel;
+    const strength = GenerateRandomNumberInRange(2,10) * difficultyLevel;
+    const health = GenerateRandomNumberInRange(2,10) * difficultyLevel;
+    const damage = GenerateRandomNumberInRange(2,7) * difficultyLevel;
+    const tohit = GenerateRandomNumberInRange(4,8) * difficultyLevel;
+    const evasion = GenerateRandomNumberInRange(0,4) * difficultyLevel;
+    const armor = GenerateRandomNumberInRange(1,6) * difficultyLevel;
 
     return new NPC(strength,health,damage,tohit,difficultyLevel,25*difficultyLevel,name,index,evasion,armor);
 }
 
 export function CreatePlayerCharacter(name){
-    //strength
-    let strength = GenerateRandomNumberInRange(4,16);
-   
-    //health
-    let health = GenerateRandomNumberInRange(14,31);
-
-    //dmg
-    let damage = GenerateRandomNumberInRange(2,7);
-
-    //tohit
-    let tohit = GenerateRandomNumberInRange(6,12);
-
-    //Evasion
-    let evasion = GenerateRandomNumberInRange(2,8);
-
-    //Armor
-    let armor = GenerateRandomNumberInRange(1,3);
+    const strength = GenerateRandomNumberInRange(4,16);
+    const health = GenerateRandomNumberInRange(14,31);
+    const damage = GenerateRandomNumberInRange(2,7);
+    const tohit = GenerateRandomNumberInRange(6,12);
+    const evasion = GenerateRandomNumberInRange(2,8);
+    const armor = GenerateRandomNumberInRange(1,3);
 
     return new Player(strength,health,damage,tohit,1,0,name,window.PlayerParty.length,window.PlayerParty.length,evasion,armor);
 }
@@ -88,17 +64,10 @@ export function CreatNPCName(seed){
 }
 
 export function RandomPartyMemberIndex(Party){
-    let rnd = Math.ceil(Math.random() * Party.length-1);
+    let rnd = Math.ceil(Math.random() * Party.length - 1);
+    console.log(rnd);
     if (!Party[rnd].IsAlive){
-        SelectTarget(Party);
+        RandomPartyMemberIndex(Party);
     }
     return rnd;
-}
-
-function SelectTarget(Party){
-    let rnd = Math.ceil(Math.random() * Party.length-1);
-    if (!Party[rnd].IsAlive){
-        SelectTarget(Party);
-    }
-    return Party[rnd];
 }

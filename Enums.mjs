@@ -8,7 +8,8 @@ export const EncounterTypes = {
     INFORMATION: 'information',
     TRAP: 'trap',
     GAINPARTYMEMBER: 'gainpartymember',
-    SPOTDAMAGE: 'spotdamage'
+    SPOTDAMAGE: 'spotdamage',
+    RESURRECTION: "resurrection"
 }
 export const RarityModifiers = {
     TREASURE: 8,

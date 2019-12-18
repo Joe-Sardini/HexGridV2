@@ -1,6 +1,6 @@
 'use strict'
 
-import { NPCInfoElement, EndGameOverlayElement, PlayerInfoElement, inventoryListElement, modal } from './Elements.mjs';
+import { NPCInfoElement, EndGameOverlayElement, PlayerInfoElement, inventoryListElement, modal, modalBackpack, PartyBackpackElement } from './Elements.mjs';
 import { StringOfEnum, CheckIfPartyIsAllDead, CheckIfNPCPartyIsAllDead } from './Utilities.mjs';
 import { ItemTypes, Rarity } from './Enums.mjs';
 
@@ -53,7 +53,7 @@ export function UpdateDisplay(){
 }
 
 export function DisplayParty(){
-    PlayerInfoElement.innerHTML = "<thead><tr><Th>Character Info</th></tr></thead>";
+    PlayerInfoElement.innerHTML = "<thead><tr><Th>Character Info</th></tr></thead><TR><TD id='backpack'>BP</TD></TR>";
     for (let i = 0; i < window.PlayerParty.length; i++){
         let PlayerCharacter = window.PlayerParty[i];
         PlayerInfoElement.innerHTML += `<tr><TD><div class='PCDisplay' id='PCSlot${i}' style='border:2px solid black; width:150px' ondrop='drop_handler(event)' ondragover='dragover_handler(event)'> 
@@ -89,6 +89,29 @@ function ConfigurePartyDisplay(){
             document.getElementById(divID).addEventListener("click",HandleDeadPartyDisplayClick);
         }
     }
+    document.getElementById("backpack").addEventListener("click",function(){HandleBackpackClick();},false)
+}
+
+function HandleBackpackClick(){
+    PartyBackpackElement.innerHTML = BuildBackpackInventoryDisplay();
+}
+
+export function BuildBackpackInventoryDisplay(){
+    modalBackpack.style.display = "block";
+    let invenTableHTML = `<table class='steelBlueCols'><thead><tr><th colspan=4>Backpack</th></tr></thead><tbody><tr>`;
+    for (let idx = 0; idx < window.PartyBackpack.length; idx++){
+        let ToolTipData = window.PartyBackpack[idx].ItemName 
+        + "\n" + StringOfEnum(ItemTypes,window.PartyBackpack[idx].ItemType) 
+        + "\n" + StringOfEnum(Rarity,window.PartyBackpack[idx].ItemRarity);
+
+        invenTableHTML += `<td><a href='#' draggable='true' ondragstart='dragstart_handler(event)' data-toggle='tooltip' id='ibackpack' data-html=true data-placement='bottom' title='${ToolTipData}'><img src='${window.PartyBackpack[idx].ImageLocation}' width='20px' height='20px' />${window.PartyBackpack[idx].ItemName}</a></td>`;
+
+        if ((idx-3) % 4 === 0){
+            invenTableHTML += "</tr><tr>";
+        }
+    }
+    invenTableHTML += "</tr></table>";
+    return invenTableHTML; 
 }
 
 export function HandlePartyDisplayClick(PartyMemberIndex){
@@ -113,6 +136,10 @@ function BuildCharacterInventoryDisplay(Character){
     }
     invenTableHTML += "</tr></table>";
     return invenTableHTML;
+}
+
+export function ClearNPCParty(){
+    document.getElementById("NPCInfo").innerHTML = "";
 }
 
 function HandleDeadPartyDisplayClick(){

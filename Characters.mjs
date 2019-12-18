@@ -29,6 +29,9 @@ export class Character {
     }
 
     //#region Properties
+    get BaseHealth(){
+        return this._BaseHealth;
+    }
     get BaseInitiative(){
         return this._BaseInitiative;
     }
@@ -202,12 +205,8 @@ export class Player extends Character{
 
     CheckLevel(){
         const expNextLevel = LevelBreakdown[this._Level-1][1];
-        console.log("Check Level");
-        console.log("this._ExperiencePoints " + this._ExperiencePoints);
-        console.log("expNextLevel " + expNextLevel);
         if (this._ExperiencePoints > expNextLevel){
             this._Level++;
-            console.log(this._Level);
             this.LevelUp(this._Level);
             this.CheckLevel();
         }

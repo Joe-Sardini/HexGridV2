@@ -2,7 +2,7 @@
 
 import { EncounterTypes } from './Enums.mjs';
 import { ItemManager } from './ItemManager.mjs';
-import { Encounter, Rest, GainPartyMember, Friendly, Combat, Trap, SpotDamage, Treasure } from './Encounters.mjs';
+import { Encounter, Rest, GainPartyMember, Friendly, Combat, Trap, SpotDamage, Treasure, Ressurection } from './Encounters.mjs';
 import { PointF } from './PointF.mjs';
 
 
@@ -139,7 +139,10 @@ export class HexObject {
                 break;    
             case EncounterTypes.REST:
                 this._Encounter = new Rest(PointF,"","Encounter Type - Rest.");
-                break;    
+                break;  
+            case EncounterTypes.RESURRECTION:
+                this._Encounter = new Ressurection(PointF,"","Encounter Type - Ressurection");
+                break;
             default:
                 this._Encounter = new Encounter(PointF,"","Default Encounter.");
         }

@@ -9,6 +9,7 @@ window.NPCParty = [];
 window.Hexes = [];
 window.bCombatIsOver = false;
 window.PlayerMemberIndex = 0;
+window.PartyBackpack = [];
 
 //Attaching included library functions to global scope so they can be used with modules
 window.NameGen = NameGen;
@@ -18,15 +19,23 @@ var dragged;
 
 //These elements are also referenced in the elements module
 const modal = document.getElementById("myModal");
+const modalBackpack = document.getElementById("modalBackpack");
 const span = document.getElementsByClassName("close")[0];
+const spanBP = document.getElementsByClassName("closeBP")[0];
 
 span.onclick = function(){
     modal.style.display = "none";
 }
 
+spanBP.onclick = function(){
+    modalBackpack.style.display = "none";
+}
+
 window.onclick = function(event){
     if (event.target == modal) {
-      modal.style.display = "none";
+        modal.style.display = "none";
+    }else if (event.target == modalBackpack) {
+        modalBackpack.style.display = "none";
     }
 }
 
@@ -56,7 +65,11 @@ window.drop_handler = function(ev) {
         window.TransferItems(FromChar,ToCharSlot,ItemData);
         window.DisplayParty();
         const event = new Event('click');
-        document.getElementById(`PCSlot${window.PlayerMemberIndex}`).dispatchEvent(event);
+        if (FromChar === 'ibackpack'){
+            document.getElementById('backpack').dispatchEvent(event);    
+        }else{
+            document.getElementById(`PCSlot${window.PlayerMemberIndex}`).dispatchEvent(event);
+        }
     }
 }
 

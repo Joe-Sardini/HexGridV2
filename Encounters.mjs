@@ -203,12 +203,42 @@ export class Treasure extends Encounter{
     }
 
     RunEncounter(){
+        console.log("Treasure");
         this._Items.forEach(e => {console.log(e);});
-        for (let idx = 0; idx < this._Items.length; idx++){
-            window.PlayerParty[RandomPartyMemberIndex(window.PlayerParty)].Inventory.push(this._Items[idx]);
+        this._Items.forEach(e => {window.PartyBackpack.push(e);});
+        console.log(window.PartyBackpack.length);
+
+//        for (let idx = 0; idx < this._Items.length; idx++){
+//           window.PlayerParty[RandomPartyMemberIndex(window.PlayerParty)].Inventory.push(this._Items[idx]);
+//        }
+        window.PlayerParty.forEach(e => {e.ApplyExperience(5);});
+//        ApplyPartyItems();
+    }
+}
+
+export class Ressurection extends Encounter{
+    constructor(location,items,description){
+        super(location,items,description);    
+    }
+
+    RunEncounter(){
+        console.log("Ressurection");
+        const expEarned = this.CheckPartyStatus();
+        window.PlayerParty.forEach(e => {e.ApplyExperience(expEarned)})
+        DisplayParty();
+    }
+
+    CheckPartyStatus(){
+        for (let idx = 0; idx <= window.PlayerParty.length-1; idx++){
+            if (!window.PlayerParty[idx].IsAlive){
+                window.PlayerParty[idx].IsAlive = true;
+                window.PlayerParty[idx].CurrentHealth = window.PlayerParty[idx].BaseHealth;
+                EncounterHistoryElement.innerHTML += `<BR>${window.PlayerParty[idx].Name} comes back to life!`;
+                return 10;
+            }
         }
-        window.PlayerParty.forEach(e => {e.ApplyExperience(5)})
-        ApplyPartyItems();
+        EncounterHistoryElement.innerHTML += "<BR>Nothing happens...";
+        return 1;
     }
 }
 //#endregion

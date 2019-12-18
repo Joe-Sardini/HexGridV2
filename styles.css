@@ -105,7 +105,7 @@ div.EventHistory span.Damage {
   /* Sit on top */
   left: 150px;
   top: 25px;
-  width: 500px;
+  width: 825px;
   /* Full width */
   height: 300px;
   /* Full height */
@@ -121,7 +121,7 @@ div.EventHistory span.Damage {
   /* 15% from the top and centered */
   padding: 10px;
   border: 1px solid #888;
-  width: 85%;
+  width: 95%;
   /* Could be more or less, depending on screen size */
   z-index: 4;
 }
@@ -140,10 +140,24 @@ div.EventHistory span.Damage {
   cursor: pointer;
 }
 
+.closeBP {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.closeBP:hover,
+.closeBP:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
 table.steelBlueCols {
   border: 4px solid #555555;
   background-color: #555555;
-  width: 500px;
+  width: 750px;
   text-align: center;
   border-collapse: collapse;
 }

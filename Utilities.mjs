@@ -50,18 +50,47 @@ export function GenerateRandomNumberInRange(min,max){
 
 //Used in drag and drop inventory window to charcter slots
 export function TransferItems(from,to,itemName){
-    // who it's from
-    let fromChar = window.PlayerParty.find(Player => window._.isEqual(Player.Name,from));
+    if (from === 'ibackpack'){
+        TransferItemFromBackpack(to,itemName);
+    }else{
+        TransferItemFromCharacter(from,to,itemName);
+    }
+}
+
+function TransferItemFromBackpack(to,itemName){
+    //find the item
+    const sItem = (Item) => Item.ItemName === itemName;
+    const itemIndex = window.PartyBackpack.findIndex(sItem); 
+
+    //make a copy of the item
+    const item = window.PartyBackpack.find(Item => window._.isEqual(Item.ItemName,itemName));
+
+    //get index of party memeber that we drop to
+    const PCToIndex = to.substring(6,to.length);
+
+    //do a switcheroo
+    if (itemIndex > -1) {
+        item.IsApplied = false;
+        window.PartyBackpack = window.PartyBackpack.slice(0,itemIndex).concat(window.PartyBackpack.slice(itemIndex+1,window.PartyBackpack.length));
+        if (window.PlayerParty[PCToIndex] != undefined){
+            window.PlayerParty[PCToIndex].AddItem(item);
+        }
+    }
+    DisplayParty();
+}
+
+function TransferItemFromCharacter(from,to,itemName){
+    const fromChar = window.PlayerParty.find(Player => window._.isEqual(Player.Name,from));
 
     //find the item
     const sItem = (Item) => Item.ItemName === itemName;
-    let itemIndex = window.PlayerParty[fromChar.Index].Inventory.findIndex(sItem); 
+    const itemIndex = window.PlayerParty[fromChar.Index].Inventory.findIndex(sItem); 
     
     //make a copy of the item
-    let item = window.PlayerParty[fromChar.Index].Inventory.find(Item => window._.isEqual(Item.ItemName,itemName));
+    const item = window.PlayerParty[fromChar.Index].Inventory.find(Item => window._.isEqual(Item.ItemName,itemName));
     
     //get index of party memeber that we drop to
-    let PCToIndex = to.substring(6,to.length);
+    const PCToIndex = to.substring(6,to.length);
 
     //do a switcheroo
     if (itemIndex > -1) {
