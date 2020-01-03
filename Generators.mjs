@@ -65,7 +65,6 @@ export function CreatNPCName(seed){
 
 export function RandomPartyMemberIndex(Party){
     let rnd = Math.ceil(Math.random() * Party.length - 1);
-    console.log(rnd);
     if (!Party[rnd].IsAlive){
         RandomPartyMemberIndex(Party);
     }

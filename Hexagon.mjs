@@ -38,18 +38,17 @@ export class HexagonGrid {
 
         window.HexCount = rows*cols;
 
-        for (let col = 0; col < cols; col++) {
-            for (let row = 0; row < rows; row++) {
-    
-                if (!offsetColumn) {
+        for (let col = 0; col < cols; col++){
+            for (let row = 0; row < rows; row++){
+                if (!offsetColumn){
                     currentHexX = (col * this._side) + originX;
                     currentHexY = (row * this._height) + originY;
-                } else {
+                }else{
                     currentHexX = col * this._side + originX;
                     currentHexY = (row * this._height) + originY + (this._height * 0.5);
                 }
     
-                if (isDebug) {
+                if (isDebug){
                     debugText = row + "," + col;
                 }
                 
@@ -64,8 +63,8 @@ export class HexagonGrid {
     }
 
     DrawHexAtColRow(column, row, color, image, debugText, hexText){
-        let drawy = column % 2 == 0 ? (row * this._height) + this._canvasOriginY : (row * this._height) + this._canvasOriginY + (this._height / 2);
-        let drawx = (column * this._side) + this._canvasOriginX;
+        const drawy = column % 2 == 0 ? (row * this._height) + this._canvasOriginY : (row * this._height) + this._canvasOriginY + (this._height / 2);
+        const drawx = (column * this._side) + this._canvasOriginX;
         this.DrawHex(drawx, drawy, color, debugText, image, hexText);
     }
 
@@ -374,11 +373,6 @@ export class HexagonGrid {
         let obj = window.Hexes.find(HexObject => window._.isEqual(HexObject.PointF,nPointF));
     
         return obj.HexIndex;
-    }
-
-    DetermineEncounter(mouseX, mouseY){
-        let tile = this.GetSelectedTile(mouseX, mouseY);
-        return tile;
     }
 }
 //#endregion

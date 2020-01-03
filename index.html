@@ -70,14 +70,14 @@
        
 <script src="/node_modules/lodash/lodash.js"></script>
 <script src="/NameGen/namegen.js"></script>    
-<script src="./Global.js?v=4"></script>
-<script type="module" src="Main.mjs?v=5"></script>
+<script src="./Global.js"></script>
+<script type="module" src="Main.mjs"></script>
 
 <script type="module">
     import { TransferItems } from './Utilities.mjs?v=5';
     window.TransferItems = TransferItems;
     
-    import { DisplayParty, HandlePartyDisplayClick, ClearNPCParty } from './UIFunctions.mjs?v=1';
+    import { DisplayParty, HandlePartyDisplayClick, ClearNPCParty } from './UIFunctions.mjs';
     window.DisplayParty = DisplayParty;
     window.ClearNPCParty = ClearNPCParty;
     window.HandlePartyDisplayClick = HandlePartyDisplayClick;

@@ -1,6 +1,6 @@
 'use strict'
 
-import { DisplayParty } from './UIFunctions.mjs?v=1';
+import { DisplayParty } from './UIFunctions.mjs';
 // eslint-disable-next-line no-unused-vars
 import { Player } from './Characters.mjs';
 // eslint-disable-next-line no-unused-vars
@@ -55,7 +55,7 @@ export function GenerateRandomNumberInRange(min,max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-//Used in drag and drop inventory window to charcter slots
+//Used in drag and drop inventory window(s)
 export function TransferItems(from,to,itemName){
     if (from === 'ibackpack'){
         TransferItemFromBackpack(to,itemName);
