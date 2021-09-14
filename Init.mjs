@@ -8,7 +8,7 @@ import { EncounterTypes } from './Enums.mjs';
 
 export function InitializeGameData(){
     for (let index = 0; index < window.Hexes.length;index++){
-        window.Hexes[index].EncounterType = EncounterTypes.TREASURE; //RandomEncounter();
+        window.Hexes[index].EncounterType = RandomEncounter(); //EncounterTypes.TREASURE; //
     }
     
     window.PlayerParty.push(new Player(20,25,5,2,1,0,"CP1",window.PlayerParty.length,7,5));
