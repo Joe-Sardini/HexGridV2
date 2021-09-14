@@ -23,10 +23,6 @@ export function StringOfEnum(enumObj,value){
 
 export function CheckWinCondition(){
     return (window.HexesCompletedTracker === window.HexCount ? true : false);
-    // if (window.HexesCompletedTracker === window.HexCount){
-    //     return true;
-    // }
-    // return false;
 }
 
 export function CheckIfPartyIsAllDead(){
@@ -59,11 +55,6 @@ export function GenerateRandomNumberInRange(min,max){
 //Used in drag and drop inventory window(s)
 export function TransferItems(from,to,itemName){
     (from === 'ibackpack' ? TransferItemFromBackpack(to,itemName) : TransferItemFromCharacter(from,to,itemName));
-    // if (from === 'ibackpack'){
-    //     TransferItemFromBackpack(to,itemName);
-    // }else{
-    //     TransferItemFromCharacter(from,to,itemName);
-    // }
 }
 
 function TransferItemFromBackpack(to,itemName){
