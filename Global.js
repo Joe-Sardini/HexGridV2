@@ -67,11 +67,12 @@ window.drop_handler = function(ev) {
         window.TransferItems(FromChar,ToCharSlot,ItemData);
         window.DisplayParty();
         const event = new Event('click');
-        if (FromChar === 'ibackpack'){
-            document.getElementById('backpack').dispatchEvent(event);    
-        }else{
-            document.getElementById(`PCSlot${window.PlayerMemberIndex}`).dispatchEvent(event);
-        }
+        (FromChar === 'ibackpack' ? document.getElementById('backpack').dispatchEvent(event) : document.getElementById(`PCSlot${window.PlayerMemberIndex}`).dispatchEvent(event))
+        // if (FromChar === 'ibackpack'){
+        //     document.getElementById('backpack').dispatchEvent(event);    
+        // }else{
+        //     document.getElementById(`PCSlot${window.PlayerMemberIndex}`).dispatchEvent(event);
+        // }
     }
 }
 
