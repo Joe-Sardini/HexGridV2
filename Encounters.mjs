@@ -119,11 +119,11 @@ export class Combat extends Encounter{
     RunEncounter(){
         console.log("Combat");
         this._EncounterLogElement.innerHTML += `<BR> ${this.Description}`;
-        // Should probably have a global combat engine so I'm not making a new one everytime
+        // Should probably have a global combat engine so I'm not making a new one every time
         const combatEncounter = new CombatEngine(window.PlayerParty,this.ConstructEnemyParty());
         let idx = 0;
         do{
-            combatEncounter.RandomTargetCombat();
+            window.bCombatIsOver = combatEncounter.RandomTargetCombat();
             if (idx > 50){ //50 rounds max
                 window.bCombatIsOver = true;
             }
@@ -203,8 +203,8 @@ export class Treasure extends Encounter{
 
     RunEncounter(){
         console.log("Treasure");
-        this._Items.forEach(e => {console.log(e);});
         this._Items.forEach(e => {window.PartyBackpack.push(e);});
+        this._EncounterLogElement.innerHTML += "<BR>Your party has acquired some items";
         window.PlayerParty.forEach(e => {e.ApplyExperience(5);});
     }
 }

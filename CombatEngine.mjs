@@ -63,8 +63,12 @@ export class CombatEngine{
                 if (isPC){
                     this._EnemyParty[player2.Index].CurrentHealth -= damage;
                     if (this._EnemyParty[player2.Index].IsAlive === false){
-                        if (this._PlayerParty[player1.Index].ExperiencePoints != undefined){
-                            this._PlayerParty[player1.Index].ExperiencePoints += this._EnemyParty[player2.Index].ExperienceValue;
+                        try {
+                            if (this._PlayerParty[player1.Index].ExperiencePoints != undefined){
+                                this._PlayerParty[player1.Index].ExperiencePoints += this._EnemyParty[player2.Index].ExperienceValue;
+                            }
+                        } catch (exception){
+                            console.log(exception);
                         }
                     }
                 }else{
