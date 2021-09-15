@@ -20,9 +20,9 @@ export function RandomEncounter(){
         case 6:
             return EncounterTypes.TRAP;
         case 7:
-            return EncounterTypes.GAINPARTYMEMBER;
+            return EncounterTypes.GAIN_PARTY_MEMBER;
         case 8:
-            return EncounterTypes.SPOTDAMAGE;
+            return EncounterTypes.SPOT_DAMAGE;
         case 9:
             return EncounterTypes.RESURRECTION;
         default:
@@ -34,22 +34,22 @@ export function CreateNPC(name,difficultyLevel = 1,index){
     const strength = GenerateRandomNumberInRange(2,10) * difficultyLevel;
     const health = GenerateRandomNumberInRange(2,10) * difficultyLevel;
     const damage = GenerateRandomNumberInRange(2,7) * difficultyLevel;
-    const tohit = GenerateRandomNumberInRange(4,8) * difficultyLevel;
+    const toHit = GenerateRandomNumberInRange(4,8) * difficultyLevel;
     const evasion = GenerateRandomNumberInRange(0,4) * difficultyLevel;
     const armor = GenerateRandomNumberInRange(1,6) * difficultyLevel;
 
-    return new NPC(strength,health,damage,tohit,difficultyLevel,25*difficultyLevel,name,index,evasion,armor);
+    return new NPC(strength,health,damage,toHit,difficultyLevel,25*difficultyLevel,name,index,evasion,armor);
 }
 
 export function CreatePlayerCharacter(name){
     const strength = GenerateRandomNumberInRange(4,16);
     const health = GenerateRandomNumberInRange(14,31);
     const damage = GenerateRandomNumberInRange(2,7);
-    const tohit = GenerateRandomNumberInRange(6,12);
+    const toHit = GenerateRandomNumberInRange(6,12);
     const evasion = GenerateRandomNumberInRange(2,8);
     const armor = GenerateRandomNumberInRange(1,3);
 
-    return new Player(strength,health,damage,tohit,1,0,name,window.PlayerParty.length,window.PlayerParty.length,evasion,armor);
+    return new Player(strength,health,damage,toHit,1,0,name,window.PlayerParty.length,window.PlayerParty.length,evasion,armor);
 }
 
 function GenerateRandomNumberInRange(min,max){

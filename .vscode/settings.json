@@ -1,4 +1,7 @@
 {
     "git.ignoreLimitWarning": true,
-    "svn.ignoreMissingSvnWarning": true
+    "svn.ignoreMissingSvnWarning": true,
+    "cSpell.ignoreWords": [
+        "ibackpack"
+    ]
 }

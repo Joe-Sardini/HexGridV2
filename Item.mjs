@@ -4,13 +4,13 @@ import { ItemTypes } from './Enums.mjs';
 
 //#region Items
 export class Item {
-    constructor(itemName,damagemod,str,health,dmg,tohit,level,evasion,armor,initiative,itemType,rarity){
+    constructor(itemName,damageMod,str,health,dmg,toHit,level,evasion,armor,initiative,itemType,rarity){
         this._ItemName = itemName; 
-        this._DamageMod = damagemod;
+        this._DamageMod = damageMod;
         this._Strength = str;
         this._Health = health;
         this._Damage = dmg;
-        this._ToHit = tohit;
+        this._ToHit = toHit;
         this._Level = level;
         this._Initiative = initiative;
         this._Evasion = evasion; 
@@ -108,7 +108,7 @@ export class Item {
             case ItemTypes.WEAPON:
                 this._ImageLocation = 'images/ssword.jpg';
                 break;
-            case ItemTypes.JEWLERY:
+            case ItemTypes.JEWELRY:
                 this._ImageLocation = 'images/jewlery.jpg';
                 break;
             case ItemTypes.MAGIC:

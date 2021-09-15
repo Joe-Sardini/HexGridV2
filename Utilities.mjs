@@ -65,7 +65,7 @@ function TransferItemFromBackpack(to,itemName){
     //make a copy of the item
     const item = window.PartyBackpack.find(Item => window._.isEqual(Item.ItemName,itemName));
 
-    //get index of party memeber that we drop to
+    //get index of party member that we drop to
     const PCToIndex = to.substring(6,to.length);
 
     //do a switcheroo
@@ -89,7 +89,7 @@ function TransferItemFromCharacter(from,to,itemName){
     //make a copy of the item
     const item = window.PlayerParty[fromChar.Index].Inventory.find(Item => window._.isEqual(Item.ItemName,itemName));
     
-    //get index of party memeber that we drop to
+    //get index of party member that we drop to
     const PCToIndex = to.substring(6,to.length);
 
     //do a switcheroo

@@ -5,15 +5,15 @@ import { LevelBreakdown } from './Data.mjs';
 
 //#region Characters
 export class Character {
-    constructor(str,health,dmg,tohit,level,name,index,evasion,armor){
+    constructor(str,health,dmg,toHit,level,name,index,evasion,armor){
         this._Strength = str;
         this._BaseStrength = str;
         this._Health = health;
         this._BaseHealth = health;
         this._Damage = dmg;
         this._BaseDamage = dmg;
-        this._ToHit = tohit;
-        this._BaseToHit = tohit;
+        this._ToHit = toHit;
+        this._BaseToHit = toHit;
         this._Level = level;
         this._CurrentHealth = health;
         this._Name = name;
@@ -177,9 +177,9 @@ export class Character {
 }
 
 export class Player extends Character{
-    constructor(str,health,dmg,tohit,level,exppoints,name,index,evasion,armor){
-        super(str,health,dmg,tohit,level,name,index,evasion,armor);
-        this._ExperiencePoints = exppoints;
+    constructor(str,health,dmg,toHit,level,expPoints,name,index,evasion,armor){
+        super(str,health,dmg,toHit,level,name,index,evasion,armor);
+        this._ExperiencePoints = expPoints;
     }
     get ExperiencePoints(){
         return this._ExperiencePoints;
@@ -214,9 +214,9 @@ export class Player extends Character{
 }
 
 export class NPC extends Character{
-    constructor(str,health,dmg,tohit,level,expvalue,name,index,evasion,armor){
-        super(str,health,dmg,tohit,level,name,index,evasion,armor);
-        this._ExperienceValue = expvalue;
+    constructor(str,health,dmg,toHit,level,expValue,name,index,evasion,armor){
+        super(str,health,dmg,toHit,level,name,index,evasion,armor);
+        this._ExperienceValue = expValue;
         NPCPartyElement.innerHTML += `<BR> Name:${name} | HP:${health}`;
     }
     get ExperienceValue(){

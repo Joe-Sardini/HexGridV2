@@ -68,11 +68,6 @@ window.drop_handler = function(ev) {
         window.DisplayParty();
         const event = new Event('click');
         (FromChar === 'ibackpack' ? document.getElementById('backpack').dispatchEvent(event) : document.getElementById(`PCSlot${window.PlayerMemberIndex}`).dispatchEvent(event))
-        // if (FromChar === 'ibackpack'){
-        //     document.getElementById('backpack').dispatchEvent(event);    
-        // }else{
-        //     document.getElementById(`PCSlot${window.PlayerMemberIndex}`).dispatchEvent(event);
-        // }
     }
 }
 

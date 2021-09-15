@@ -2,7 +2,7 @@
 
 import { EncounterTypes } from './Enums.mjs';
 import { ItemManager } from './ItemManager.mjs';
-import { Encounter, Rest, GainPartyMember, Friendly, Combat, Trap, SpotDamage, Treasure, Ressurection } from './Encounters.mjs';
+import { Encounter, Rest, GainPartyMember, Friendly, Combat, Trap, SpotDamage, Treasure, Resurrection } from './Encounters.mjs';
 import { PointF } from './PointF.mjs';
 
 
@@ -131,17 +131,17 @@ export class HexObject {
             case EncounterTypes.TRAP:
                 this._Encounter = new Trap(PointF,"","It's a trap!!");
                 break;
-            case EncounterTypes.GAINPARTYMEMBER:
+            case EncounterTypes.GAIN_PARTY_MEMBER:
                 this._Encounter = new GainPartyMember(PointF,"","Your party expands!");
                 break;
-            case EncounterTypes.SPOTDAMAGE:
+            case EncounterTypes.SPOT_DAMAGE:
                 this._Encounter = new SpotDamage(PointF,"","Encounter Type - Spot Damage.");
                 break;    
             case EncounterTypes.REST:
                 this._Encounter = new Rest(PointF,"","Encounter Type - Rest.");
                 break;  
             case EncounterTypes.RESURRECTION:
-                this._Encounter = new Ressurection(PointF,"","Encounter Type - Ressurection");
+                this._Encounter = new Resurrection(PointF,"","Encounter Type - Resurrection");
                 break;
             default:
                 this._Encounter = new Encounter(PointF,"","Default Encounter.");

@@ -151,7 +151,7 @@ export class Trap extends Encounter{
 
     RunEncounter(){
         console.log("Trap");
-        this._EncounterLogElement.innerHTML += `<BR>Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party memebers.`;
+        this._EncounterLogElement.innerHTML += `<BR>Trap Damage - ${this._TrapDamage*this._DifficultyLevel} damage to all party members.`;
         for (let idx = 0; idx < window.PlayerParty.length; idx++){
             if (window.PlayerParty[idx].IsAlive){
                 window.PlayerParty[idx].CurrentHealth = (window.PlayerParty[idx].CurrentHealth - (this._TrapDamage * this._DifficultyLevel));
@@ -209,13 +209,13 @@ export class Treasure extends Encounter{
     }
 }
 
-export class Ressurection extends Encounter{
+export class Resurrection extends Encounter{
     constructor(location,items,description){
         super(location,items,description);    
     }
 
     RunEncounter(){
-        console.log("Ressurection");
+        console.log("Resurrection");
         const expEarned = this.CheckPartyStatus();
         window.PlayerParty.forEach(e => {e.ApplyExperience(expEarned)})
         DisplayParty();
