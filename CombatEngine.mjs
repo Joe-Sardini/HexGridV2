@@ -68,7 +68,11 @@ export class CombatEngine{
                         }
                     }
                 }else{
-                    this._PlayerParty[player2.Index].CurrentHealth -= damage;    
+                    try {
+                        this._PlayerParty[player2.Index].CurrentHealth -= damage;    
+                    } catch (ex){
+                        
+                    }
                 }
             }else{
                 this._CombatLogElement.innerHTML += `does no damage!`;
@@ -89,8 +93,9 @@ export class CombatEngine{
             }
             if (this.IsPartyAllDead(this._EnemyParty) || this.IsPartyAllDead(this._PlayerParty)){
                 window.bCombatIsOver = true;
-                EventLogElement.innerHTML += `<BR> party destroyed!`;
-                break;
+                EventLogElement.innerHTML += `<BR> ${(this.IsPartyAllDead(this._EnemyParty)) ? 'Enemy ' : 'Player '} party destroyed!`;
+                return true;
+                //break;
             }
         }
     }
