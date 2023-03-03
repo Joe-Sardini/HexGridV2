@@ -7,7 +7,7 @@
     "underscore": "^1.13.1"
   },
   "devDependencies": {
-    "mocha": "^6.2.2"
+    "mocha": "^6.2.3"
   },
   "scripts": {
     "test": "mocha"
